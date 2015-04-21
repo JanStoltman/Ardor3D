@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -18,19 +18,6 @@ import java.nio.ShortBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES1;
-import com.jogamp.opengl.GL2ES2;
-import com.jogamp.opengl.GL2ES3;
-import com.jogamp.opengl.GL2GL3;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
-import com.jogamp.opengl.fixedfunc.GLPointerFunc;
-import com.jogamp.opengl.glu.GLU;
 
 import com.ardor3d.image.ImageDataFormat;
 import com.ardor3d.image.PixelDataType;
@@ -105,11 +92,23 @@ import com.ardor3d.util.Constants;
 import com.ardor3d.util.geom.BufferUtils;
 import com.ardor3d.util.stat.StatCollector;
 import com.ardor3d.util.stat.StatType;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
+import com.jogamp.opengl.GL2ES2;
+import com.jogamp.opengl.GL2ES3;
+import com.jogamp.opengl.GL2GL3;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+import com.jogamp.opengl.fixedfunc.GLPointerFunc;
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.GLBuffers;
 
 /**
  * <code>JoglRenderer</code> provides an implementation of the <code>Renderer</code> interface using the JOGL API.
- * 
+ *
  * @see com.ardor3d.renderer.Renderer
  */
 public class JoglRenderer extends AbstractRenderer {
@@ -457,7 +456,7 @@ public class JoglRenderer extends AbstractRenderer {
             if (!vboIdsBuffer.hasRemaining()) {
                 vboIdsBuffer.flip();
                 if (vboIdsBuffer.remaining() > 0) {
-                    gl.glDeleteTextures(vboIdsBuffer.remaining(), vboIdsBuffer);
+                    gl.glDeleteBuffers(vboIdsBuffer.remaining(), vboIdsBuffer);
                 }
                 vboIdsBuffer.clear();
             }
@@ -467,7 +466,7 @@ public class JoglRenderer extends AbstractRenderer {
         }
         vboIdsBuffer.flip();
         if (vboIdsBuffer.remaining() > 0) {
-            gl.glDeleteTextures(vboIdsBuffer.remaining(), vboIdsBuffer);
+            gl.glDeleteBuffers(vboIdsBuffer.remaining(), vboIdsBuffer);
         }
         vboIdsBuffer.clear();
     }
@@ -1899,7 +1898,7 @@ public class JoglRenderer extends AbstractRenderer {
     /**
      * Start a new display list. All further renderer commands that can be stored in a display list are part of this new
      * list until {@link #endDisplayList()} is called.
-     * 
+     *
      * @return id of new display list
      */
     @Override
