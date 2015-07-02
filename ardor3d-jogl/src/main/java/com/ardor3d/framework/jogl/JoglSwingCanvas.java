@@ -13,21 +13,23 @@ package com.ardor3d.framework.jogl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CountDownLatch;
 
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLRunnable;
-import com.jogamp.opengl.awt.GLJPanel;
 import javax.swing.SwingUtilities;
 
 import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.Canvas;
 import com.ardor3d.framework.DisplaySettings;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLRunnable;
+import com.jogamp.opengl.awt.GLJPanel;
 
 /**
  * Ardor3D JOGL Swing lightweight canvas, Swing component for the OpenGL rendering of Ardor3D with JOGL that supports
  * the AWT input system directly and its abstraction in Ardor3D (com.ardor3d.input.awt). As this canvas is generally
  * slower and heavier (in term of memory footprint) than JoglAwtCanvas, use it if and only if you have some problems
- * when mixing heavyweight and lightweight components
- * 
+ * when mixing heavyweight and lightweight components.
+ *
+ * N.B: This canvas uses GLSL internally when it is available and supported, setting the property jogl.gljpanel.noglsl
+ * to true is recommended to avoid any conflicts with the effects based on GLSL including the bloom effect.
  */
 public class JoglSwingCanvas extends GLJPanel implements Canvas {
 
