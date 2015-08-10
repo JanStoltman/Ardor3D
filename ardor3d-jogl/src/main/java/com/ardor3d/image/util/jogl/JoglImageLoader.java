@@ -164,7 +164,7 @@ public class JoglImageLoader implements ImageLoader {
      * @throws IOException
      */
     protected String getFileSuffix(final InputStream is) throws IOException {
-        if (is.markSupported() && is.available() >= 16) {
+        if (is.markSupported() && is.available() >= 32) {
             is.mark(32);
             try {
                 final byte[] b = new byte[32];
