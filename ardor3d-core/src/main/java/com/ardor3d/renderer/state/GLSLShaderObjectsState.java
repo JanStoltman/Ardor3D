@@ -74,7 +74,7 @@ public class GLSLShaderObjectsState extends RenderState {
     /** Storage for shader attribute values */
     protected List<ShaderVariable> _shaderAttributes = new ArrayList<ShaderVariable>();
 
-    protected ByteBuffer _vertShader, _fragShader, _geomShader, _tessControlShader, _tessEvalShader;
+    protected ByteBuffer _vertShader, _fragShader, _geomShader, _tessControlShader, _tessEvalShader, _compShader;
 
     // XXX: The below fields are public for brevity mostly as a way to remember that this class needs revisiting.
 
@@ -107,6 +107,9 @@ public class GLSLShaderObjectsState extends RenderState {
     /** OpenGL id for the attached tessellation evaluation shader. */
     public int _tessellationEvaluationShaderID = -1;
 
+    /** OpenGL id for the attached compute shader. */
+    public int _computeShaderID = -1;
+
     /** if true, we'll send our vertex attributes to the shader via vbo */
     private boolean _useAttributeVBO;
 
@@ -124,6 +127,9 @@ public class GLSLShaderObjectsState extends RenderState {
 
     /** optional name for our tessellation evaluation shader, used for debugging details. */
     public String _tessellationEvaluationShaderName;
+
+    /** optional name for our compute shader, used for debugging details. */
+    public String _computeShaderName;
 
     /**
      * Gets the currently loaded vertex shader.
@@ -170,6 +176,15 @@ public class GLSLShaderObjectsState extends RenderState {
         return _tessEvalShader;
     }
 
+    /**
+     * Gets the currently loaded compute shader.
+     *
+     * @return
+     */
+    public ByteBuffer getComputeShader() {
+        return _compShader;
+    }
+
     public void setVertexShader(final InputStream stream) throws IOException {
         setVertexShader(stream, "");
     }
@@ -213,6 +228,15 @@ public class GLSLShaderObjectsState extends RenderState {
     public void setTessellationEvaluationShader(final InputStream stream, final String name) throws IOException {
         setTessellationEvaluationShader(load(stream));
         _tessellationEvaluationShaderName = name;
+    }
+
+    public void setComputeShader(final InputStream stream) throws IOException {
+        setComputeShader(stream, "");
+    }
+
+    public void setComputeShader(final InputStream stream, final String name) throws IOException {
+        setComputeShader(load(stream));
+        _computeShaderName = name;
     }
 
     protected ByteBuffer load(final InputStream in) throws IOException {
@@ -357,6 +381,29 @@ public class GLSLShaderObjectsState extends RenderState {
     }
 
     /**
+     * Set the contents for our compute shader
+     *
+     * @param shader
+     *            the shader contents.
+     */
+    public void setComputeShader(final ByteBuffer shader) {
+        setComputeShader(shader, "");
+    }
+
+    /**
+     * Set the contents for our compute shader
+     *
+     * @param shader
+     *            the shader contents.
+     * @param name
+     *            a label for this shader, displayer upon shader errors.
+     */
+    public void setComputeShader(final ByteBuffer shader, final String name) {
+        _compShader = shader;
+        _computeShaderName = name;
+    }
+
+    /**
      * Set the contents for our vertex shader
      *
      * @param shader
@@ -469,6 +516,29 @@ public class GLSLShaderObjectsState extends RenderState {
     public void setTessellationEvaluationShader(final String shader, final String name) {
         _tessEvalShader = stringToByteBuffer(shader);
         _tessellationEvaluationShaderName = name;
+    }
+
+    /**
+     * Set the contents for our compute shader
+     *
+     * @param shader
+     *            the shader contents.
+     */
+    public void setComputeShader(final String shader) {
+        setComputeShader(shader, "");
+    }
+
+    /**
+     * Set the contents for our compute shader
+     *
+     * @param shader
+     *            the shader contents.
+     * @param name
+     *            a label for this shader, displayer upon shader errors.
+     */
+    public void setComputeShader(final String shader, final String name) {
+        _compShader = stringToByteBuffer(shader);
+        _computeShaderName = name;
     }
 
     private ByteBuffer stringToByteBuffer(final String str) {

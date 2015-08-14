@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,15 +13,14 @@ package com.ardor3d.renderer.jogl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import com.ardor3d.renderer.ContextCapabilities;
+import com.ardor3d.util.geom.jogl.DirectNioBuffersSet;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.GL2ES2;
 import com.jogamp.opengl.GL2ES3;
 import com.jogamp.opengl.GLAutoDrawable;
-
-import com.ardor3d.renderer.ContextCapabilities;
-import com.ardor3d.util.geom.jogl.DirectNioBuffersSet;
 
 public class JoglContextCapabilities extends ContextCapabilities {
 
@@ -83,6 +82,8 @@ public class JoglContextCapabilities extends ContextCapabilities {
 
         _tessellationShadersSupported = gl.isExtensionAvailable("GL_ARB_tessellation_shader") && _glslSupported;
 
+        _computeShaderSupported = gl.isExtensionAvailable("GL_ARB_compute_shader") && _glslSupported;
+
         if (_glslSupported) {
             if (gl.isGL2()) {
                 gl.glGetIntegerv(GL2.GL_MAX_VERTEX_ATTRIBS_ARB, buf);
@@ -112,7 +113,7 @@ public class JoglContextCapabilities extends ContextCapabilities {
             // Max multisample samples.
             if (gl.isExtensionAvailable("GL_EXT_framebuffer_multisample")
                     && gl.isExtensionAvailable("GL_EXT_framebuffer_blit") && gl.isGL2ES3()) {
-                gl.glGetIntegerv(GL2ES3.GL_MAX_SAMPLES, buf);
+                gl.glGetIntegerv(GL.GL_MAX_SAMPLES, buf);
                 _maxFBOSamples = buf.get(0);
             } else {
                 _maxFBOSamples = 0;

@@ -31,6 +31,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES2;
 import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GL3ES3;
 import com.jogamp.opengl.GLContext;
 
 public abstract class JoglShaderObjectsStateUtil {
@@ -312,7 +313,7 @@ public abstract class JoglShaderObjectsStateUtil {
                     }
                 }
 
-                // Compile the tessellation control shader
+                // Compile the tessellation evaluation shader
                 final JoglRenderContext context = (JoglRenderContext) ContextManager.getCurrentContext();
                 final IntBuffer compiled = context.getDirectNioBuffersSet().getSingleIntBuffer();
                 compiled.clear();
@@ -341,6 +342,64 @@ public abstract class JoglShaderObjectsStateUtil {
             } else if (state._tessellationEvaluationShaderID != -1) {
                 removeTessEvalShader(state);
                 state._tessellationEvaluationShaderID = -1;
+            }
+        }
+
+        if (caps.isComputeShaderSupported()) {
+            if (state.getComputeShader() != null) {
+                if (state._computeShaderID != -1) {
+                    removeCompShader(state);
+                }
+                if (gl.isGL2()) {
+                    state._computeShaderID = (int) gl.getGL2().glCreateShaderObjectARB(GL3ES3.GL_COMPUTE_SHADER);
+                } else {
+                    if (gl.isGL2ES2()) {
+                        state._computeShaderID = gl.getGL2ES2().glCreateShader(GL3ES3.GL_COMPUTE_SHADER);
+                    }
+                }
+
+                // Create the sources
+                final byte array[] = new byte[state.getComputeShader().limit()];
+                state.getComputeShader().rewind();
+                state.getComputeShader().get(array);
+                if (gl.isGL2()) {
+                    gl.getGL2().glShaderSourceARB(state._computeShaderID, 1, new String[] { new String(array) },
+                            new int[] { array.length }, 0);
+                } else {
+                    if (gl.isGL2ES2()) {
+                        gl.getGL2ES2().glShaderSource(state._computeShaderID, 1, new String[] { new String(array) },
+                                new int[] { array.length }, 0);
+                    }
+                }
+
+                // Compile the compute shader
+                final JoglRenderContext context = (JoglRenderContext) ContextManager.getCurrentContext();
+                final IntBuffer compiled = context.getDirectNioBuffersSet().getSingleIntBuffer();
+                compiled.clear();
+                if (gl.isGL2()) {
+                    gl.getGL2().glCompileShaderARB(state._computeShaderID);
+                    gl.getGL2().glGetObjectParameterivARB(state._computeShaderID, GL2.GL_OBJECT_COMPILE_STATUS_ARB,
+                            compiled);
+                } else {
+                    if (gl.isGL2ES2()) {
+                        gl.getGL2ES2().glCompileShader(state._computeShaderID);
+                        gl.getGL2ES2().glGetShaderiv(state._computeShaderID, GL2ES2.GL_COMPILE_STATUS, compiled);
+                    }
+                }
+                checkShaderError(compiled.get(0), state._computeShaderID, state._computeShaderName);
+
+                // Attach the program
+                if (gl.isGL2()) {
+                    gl.getGL2().glAttachObjectARB(state._programID, state._computeShaderID);
+                } else {
+                    if (gl.isGL2ES2()) {
+                        gl.getGL2ES2().glAttachShader(state._programID, state._computeShaderID);
+                    }
+                }
+
+            } else if (state._computeShaderID != -1) {
+                removeCompShader(state);
+                state._computeShaderID = -1;
             }
         }
 
@@ -487,6 +546,23 @@ public abstract class JoglShaderObjectsStateUtil {
                 if (gl.isGL2ES2()) {
                     gl.getGL2ES2().glDetachShader(state._programID, state._tessellationEvaluationShaderID);
                     gl.getGL2ES2().glDeleteShader(state._tessellationEvaluationShaderID);
+                }
+            }
+        }
+    }
+
+    /** Removes the compute shader */
+    private static void removeCompShader(final GLSLShaderObjectsState state) {
+        final GL gl = GLContext.getCurrentGL();
+
+        if (state._computeShaderID != -1) {
+            if (gl.isGL2()) {
+                gl.getGL2().glDetachObjectARB(state._programID, state._computeShaderID);
+                gl.getGL2().glDeleteObjectARB(state._computeShaderID);
+            } else {
+                if (gl.isGL2ES2()) {
+                    gl.getGL2ES2().glDetachShader(state._programID, state._computeShaderID);
+                    gl.getGL2ES2().glDeleteShader(state._computeShaderID);
                 }
             }
         }

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -40,6 +40,7 @@ public class ContextCapabilities {
     protected boolean _geometryShader4Supported = false;
     protected boolean _geometryInstancingSupported = false;
     protected boolean _tessellationShadersSupported = false;
+    protected boolean _computeShaderSupported = false;
     protected int _maxGLSLVertexAttribs;
 
     protected boolean _pbufferSupported = false;
@@ -153,6 +154,7 @@ public class ContextCapabilities {
         _glslSupported = source._glslSupported;
         _geometryInstancingSupported = source._geometryInstancingSupported;
         _tessellationShadersSupported = source._tessellationShadersSupported;
+        _computeShaderSupported = source._computeShaderSupported;
         _maxAnisotropic = source._maxAnisotropic;
         _maxFBOColorAttachments = source._maxFBOColorAttachments;
         _maxFBOSamples = source._maxFBOSamples;
@@ -338,6 +340,14 @@ public class ContextCapabilities {
     }
 
     /**
+     * @return <code>true</code> if the GLSL is supported and GL_ARB_compute_shader is supported by current graphics
+     *         configuration
+     */
+    public boolean isComputeShaderSupported() {
+        return _computeShaderSupported;
+    }
+
+    /**
      * @return true if the ARB_shader_objects extension is supported by current graphics configuration.
      */
     public boolean isGLSLSupported() {
@@ -391,7 +401,7 @@ public class ContextCapabilities {
     /**
      * <code>getNumberOfAuxiliaryDrawBuffers</code> returns the total number of available auxiliary draw buffers this
      * context supports.
-     * 
+     *
      * @return the number of available auxiliary draw buffers supported by the context.
      */
     public int getNumberOfAuxiliaryDrawBuffers() {
@@ -400,7 +410,7 @@ public class ContextCapabilities {
 
     /**
      * <code>getTotalNumberOfUnits</code> returns the total number of texture units this context supports.
-     * 
+     *
      * @return the total number of texture units supported by the context.
      */
     public int getTotalNumberOfUnits() {
@@ -410,7 +420,7 @@ public class ContextCapabilities {
     /**
      * <code>getNumberOfFixedUnits</code> returns the number of texture units this context supports, for use in the
      * fixed pipeline.
-     * 
+     *
      * @return the number units.
      */
     public int getNumberOfFixedTextureUnits() {
@@ -420,7 +430,7 @@ public class ContextCapabilities {
     /**
      * <code>getNumberOfVertexUnits</code> returns the number of texture units available to a vertex shader that this
      * context supports.
-     * 
+     *
      * @return the number of units.
      */
     public int getNumberOfVertexUnits() {
@@ -430,7 +440,7 @@ public class ContextCapabilities {
     /**
      * <code>getNumberOfFragmentUnits</code> returns the number of texture units available to a fragment shader that
      * this context supports.
-     * 
+     *
      * @return the number of units.
      */
     public int getNumberOfFragmentTextureUnits() {
@@ -440,7 +450,7 @@ public class ContextCapabilities {
     /**
      * <code>getNumberOfFragmentTexCoordUnits</code> returns the number of texture coordinate sets available that this
      * context supports.
-     * 
+     *
      * @return the number of units.
      */
     public int getNumberOfFragmentTexCoordUnits() {
@@ -456,7 +466,7 @@ public class ContextCapabilities {
 
     /**
      * <code>getNumberOfTotalUnits</code> returns the number of texture units this context supports.
-     * 
+     *
      * @return the number of units.
      */
     public int getNumberOfTotalTextureUnits() {
@@ -465,7 +475,7 @@ public class ContextCapabilities {
 
     /**
      * <code>getMaxFBOColorAttachments</code> returns the MAX_COLOR_ATTACHMENTS for FBOs that this context supports.
-     * 
+     *
      * @return the number of buffers.
      */
     public int getMaxFBOColorAttachments() {
@@ -474,7 +484,7 @@ public class ContextCapabilities {
 
     /**
      * Returns the maximum anisotropic filter.
-     * 
+     *
      * @return The maximum anisotropic filter.
      */
     public float getMaxAnisotropic() {
@@ -525,7 +535,7 @@ public class ContextCapabilities {
 
     /**
      * Returns if S3TC compression is available for textures.
-     * 
+     *
      * @return true if S3TC is available.
      */
     public boolean isS3TCSupported() {
@@ -534,7 +544,7 @@ public class ContextCapabilities {
 
     /**
      * Returns if LATC compression is available for textures.
-     * 
+     *
      * @return true if LATC is available.
      */
     public boolean isLATCSupported() {
@@ -543,7 +553,7 @@ public class ContextCapabilities {
 
     /**
      * Returns if generic (non-specific) compression is available for textures.
-     * 
+     *
      * @return true if available.
      */
     public boolean isGenericTCSupported() {
@@ -552,7 +562,7 @@ public class ContextCapabilities {
 
     /**
      * Returns if Texture3D is available for textures.
-     * 
+     *
      * @return true if Texture3D is available.
      */
     public boolean isTexture3DSupported() {
@@ -561,7 +571,7 @@ public class ContextCapabilities {
 
     /**
      * Returns if TextureCubeMap is available for textures.
-     * 
+     *
      * @return true if TextureCubeMap is available.
      */
     public boolean isTextureCubeMapSupported() {
@@ -570,7 +580,7 @@ public class ContextCapabilities {
 
     /**
      * Returns if AutomaticMipmap generation is available for textures.
-     * 
+     *
      * @return true if AutomaticMipmap generation is available.
      */
     public boolean isAutomaticMipmapsSupported() {
@@ -652,7 +662,7 @@ public class ContextCapabilities {
 
     /**
      * Returns the vendor of the graphics adapter
-     * 
+     *
      * @return The vendor of the graphics adapter
      */
     public String getDisplayVendor() {
@@ -661,7 +671,7 @@ public class ContextCapabilities {
 
     /**
      * Returns renderer details of the adapter
-     * 
+     *
      * @return The adapter details
      */
     public String getDisplayRenderer() {
@@ -670,7 +680,7 @@ public class ContextCapabilities {
 
     /**
      * Returns the version supported
-     * 
+     *
      * @return The version supported
      */
     public String getDisplayVersion() {
@@ -679,7 +689,7 @@ public class ContextCapabilities {
 
     /**
      * Returns the supported shading language version. Needs OpenGL 2.0 support to query.
-     * 
+     *
      * @return The shading language version supported
      */
     public String getShadingLanguageVersion() {
