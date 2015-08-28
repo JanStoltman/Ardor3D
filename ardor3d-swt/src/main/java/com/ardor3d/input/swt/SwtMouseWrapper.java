@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -167,6 +167,24 @@ public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveLi
                 break;
             case 2:
                 button = MouseButton.MIDDLE;
+                break;
+            case 4:
+                button = MouseButton.FOUR;
+                break;
+            case 5:
+                button = MouseButton.FIVE;
+                break;
+            case 6:
+                button = MouseButton.SIX;
+                break;
+            case 7:
+                button = MouseButton.SEVEN;
+                break;
+            case 8:
+                button = MouseButton.EIGHT;
+                break;
+            case 9:
+                button = MouseButton.NINE;
                 break;
             default:
                 throw new RuntimeException("unknown button: " + e.button);

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -27,6 +27,12 @@ public final class TriggerConditions {
     private static final MouseButtonCondition RIGHT_DOWN_CONDITION = makeCondition(MouseButton.RIGHT, ButtonState.DOWN);
     private static final MouseButtonCondition MIDDLE_DOWN_CONDITION = makeCondition(MouseButton.MIDDLE,
             ButtonState.DOWN);
+    private static final MouseButtonCondition FOUR_DOWN_CONDITION = makeCondition(MouseButton.FOUR, ButtonState.DOWN);
+    private static final MouseButtonCondition FIVE_DOWN_CONDITION = makeCondition(MouseButton.FIVE, ButtonState.DOWN);
+    private static final MouseButtonCondition SIX_DOWN_CONDITION = makeCondition(MouseButton.SIX, ButtonState.DOWN);
+    private static final MouseButtonCondition SEVEN_DOWN_CONDITION = makeCondition(MouseButton.SEVEN, ButtonState.DOWN);
+    private static final MouseButtonCondition EIGHT_DOWN_CONDITION = makeCondition(MouseButton.EIGHT, ButtonState.DOWN);
+    private static final MouseButtonCondition NINE_DOWN_CONDITION = makeCondition(MouseButton.NINE, ButtonState.DOWN);
 
     private static final Predicate<TwoInputStates> ALWAYS_TRUE = new Predicate<TwoInputStates>() {
         @Override
@@ -63,7 +69,7 @@ public final class TriggerConditions {
     }
 
     /**
-     * 
+     *
      * @return a condition that is true if the left button is down
      */
     public static MouseButtonCondition leftButtonDown() {
@@ -71,7 +77,7 @@ public final class TriggerConditions {
     }
 
     /**
-     * 
+     *
      * @return a condition that is true if the right button is down
      */
     public static MouseButtonCondition rightButtonDown() {
@@ -79,11 +85,59 @@ public final class TriggerConditions {
     }
 
     /**
-     * 
+     *
      * @return a condition that is true if the middle button is down
      */
     public static MouseButtonCondition middleButtonDown() {
         return MIDDLE_DOWN_CONDITION;
+    }
+
+    /**
+     *
+     * @return a condition that is true if the fourth button is down
+     */
+    public static MouseButtonCondition fourButtonDown() {
+        return FOUR_DOWN_CONDITION;
+    }
+
+    /**
+     *
+     * @return a condition that is true if the fifth button is down
+     */
+    public static MouseButtonCondition fiveButtonDown() {
+        return FIVE_DOWN_CONDITION;
+    }
+
+    /**
+     *
+     * @return a condition that is true if the sixth button is down
+     */
+    public static MouseButtonCondition sixButtonDown() {
+        return SIX_DOWN_CONDITION;
+    }
+
+    /**
+     *
+     * @return a condition that is true if the seventh button is down
+     */
+    public static MouseButtonCondition sevenButtonDown() {
+        return SEVEN_DOWN_CONDITION;
+    }
+
+    /**
+     *
+     * @return a condition that is true if the eighth button is down
+     */
+    public static MouseButtonCondition eightButtonDown() {
+        return EIGHT_DOWN_CONDITION;
+    }
+
+    /**
+     *
+     * @return a condition that is true if the ninth button is down
+     */
+    public static MouseButtonCondition nineButtonDown() {
+        return NINE_DOWN_CONDITION;
     }
 
     /**
