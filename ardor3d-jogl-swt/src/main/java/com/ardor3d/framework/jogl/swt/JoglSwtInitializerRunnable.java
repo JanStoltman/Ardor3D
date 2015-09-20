@@ -8,7 +8,7 @@
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
-package com.ardor3d.framework.jogl;
+package com.ardor3d.framework.jogl.swt;
 
 import com.ardor3d.framework.DisplaySettings;
 

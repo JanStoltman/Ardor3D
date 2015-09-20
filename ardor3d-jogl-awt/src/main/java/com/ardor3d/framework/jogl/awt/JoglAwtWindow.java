@@ -8,7 +8,7 @@
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
-package com.ardor3d.framework.jogl;
+package com.ardor3d.framework.jogl.awt;
 
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -29,22 +29,22 @@ import java.util.logging.Logger;
 
 import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLException;
-
 import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.CanvasRenderer;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.NativeCanvas;
+import com.ardor3d.framework.jogl.JoglCanvasRenderer;
 import com.ardor3d.image.Image;
 import com.ardor3d.renderer.jogl.JoglPbufferTextureRenderer;
 
 /**
  * A canvas implementation for use with AWT JOGL windows.
  */
-public class JoglCanvas extends Frame implements NativeCanvas {
+public class JoglAwtWindow extends Frame implements NativeCanvas {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = Logger.getLogger(JoglCanvas.class.getName());
+    private static final Logger logger = Logger.getLogger(JoglAwtWindow.class.getName());
 
     private final DisplaySettings _settings;
     private boolean _inited = false;
@@ -52,7 +52,7 @@ public class JoglCanvas extends Frame implements NativeCanvas {
 
     private JoglAwtCanvas _glCanvas;
 
-    public JoglCanvas(final JoglCanvasRenderer canvasRenderer, final DisplaySettings settings) {
+    public JoglAwtWindow(final JoglCanvasRenderer canvasRenderer, final DisplaySettings settings) {
         _settings = settings;
 
         // Create the OpenGL canvas
@@ -214,7 +214,7 @@ public class JoglCanvas extends Frame implements NativeCanvas {
                     gd.setDisplayMode(previousDisplayMode);
                 }
                 // If required, get back to the windowed mode
-                if (gd.getFullScreenWindow() == JoglCanvas.this) {
+                if (gd.getFullScreenWindow() == JoglAwtWindow.this) {
                     gd.setFullScreenWindow(null);
                 }
             }

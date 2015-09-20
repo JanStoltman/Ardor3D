@@ -28,7 +28,7 @@ import com.ardor3d.framework.Canvas;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.FrameHandler;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
-import com.ardor3d.framework.jogl.JoglSwingCanvas;
+import com.ardor3d.framework.jogl.awt.JoglSwingCanvas;
 import com.ardor3d.image.util.awt.AWTImageLoader;
 import com.ardor3d.input.ControllerWrapper;
 import com.ardor3d.input.Key;

@@ -8,34 +8,34 @@
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
-package com.ardor3d.framework.jogl;
+package com.ardor3d.framework.jogl.awt;
 
 import com.ardor3d.framework.DisplaySettings;
 
-public class JoglAwtInitializerRunnable implements Runnable {
+public class JoglSwingInitializerRunnable implements Runnable {
 
-    private final JoglAwtCanvas _joglAwtCanvas;
+    private final JoglSwingCanvas _joglSwingCanvas;
 
     private final DisplaySettings _settings;
 
-    public JoglAwtInitializerRunnable(final JoglAwtCanvas joglAwtCanvas, final DisplaySettings settings) {
-        _joglAwtCanvas = joglAwtCanvas;
+    public JoglSwingInitializerRunnable(final JoglSwingCanvas joglSwingCanvas, final DisplaySettings settings) {
+        _joglSwingCanvas = joglSwingCanvas;
         _settings = settings;
     }
 
     @Override
     public void run() {
         // Make the window visible to realize the OpenGL surface.
-        _joglAwtCanvas.setVisible(true);
+        _joglSwingCanvas.setVisible(true);
         // Force the realization
-        _joglAwtCanvas.display();
-        if (_joglAwtCanvas.getDelegatedDrawable().isRealized()) {
+        _joglSwingCanvas.display();
+        if (_joglSwingCanvas.getDelegatedDrawable().isRealized()) {
             // Request the focus here as it cannot work when the window is not visible
-            _joglAwtCanvas.requestFocus();
+            _joglSwingCanvas.requestFocus();
             // The OpenGL context has been created after the realization of the surface
-            _joglAwtCanvas.getCanvasRenderer().setContext(_joglAwtCanvas.getContext());
+            _joglSwingCanvas.getCanvasRenderer().setContext(_joglSwingCanvas.getContext());
             // As the canvas renderer knows the OpenGL context, it can be initialized
-            _joglAwtCanvas.getCanvasRenderer().init(_settings, true);
+            _joglSwingCanvas.getCanvasRenderer().init(_settings, true);
         }
     }
 }

@@ -18,14 +18,13 @@ import java.net.URISyntaxException;
 import java.util.concurrent.Callable;
 
 import com.jogamp.nativewindow.util.DimensionImmutable;
-
 import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.FrameHandler;
 import com.ardor3d.framework.Scene;
 import com.ardor3d.framework.Updater;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
-import com.ardor3d.framework.jogl.JoglNewtAwtCanvas;
+import com.ardor3d.framework.jogl.awt.JoglNewtAwtCanvas;
 import com.ardor3d.image.util.awt.AWTImageLoader;
 import com.ardor3d.input.GrabbedState;
 import com.ardor3d.input.Key;

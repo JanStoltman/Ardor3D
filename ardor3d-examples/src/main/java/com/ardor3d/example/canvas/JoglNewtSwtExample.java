@@ -38,7 +38,7 @@ import com.ardor3d.framework.CanvasRenderer;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.FrameHandler;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
-import com.ardor3d.framework.jogl.JoglNewtSwtCanvas;
+import com.ardor3d.framework.jogl.swt.JoglNewtSwtCanvas;
 import com.ardor3d.image.util.ImageLoaderUtil;
 import com.ardor3d.image.util.jogl.JoglImageLoader;
 import com.ardor3d.input.ControllerWrapper;
