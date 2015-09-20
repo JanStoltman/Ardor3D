@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -12,6 +12,7 @@ package com.ardor3d.util.scenegraph;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import com.ardor3d.renderer.ContextCleanListener;
 import com.ardor3d.renderer.ContextManager;
@@ -22,12 +23,11 @@ import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.GameTaskQueueManager;
 import com.ardor3d.util.SimpleContextIdReference;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.MapMaker;
 import com.google.common.collect.Multimap;
 
 public class DisplayListDelegate implements RenderDelegate {
 
-    private static Map<DisplayListDelegate, Object> _identityCache = new MapMaker().weakKeys().makeMap();
+    private static Map<DisplayListDelegate, Object> _identityCache = new WeakHashMap<DisplayListDelegate, Object>();
     private static final Object STATIC_REF = new Object();
 
     private static ReferenceQueue<DisplayListDelegate> _refQueue = new ReferenceQueue<DisplayListDelegate>();
@@ -36,7 +36,7 @@ public class DisplayListDelegate implements RenderDelegate {
         ContextManager.addContextCleanListener(new ContextCleanListener() {
             @Override
             public void cleanForContext(final RenderContext renderContext) {
-            // TODO: Need a way to call back to the creator of the display list?
+                // TODO: Need a way to call back to the creator of the display list?
             }
         });
     }

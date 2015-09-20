@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,6 +13,7 @@ package com.ardor3d.extension.animation.skeletal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import com.ardor3d.extension.animation.skeletal.clip.AnimationClip;
 import com.ardor3d.extension.animation.skeletal.clip.AnimationClipInstance;
@@ -22,7 +23,6 @@ import com.ardor3d.extension.animation.skeletal.util.LoggingMap;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.ardor3d.util.Timer;
-import com.google.common.collect.MapMaker;
 
 /**
  * <p>
@@ -55,7 +55,7 @@ public class AnimationManager {
     protected final Spatial _sceneRoot;
 
     /** Local instance information for any clips referenced by the layers/blend trees in this manager. */
-    protected final Map<AnimationClip, AnimationClipInstance> _clipInstances = new MapMaker().weakKeys().makeMap();
+    protected final Map<AnimationClip, AnimationClipInstance> _clipInstances = new WeakHashMap<AnimationClip, AnimationClipInstance>();
 
     /** A logic object responsible for taking animation data and applying it to skeleton poses. */
     protected AnimationApplier _applier;
@@ -101,7 +101,7 @@ public class AnimationManager {
 
     /**
      * Construct a new AnimationManager.
-     * 
+     *
      * @param globalTimer
      *            the timer to use for global time keeping.
      * @param pose
@@ -113,7 +113,7 @@ public class AnimationManager {
 
     /**
      * Construct a new AnimationManager.
-     * 
+     *
      * @param globalTimer
      *            the timer to use for global time keeping.
      * @param pose
@@ -162,7 +162,7 @@ public class AnimationManager {
     }
 
     /**
-     * 
+     *
      * @return True if clips will reset if the currentUpdateState is Stop.
      */
     public boolean isResetClipsOnStop() {
@@ -172,8 +172,8 @@ public class AnimationManager {
     /**
      * @param resetClipsOnStop
      *            True if clips are to be reset when currentUpdateState is Stop, false otherwise.
-     * 
-     * 
+     *
+     *
      */
     public void setResetClipsOnStop(final boolean resetClipsOnStop) {
         _resetClipsOnStop = resetClipsOnStop;
@@ -258,7 +258,7 @@ public class AnimationManager {
 
     /**
      * Notify any listeners of the state change
-     * 
+     *
      * @param oldState
      *            previous state
      */
@@ -270,7 +270,7 @@ public class AnimationManager {
 
     /**
      * Add an AnimationUpdateStateListener to this manager.
-     * 
+     *
      * @param listener
      *            the listener to add.
      */
@@ -280,7 +280,7 @@ public class AnimationManager {
 
     /**
      * Remove an AnimationUpdateStateListener from this manager.
-     * 
+     *
      * @param listener
      *            the listener to remove.
      * @return true if the listener was found
@@ -426,7 +426,7 @@ public class AnimationManager {
 
     /**
      * Retrieve and track an instance of an animation clip to be used with this manager.
-     * 
+     *
      * @param clip
      *            the clip to instance.
      * @return our new clip instance.
@@ -444,7 +444,7 @@ public class AnimationManager {
 
     /**
      * Retrieve an existing clip instance being tracked by this manager.
-     * 
+     *
      * @param clipName
      *            the name of the clip to find an existing instance of. Case sensitive.
      * @return our existing clip instance, or null if we were not tracking a clip of the given name.
@@ -461,7 +461,7 @@ public class AnimationManager {
 
     /**
      * Retrieve an existing clip tracked by this manager.
-     * 
+     *
      * @param clipName
      *            the name of the clip to find. Case sensitive.
      * @return our existing clip, or null if we were not tracking a clip of the given name.
@@ -478,7 +478,7 @@ public class AnimationManager {
 
     /**
      * Rewind and reactivate the clip instance associated with the given clip.
-     * 
+     *
      * @param clip
      *            the clip to pull the instance for.
      * @param globalStartTime
@@ -520,7 +520,7 @@ public class AnimationManager {
 
     /**
      * Add a new layer to our list of animation layers.
-     * 
+     *
      * @param layer
      *            the layer to add.
      * @return the index of our added layer in our list of animation layers.
@@ -533,7 +533,7 @@ public class AnimationManager {
 
     /**
      * Insert a given animation layer into our list of layers.
-     * 
+     *
      * @param layer
      *            the layer to insert.
      * @param index

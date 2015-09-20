@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -19,6 +19,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import com.ardor3d.math.MathUtils;
@@ -32,7 +33,6 @@ import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.export.Savable;
 import com.ardor3d.util.geom.BufferUtils;
-import com.google.common.collect.MapMaker;
 
 /**
  * MeshData contains all the commonly used buffers for rendering a mesh.
@@ -71,7 +71,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the vertex count.
-     * 
+     *
      * @return the vertex count
      */
     public int getVertexCount() {
@@ -80,7 +80,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the vertex buffer.
-     * 
+     *
      * @return the vertex buffer
      */
     public FloatBuffer getVertexBuffer() {
@@ -92,7 +92,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the vertex buffer.
-     * 
+     *
      * @param vertexBuffer
      *            the new vertex buffer
      */
@@ -107,7 +107,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the vertex coords.
-     * 
+     *
      * @return the vertex coords
      */
     public FloatBufferData getVertexCoords() {
@@ -122,7 +122,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the vertex coords.
-     * 
+     *
      * @param bufferData
      *            the new vertex coords
      */
@@ -134,7 +134,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the normal buffer.
-     * 
+     *
      * @return the normal buffer
      */
     public FloatBuffer getNormalBuffer() {
@@ -146,7 +146,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the normal buffer.
-     * 
+     *
      * @param normalBuffer
      *            the new normal buffer
      */
@@ -161,7 +161,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the normal coords.
-     * 
+     *
      * @return the normal coords
      */
     public FloatBufferData getNormalCoords() {
@@ -170,7 +170,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the normal coords.
-     * 
+     *
      * @param bufferData
      *            the new normal coords
      */
@@ -181,7 +181,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the color buffer.
-     * 
+     *
      * @return the color buffer
      */
     public FloatBuffer getColorBuffer() {
@@ -193,7 +193,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the color buffer.
-     * 
+     *
      * @param colorBuffer
      *            the new color buffer
      */
@@ -208,7 +208,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the color coords.
-     * 
+     *
      * @return the color coords
      */
     public FloatBufferData getColorCoords() {
@@ -217,7 +217,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the color coords.
-     * 
+     *
      * @param bufferData
      *            the new color coords
      */
@@ -228,7 +228,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the fog buffer.
-     * 
+     *
      * @return the fog buffer
      */
     public FloatBuffer getFogBuffer() {
@@ -240,7 +240,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the fog buffer.
-     * 
+     *
      * @param fogBuffer
      *            the new fog buffer
      */
@@ -254,7 +254,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the fog coords.
-     * 
+     *
      * @return the fog coords
      */
     public FloatBufferData getFogCoords() {
@@ -263,7 +263,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the fog coords.
-     * 
+     *
      * @param bufferData
      *            the new fog coords
      */
@@ -273,7 +273,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the tangent buffer.
-     * 
+     *
      * @return the tangent buffer
      */
     public FloatBuffer getTangentBuffer() {
@@ -285,7 +285,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the tangent buffer.
-     * 
+     *
      * @param tangentBuffer
      *            the new tangent buffer
      */
@@ -299,7 +299,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the tangent coords.
-     * 
+     *
      * @return the tangent coords
      */
     public FloatBufferData getTangentCoords() {
@@ -308,7 +308,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the tangent coords.
-     * 
+     *
      * @param bufferData
      *            the new tangent coords
      */
@@ -318,10 +318,10 @@ public class MeshData implements Savable {
 
     /**
      * Gets the FloatBuffer of the FloatBufferData set on a given texture unit.
-     * 
+     *
      * @param index
      *            the unit index
-     * 
+     *
      * @return the texture buffer for the given index, or null if none was set.
      */
     public FloatBuffer getTextureBuffer(final int index) {
@@ -338,7 +338,7 @@ public class MeshData implements Savable {
     /**
      * Sets the texture buffer for a given texture unit index. Interprets it as a 2 component float buffer data. If you
      * need other sizes, use setTextureCoords instead.
-     * 
+     *
      * @param textureBuffer
      *            the texture buffer
      * @param index
@@ -359,7 +359,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the texture coords.
-     * 
+     *
      * @return the texture coords
      */
     public List<FloatBufferData> getTextureCoords() {
@@ -368,10 +368,10 @@ public class MeshData implements Savable {
 
     /**
      * Gets the texture coords assigned to a specific texture unit index of this MeshData.
-     * 
+     *
      * @param index
      *            the texture unit index
-     * 
+     *
      * @return the texture coords
      */
     public FloatBufferData getTextureCoords(final int index) {
@@ -383,7 +383,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets all texture coords on this MeshData.
-     * 
+     *
      * @param textureCoords
      *            the new texture coords
      */
@@ -394,7 +394,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the texture coords of a specific texture unit index to the given FloatBufferData.
-     * 
+     *
      * @param textureCoords
      *            the texture coords
      * @param index
@@ -410,7 +410,7 @@ public class MeshData implements Savable {
 
     /**
      * Retrieves the interleaved buffer, if set or created through packInterleaved.
-     * 
+     *
      * @return the interleaved buffer
      */
     public FloatBuffer getInterleavedBuffer() {
@@ -422,7 +422,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the interleaved data.
-     * 
+     *
      * @return the interleaved data
      */
     public FloatBufferData getInterleavedData() {
@@ -431,7 +431,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the interleaved data.
-     * 
+     *
      * @param interleavedData
      *            the interleaved data
      */
@@ -458,7 +458,7 @@ public class MeshData implements Savable {
     /**
      * <code>copyTextureCoords</code> copies the texture coordinates of a given texture unit to another location. If the
      * texture unit is not valid, then the coordinates are ignored. Coords are multiplied by the given factor.
-     * 
+     *
      * @param fromIndex
      *            the coordinates to copy.
      * @param toIndex
@@ -504,7 +504,7 @@ public class MeshData implements Savable {
     /**
      * <code>copyTextureCoords</code> copies the texture coordinates of a given texture unit to another location. If the
      * texture unit is not valid, then the coordinates are ignored. Coords are multiplied by the given S and T factors.
-     * 
+     *
      * @param fromIndex
      *            the coordinates to copy.
      * @param toIndex
@@ -555,7 +555,7 @@ public class MeshData implements Savable {
 
     /**
      * <code>getNumberOfUnits</code> returns the number of texture units this geometry is currently using.
-     * 
+     *
      * @return the number of texture units in use.
      */
     public int getNumberOfUnits() {
@@ -567,7 +567,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the index buffer.
-     * 
+     *
      * @return the index buffer
      */
     public Buffer getIndexBuffer() {
@@ -579,7 +579,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the index buffer.
-     * 
+     *
      * @param indices
      *            the new index buffer
      */
@@ -595,7 +595,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the index buffer.
-     * 
+     *
      * @param indices
      *            the new index buffer
      */
@@ -611,7 +611,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the index buffer.
-     * 
+     *
      * @param indices
      *            the new index buffer
      */
@@ -627,7 +627,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the indices.
-     * 
+     *
      * @return the indices
      */
     public IndexBufferData<?> getIndices() {
@@ -636,7 +636,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the indices
-     * 
+     *
      * @param bufferData
      *            the new indices
      */
@@ -648,7 +648,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the index mode.
-     * 
+     *
      * @return the IndexMode of the first section of this MeshData.
      * @deprecated Please switch to {@link #getIndexMode(int)}
      */
@@ -659,7 +659,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the index mode.
-     * 
+     *
      * @param indexMode
      *            the new IndexMode to use for the first section of this MeshData.
      */
@@ -671,7 +671,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the index lengths.
-     * 
+     *
      * @return the index lengths
      */
     public int[] getIndexLengths() {
@@ -680,7 +680,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the index lengths.
-     * 
+     *
      * @param indexLengths
      *            the new index lengths
      */
@@ -692,7 +692,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the index modes.
-     * 
+     *
      * @return the index modes
      */
     public IndexMode[] getIndexModes() {
@@ -701,10 +701,10 @@ public class MeshData implements Savable {
 
     /**
      * Gets the index mode.
-     * 
+     *
      * @param sectionIndex
      *            the section index
-     * 
+     *
      * @return the index mode
      */
     public IndexMode getIndexMode(final int sectionIndex) {
@@ -716,7 +716,7 @@ public class MeshData implements Savable {
 
     /**
      * Note: Also updates primitive counts.
-     * 
+     *
      * @param indexModes
      *            the index modes to use for this MeshData.
      */
@@ -728,7 +728,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the section count.
-     * 
+     *
      * @return the number of sections (lengths, indexModes, etc.) this MeshData contains.
      */
     public int getSectionCount() {
@@ -737,7 +737,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the total primitive count.
-     * 
+     *
      * @return the sum of the primitive counts on all sections of this mesh data.
      */
     public int getTotalPrimitiveCount() {
@@ -750,10 +750,10 @@ public class MeshData implements Savable {
 
     /**
      * Gets the primitive count.
-     * 
+     *
      * @param section
      *            the section
-     * 
+     *
      * @return the number of primitives (triangles, quads, lines, points, etc.) on a given section of this mesh data.
      */
     public int getPrimitiveCount(final int section) {
@@ -762,7 +762,7 @@ public class MeshData implements Savable {
 
     /**
      * Returns the vertex indices of a specified primitive.
-     * 
+     *
      * @param primitiveIndex
      *            which triangle, quad, etc
      * @param section
@@ -770,9 +770,9 @@ public class MeshData implements Savable {
      * @param store
      *            an int array to store the results in. if null, or the length < the size of the primitive, a new array
      *            is created and returned.
-     * 
+     *
      * @return the primitive's vertex indices as an array
-     * 
+     *
      * @throws IndexOutOfBoundsException
      *             if primitiveIndex is outside of range [0, count-1] where count is the number of primitives in the
      *             given section.
@@ -806,14 +806,14 @@ public class MeshData implements Savable {
 
     /**
      * Gets the vertices that make up the given primitive.
-     * 
+     *
      * @param primitiveIndex
      *            the primitive index
      * @param section
      *            the section
      * @param store
      *            the store. If null or the wrong size, we'll make a new array and return that instead.
-     * 
+     *
      * @return the primitive
      */
     public Vector3[] getPrimitiveVertices(final int primitiveIndex, final int section, final Vector3[] store) {
@@ -840,7 +840,7 @@ public class MeshData implements Savable {
             } else {
                 // non-indexed geometry
                 BufferUtils
-                        .populateFromBuffer(result[i], getVertexBuffer(), getVertexIndex(primitiveIndex, i, section));
+                .populateFromBuffer(result[i], getVertexBuffer(), getVertexIndex(primitiveIndex, i, section));
             }
         }
 
@@ -849,7 +849,7 @@ public class MeshData implements Savable {
 
     /**
      * Gets the texture coordinates of the primitive.
-     * 
+     *
      * @param primitiveIndex
      *            the primitive index
      * @param section
@@ -858,7 +858,7 @@ public class MeshData implements Savable {
      *            the texture index
      * @param store
      *            the store
-     * 
+     *
      * @return the texture coordinates of the primitive
      */
     public Vector2[] getPrimitiveTextureCoords(final int primitiveIndex, final int section, final int textureIndex,
@@ -894,14 +894,14 @@ public class MeshData implements Savable {
 
     /**
      * Gets the vertex index.
-     * 
+     *
      * @param primitiveIndex
      *            which triangle, quad, etc.
      * @param point
      *            which point on the triangle, quad, etc. (triangle has three points, so this would be 0-2, etc.)
      * @param section
      *            which section to pull from (corresponds to array position in indexmodes and lengths)
-     * 
+     *
      * @return the position you would expect to find the given point in the index buffer
      */
     public int getVertexIndex(final int primitiveIndex, final int point, final int section) {
@@ -956,10 +956,10 @@ public class MeshData implements Savable {
 
     /**
      * Random vertex.
-     * 
+     *
      * @param store
      *            the vector object to store the result in. if null, a new one is created.
-     * 
+     *
      * @return a random vertex from the vertices stored in this MeshData. null is returned if there are no vertices.
      */
     public Vector3 randomVertex(final Vector3 store) {
@@ -980,10 +980,10 @@ public class MeshData implements Savable {
 
     /**
      * Random point on primitives.
-     * 
+     *
      * @param store
      *            the vector object to store the result in. if null, a new one is created.
-     * 
+     *
      * @return a random point from the surface of a primitive stored in this MeshData. null is returned if there are no
      *         vertices or indices.
      */
@@ -1082,7 +1082,7 @@ public class MeshData implements Savable {
 
     /**
      * Translate points.
-     * 
+     *
      * @param x
      *            the x
      * @param y
@@ -1096,7 +1096,7 @@ public class MeshData implements Savable {
 
     /**
      * Translate points.
-     * 
+     *
      * @param amount
      *            the amount
      */
@@ -1129,7 +1129,7 @@ public class MeshData implements Savable {
 
     /**
      * Rotate points.
-     * 
+     *
      * @param rotate
      *            the rotate
      */
@@ -1144,7 +1144,7 @@ public class MeshData implements Savable {
 
     /**
      * Rotate normals.
-     * 
+     *
      * @param rotate
      *            the rotate
      */
@@ -1189,7 +1189,7 @@ public class MeshData implements Savable {
 
     /**
      * Sets the id for a vbo based on interleaving this MeshData's buffer, in regards to the given OpenGL context.
-     * 
+     *
      * @param glContext
      *            the object representing the OpenGL context a vbo belongs to. See
      *            {@link RenderContext#getGlContextRep()}
@@ -1204,7 +1204,7 @@ public class MeshData implements Savable {
         }
 
         if (_vboIdCache == null) {
-            _vboIdCache = new MapMaker().initialCapacity(1).weakKeys().makeMap();
+            _vboIdCache = new WeakHashMap<Object, Integer>(1);
         }
         _vboIdCache.put(glContext, vboId);
     }

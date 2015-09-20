@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -15,6 +15,7 @@ import java.lang.ref.ReferenceQueue;
 import java.nio.Buffer;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import com.ardor3d.renderer.ContextCleanListener;
 import com.ardor3d.renderer.ContextManager;
@@ -27,12 +28,11 @@ import com.ardor3d.util.GameTaskQueueManager;
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.MapMaker;
 import com.google.common.collect.Multimap;
 
 public abstract class AbstractBufferData<T extends Buffer> {
 
-    private static Map<AbstractBufferData<?>, Object> _identityCache = new MapMaker().weakKeys().makeMap();
+    private static Map<AbstractBufferData<?>, Object> _identityCache = new WeakHashMap<AbstractBufferData<?>, Object>();
     private static final Object STATIC_REF = new Object();
 
     private static ReferenceQueue<AbstractBufferData<?>> _vboRefQueue = new ReferenceQueue<AbstractBufferData<?>>();
@@ -73,7 +73,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
 
     /**
      * Gets the count.
-     * 
+     *
      * @return the count
      */
     public int getBufferLimit() {
@@ -86,7 +86,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
 
     /**
      * Gets the count.
-     * 
+     *
      * @return the count
      */
     public int getBufferCapacity() {
@@ -99,7 +99,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
 
     /**
      * Get the buffer holding the data.
-     * 
+     *
      * @return the buffer
      */
     public T getBuffer() {
@@ -108,7 +108,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
 
     /**
      * Set the buffer holding the data.
-     * 
+     *
      * @param buffer
      *            the buffer to set
      */
@@ -134,7 +134,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
 
     /**
      * Removes any vbo id from this buffer's data for the given OpenGL context.
-     * 
+     *
      * @param glContext
      *            the object representing the OpenGL context a vbo would belong to. See
      *            {@link RenderContext#getGlContextRep()}
@@ -150,7 +150,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
 
     /**
      * Sets the id for a vbo based on this buffer's data in regards to the given OpenGL context.
-     * 
+     *
      * @param glContextRep
      *            the object representing the OpenGL context a vbo belongs to. See
      *            {@link RenderContext#getGlContextRep()}
@@ -235,7 +235,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
     /**
      * Clean any VBO ids from the hardware, using the given Renderer object to do the work immediately, if given. If
      * not, we will delete in the next execution of the appropriate context's game task render queue.
-     * 
+     *
      * @param deleter
      *            the Renderer to use. If null, execution will not occur immediately.
      */

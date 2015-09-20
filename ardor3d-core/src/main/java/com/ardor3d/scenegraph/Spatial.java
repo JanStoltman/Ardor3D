@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -17,6 +17,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +53,6 @@ import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.export.Savable;
 import com.ardor3d.util.scenegraph.RenderDelegate;
-import com.google.common.collect.MapMaker;
 
 /**
  * Base class for all scenegraph objects.
@@ -123,7 +123,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Constructs a new <code>Spatial</code> with a given name.
-     * 
+     *
      * @param name
      *            the name of the spatial. This is required for identification purposes.
      */
@@ -134,7 +134,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Returns the name of this spatial.
-     * 
+     *
      * @return This spatial's name.
      */
     public String getName() {
@@ -143,7 +143,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the name of this Spatial.
-     * 
+     *
      * @param name
      *            new name
      */
@@ -153,7 +153,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the render delegate.
-     * 
+     *
      * @param delegate
      *            the new delegate, or null for default behavior
      * @param glContextRef
@@ -165,7 +165,7 @@ public abstract class Spatial implements Savable, Hintable {
             if (delegate == null) {
                 return;
             } else {
-                _delegateMap = new MapMaker().weakKeys().makeMap();
+                _delegateMap = new WeakHashMap<Object, RenderDelegate>();
             }
         }
         if (delegate != null) {
@@ -188,7 +188,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the render delegate.
-     * 
+     *
      * @param glContextRef
      *            if null, retrieve the default render delegate for this spatial. Otherwise, retrieve the delegate used
      *            when this Spatial is rendered in a RenderContext tied to the given glContextRef.
@@ -207,7 +207,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>getParent</code> retrieve's this node's parent. If the parent is null this is the root node.
-     * 
+     *
      * @return the parent of this node.
      */
     public Node getParent() {
@@ -217,7 +217,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * Called by {@link Node#attachChild(Spatial)} and {@link Node#detachChild(Spatial)} - don't call directly.
      * <code>setParent</code> sets the parent of this node.
-     * 
+     *
      * @param parent
      *            the parent of this node.
      */
@@ -227,7 +227,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>removeFromParent</code> removes this Spatial from it's parent.
-     * 
+     *
      * @return true if it has a parent and performed the remove.
      */
     public boolean removeFromParent() {
@@ -240,7 +240,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * determines if the provided Node is the parent, or parent's parent, etc. of this Spatial.
-     * 
+     *
      * @param ancestor
      *            the ancestor object to look for.
      * @return true if the ancestor is found, false otherwise.
@@ -265,7 +265,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the scene hints.
-     * 
+     *
      * @return the scene hints set on this Spatial
      */
     @Override
@@ -275,7 +275,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Returns the listener for dirty events on this node, if set.
-     * 
+     *
      * @return the listener
      */
     public DirtyEventListener getListener() {
@@ -284,7 +284,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the listener for dirty events on this node.
-     * 
+     *
      * @param listener
      *            listener to use.
      */
@@ -294,7 +294,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Mark this node as dirty. Can be marked as Transform, Bounding, Attached, Detached, Destroyed or RenderState
-     * 
+     *
      * @param dirtyType
      *            the dirty type
      */
@@ -304,7 +304,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Mark this node as dirty. Can be marked as Transform, Bounding, Attached, Detached, Destroyed or RenderState
-     * 
+     *
      * @param caller
      *            the spatial where the marking was initiated
      * @param dirtyType
@@ -346,7 +346,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Test if this spatial is marked as dirty in respect to the supplied DirtyType.
-     * 
+     *
      * @param dirtyType
      *            dirty type to test against
      * @return true if spatial marked dirty against the supplied dirty type
@@ -357,7 +357,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Clears the dirty flag set at this spatial for the supplied dirty type.
-     * 
+     *
      * @param dirtyType
      *            dirty type to clear flag for
      */
@@ -367,7 +367,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Clears the dirty flag set at this spatial for the supplied dirty type.
-     * 
+     *
      * @param caller
      *            the spatial where the clearing was initiated
      * @param dirtyType
@@ -381,7 +381,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Propagate the dirty mark up the tree hierarchy.
-     * 
+     *
      * @param dirtyTypes
      *            the dirty types
      */
@@ -395,7 +395,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Propagate the dirty mark down the tree hierarchy.
-     * 
+     *
      * @param dirtyTypes
      *            the dirty types
      */
@@ -406,7 +406,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * Propagate the dirty event up the hierarchy. If a listener is found on the spatial the event is fired and the
      * propagation is stopped.
-     * 
+     *
      * @param spatial
      *            the spatial
      * @param dirtyType
@@ -431,7 +431,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the local rotation matrix.
-     * 
+     *
      * @return the rotation
      */
     public ReadOnlyMatrix3 getRotation() {
@@ -440,7 +440,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the local scale vector.
-     * 
+     *
      * @return the scale
      */
     public ReadOnlyVector3 getScale() {
@@ -449,7 +449,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the local translation vector.
-     * 
+     *
      * @return the translation
      */
     public ReadOnlyVector3 getTranslation() {
@@ -458,7 +458,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the local transform.
-     * 
+     *
      * @return the transform
      */
     public ReadOnlyTransform getTransform() {
@@ -467,7 +467,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the local transform.
-     * 
+     *
      * @param transform
      *            the new transform
      */
@@ -478,7 +478,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world rotation matrix.
-     * 
+     *
      * @param rotation
      *            the new world rotation
      */
@@ -488,7 +488,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world rotation quaternion.
-     * 
+     *
      * @param rotation
      *            the new world rotation
      */
@@ -498,7 +498,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world scale.
-     * 
+     *
      * @param scale
      *            the new world scale vector
      */
@@ -508,7 +508,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world scale.
-     * 
+     *
      * @param x
      *            the x coordinate
      * @param y
@@ -522,7 +522,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world scale.
-     * 
+     *
      * @param scale
      *            the new world scale
      */
@@ -532,7 +532,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world translation vector.
-     * 
+     *
      * @param translation
      *            the new world translation
      */
@@ -542,7 +542,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world translation.
-     * 
+     *
      * @param x
      *            the x coordinate
      * @param y
@@ -556,7 +556,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the world transform.
-     * 
+     *
      * @param transform
      *            the new world transform
      */
@@ -566,7 +566,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the rotation of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param rotation
      *            the new rotation of this spatial
      * @see Transform#setRotation(Matrix3)
@@ -578,7 +578,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the rotation of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param rotation
      *            the new rotation of this spatial
      * @see Transform#setRotation(Quaternion)
@@ -590,7 +590,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>setScale</code> sets the scale of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param scale
      *            the new scale of this spatial
      */
@@ -601,7 +601,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>setScale</code> sets the scale of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param scale
      *            the new scale of this spatial
      */
@@ -612,7 +612,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * sets the scale of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param x
      *            the x scale factor
      * @param y
@@ -627,7 +627,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>setTranslation</code> sets the translation of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param translation
      *            the new translation of this spatial
      */
@@ -638,7 +638,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * sets the translation of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param x
      *            the x coordinate
      * @param y
@@ -654,7 +654,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * <code>addTranslation</code> adds the given translation to the translation of this spatial. This marks the spatial
      * as DirtyType.Transform.
-     * 
+     *
      * @param translation
      *            the translation vector
      */
@@ -664,7 +664,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * adds to the current translation of this spatial. This marks the spatial as DirtyType.Transform.
-     * 
+     *
      * @param x
      *            the x amount
      * @param y
@@ -679,7 +679,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the world rotation matrix.
-     * 
+     *
      * @return the world rotation
      */
     public ReadOnlyMatrix3 getWorldRotation() {
@@ -688,7 +688,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the world scale vector.
-     * 
+     *
      * @return the world scale
      */
     public ReadOnlyVector3 getWorldScale() {
@@ -697,7 +697,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the world translation vector.
-     * 
+     *
      * @return the world translation
      */
     public ReadOnlyVector3 getWorldTranslation() {
@@ -706,7 +706,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the world transform.
-     * 
+     *
      * @return the world transform
      */
     public ReadOnlyTransform getWorldTransform() {
@@ -715,7 +715,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>getWorldBound</code> retrieves the world bound at this level.
-     * 
+     *
      * @return the world bound at this level.
      */
     public BoundingVolume getWorldBound() {
@@ -727,7 +727,7 @@ public abstract class Spatial implements Savable, Hintable {
      * method is called.
      * <p>
      * This method is called by the renderer. Usually it should not be called directly.
-     * 
+     *
      * @param r
      *            the renderer used for display.
      */
@@ -762,7 +762,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * <code>draw</code> abstract method that handles drawing data to the renderer if it is geometry and passing the
      * call to it's children if it is a node.
-     * 
+     *
      * @param renderer
      *            the renderer used for display.
      */
@@ -770,7 +770,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Grab the render delegate for this spatial based on the currently set RenderContext.
-     * 
+     *
      * @return the delegate or null if a delegate was not found.
      */
     protected RenderDelegate getCurrentRenderDelegate() {
@@ -794,7 +794,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Update geometric state.
-     * 
+     *
      * @param time
      *            The time in seconds between the last two consecutive frames (time per frame). See
      *            {@link ReadOnlyTimer#getTimePerFrame()}
@@ -806,7 +806,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * <code>updateGeometricState</code> updates all the geometry information for the node.
-     * 
+     *
      * @param time
      *            The time in seconds between the last two consecutive frames (time per frame). See
      *            {@link ReadOnlyTimer#getTimePerFrame()}
@@ -841,7 +841,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Override to allow objects like Node to update their children.
-     * 
+     *
      * @param time
      *            The time in seconds between the last two consecutive frames (time per frame). See
      *            {@link ReadOnlyTimer#getTimePerFrame()}
@@ -850,7 +850,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Update all controllers set on this spatial.
-     * 
+     *
      * @param time
      *            The time in seconds between the last two consecutive frames (time per frame). See
      *            {@link ReadOnlyTimer#getTimePerFrame()}
@@ -875,7 +875,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Updates the worldTransform.
-     * 
+     *
      * @param recurse
      *            usually false when updating the tree. Set to true when you just want to update the world transforms
      *            for a branch without updating geometric state.
@@ -891,7 +891,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Convert a vector (in) from this spatial's local coordinate space to world coordinate space.
-     * 
+     *
      * @param in
      *            vector to read from
      * @param store
@@ -908,7 +908,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Convert a vector (in) from world coordinate space to this spatial's local coordinate space.
-     * 
+     *
      * @param in
      *            vector to read from
      * @param store
@@ -926,7 +926,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * Updates the render state values of this Spatial and and children it has. Should be called whenever render states
      * change.
-     * 
+     *
      * @param recurse
      *            true to recurse down the scenegraph tree
      */
@@ -936,7 +936,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Called internally. Updates the render states of this Spatial. The stack contains parent render states.
-     * 
+     *
      * @param recurse
      *            true to recurse down the scenegraph tree
      * @param stateStack
@@ -967,7 +967,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * The method actually implements how the render states are applied to this spatial and (if recurse is true) any
      * children it may have. By default, this function does nothing.
-     * 
+     *
      * @param recurse
      *            true to recurse down the scenegraph tree
      * @param stack
@@ -982,7 +982,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Retrieves the complete renderstate list.
-     * 
+     *
      * @return the list of renderstates
      */
     public EnumMap<StateType, RenderState> getLocalRenderStates() {
@@ -993,7 +993,7 @@ public abstract class Spatial implements Savable, Hintable {
      * <code>setRenderState</code> sets a render state for this node. Note, there can only be one render state per type
      * per node. That is, there can only be a single BlendState a single TextureState, etc. If there is already a render
      * state for a type set the old render state will be returned. Otherwise, null is returned.
-     * 
+     *
      * @param rs
      *            the render state to add.
      * @return the old render state.
@@ -1014,7 +1014,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Returns the requested RenderState that this Spatial currently has set or null if none is set.
-     * 
+     *
      * @param type
      *            the state type to retrieve
      * @return a render state at the given position or null
@@ -1025,7 +1025,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Clears a given render state index by setting it to null.
-     * 
+     *
      * @param type
      *            The type of RenderState to clear
      */
@@ -1037,7 +1037,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * Called during updateRenderState(Stack[]), this function goes up the scene graph tree until the parent is null and
      * pushes RenderStates onto the states Stack array.
-     * 
+     *
      * @param stack
      *            The stack to push any parent states onto.
      */
@@ -1057,7 +1057,7 @@ public abstract class Spatial implements Savable, Hintable {
      * updates the bounding volume of the world. Abstract, geometry transforms the bound while node merges the
      * children's bound. In most cases, users will want to call updateModelBound() and let this function be called
      * automatically during updateGeometricState().
-     * 
+     *
      * @param recurse
      *            true to recurse down the scenegraph tree
      */
@@ -1075,7 +1075,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the Spatial specific user data.
-     * 
+     *
      * @return the user data
      */
     public Object getUserData() {
@@ -1084,7 +1084,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Sets the Spatial specific user data.
-     * 
+     *
      * @param userData
      *            Some Spatial specific user data. Note: If this object is not explicitly of type Savable, it will be
      *            ignored during read/write.
@@ -1095,7 +1095,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Adds a SpatialController to this Spatial's list of controllers.
-     * 
+     *
      * @param controller
      *            The SpatialController to add
      * @see com.ardor3d.scenegraph.controller.SpatialController
@@ -1109,7 +1109,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Removes a SpatialController from this Spatial's list of controllers, if it exist.
-     * 
+     *
      * @param controller
      *            The SpatialController to remove
      * @return True if the SpatialController was in the list to remove.
@@ -1124,7 +1124,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Removes a SpatialController from this Spatial's list of controllers by index.
-     * 
+     *
      * @param index
      *            The index of the controller to remove
      * @return The SpatialController removed or null if nothing was removed.
@@ -1139,7 +1139,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Removes all Controllers from this Spatial's list of controllers.
-     * 
+     *
      * @see com.ardor3d.scenegraph.controller.SpatialController
      */
     public void clearControllers() {
@@ -1150,7 +1150,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Returns the controller in this list of controllers at index i.
-     * 
+     *
      * @param i
      *            The index to get a controller from.
      * @return The controller at index i.
@@ -1165,7 +1165,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Returns the ArrayList that contains this spatial's SpatialControllers.
-     * 
+     *
      * @return This spatial's _controllers.
      */
     public List<SpatialController<?>> getControllers() {
@@ -1177,7 +1177,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Gets the controller count.
-     * 
+     *
      * @return the number of controllers set on this Spatial.
      */
     public int getControllerCount() {
@@ -1191,7 +1191,7 @@ public abstract class Spatial implements Savable, Hintable {
      * Returns this spatial's last frustum intersection result. This int is set when a check is made to determine if the
      * bounds of the object fall inside a camera's frustum. If a parent is found to fall outside the frustum, the value
      * for this spatial will not be updated.
-     * 
+     *
      * @return The spatial's last frustum intersection result.
      */
     public Camera.FrustumIntersect getLocalLastFrustumIntersection() {
@@ -1201,7 +1201,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * Tries to find the most accurate last frustum intersection for this spatial by checking the parent for possible
      * Outside value.
-     * 
+     *
      * @return Outside, if this, or any ancestor was Outside, otherwise the local intersect value.
      */
     public Camera.FrustumIntersect getLastFrustumIntersection() {
@@ -1218,7 +1218,7 @@ public abstract class Spatial implements Savable, Hintable {
      * Overrides the last intersection result. This is useful for operations that want to start rendering at the middle
      * of a scene tree and don't want the parent of that node to influence culling. (See texture renderer code for
      * example.)
-     * 
+     *
      * @param frustumIntersects
      *            the new frustum intersection value
      */
@@ -1228,7 +1228,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Execute the given Visitor on this Spatial, and any Spatials managed by this Spatial as appropriate.
-     * 
+     *
      * @param visitor
      *            the Visitor object to use.
      * @param preexecute
@@ -1242,7 +1242,7 @@ public abstract class Spatial implements Savable, Hintable {
     /**
      * Returns the Spatial's name followed by the class of the spatial <br>
      * Example: "MyNode (com.ardor3d.scene.Spatial)
-     * 
+     *
      * @return Spatial's name followed by the class of the Spatial
      */
     @Override
@@ -1252,7 +1252,7 @@ public abstract class Spatial implements Savable, Hintable {
 
     /**
      * Create a copy of this spatial.
-     * 
+     *
      * @param shareGeometricData
      *            if true, reuse any data fields describing the geometric shape of the spatial, as applicable.
      * @return the copy as described.
@@ -1319,7 +1319,7 @@ public abstract class Spatial implements Savable, Hintable {
      * Creates and returns a new instance of this spatial. Used for instanced rendering. All instances visible on the
      * screen will be drawn in one draw call. The new instance will share all data (meshData and renderStates) with the
      * current mesh and all other instances created from this spatial.
-     * 
+     *
      * @return an instanced copy of this node
      */
     public Spatial makeInstanced() {

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import com.ardor3d.scenegraph.Mesh;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.MapMaker;
 
 /**
  * CollisionTreeManager is an automated system for handling the creation and deletion of CollisionTrees. The manager
@@ -46,7 +46,7 @@ import com.google.common.collect.MapMaker;
  * default, the manager will use the UsageTreeController for removing trees, but any other CollisionTreeController is
  * acceptable. You can create protected tree manually. These are collision trees that you request the manager to create
  * and not allow them to be removed by the CollisionTreeController.
- * 
+ *
  * @see com.ardor3d.bounding.CollisionTree
  * @see com.ardor3d.bounding.CollisionTreeController
  */
@@ -80,14 +80,14 @@ public enum CollisionTreeManager {
      * private constructor for the Singleton. Initializes the cache.
      */
     private CollisionTreeManager() {
-        _cache = new MapMaker().weakKeys().makeMap();
+        _cache = new WeakHashMap<Mesh, CollisionTree>();
         _protectedList = Collections.synchronizedList(new ArrayList<Mesh>(1));
         setCollisionTreeController(new UsageTreeController());
     }
 
     /**
      * retrieves the singleton instance of the CollisionTreeManager.
-     * 
+     *
      * @return the singleton instance of the manager.
      */
     public static CollisionTreeManager getInstance() {
@@ -108,7 +108,7 @@ public enum CollisionTreeManager {
 
     /**
      * sets the CollisionTreeController used for cleaning the cache when the maximum number of elements is reached.
-     * 
+     *
      * @param treeRemover
      *            the controller used to clean the cache.
      */
@@ -119,7 +119,7 @@ public enum CollisionTreeManager {
     /**
      * getCollisionTree obtains a collision tree that is assigned to a supplied Mesh. The cache is checked for a
      * pre-existing tree, if none is available and generateTrees is true, a new tree is created and returned.
-     * 
+     *
      * @param mesh
      *            the mesh to use as the key for the tree to obtain.
      * @return the tree associated with a given mesh
@@ -148,7 +148,7 @@ public enum CollisionTreeManager {
      * creates a new collision tree for the provided spatial. If the spatial is a node, it recursively calls
      * generateCollisionTree for each child. If it is a Mesh, a call to generateCollisionTree is made for each mesh. If
      * this tree(s) is to be protected, i.e. not deleted by the CollisionTreeController, set protect to true.
-     * 
+     *
      * @param type
      *            the type of collision tree to generate.
      * @param object
@@ -174,7 +174,7 @@ public enum CollisionTreeManager {
      * The tree is placed in the cache. If the cache's size then becomes too large, the cache is sent to the
      * CollisionTreeController for clean-up. If this tree is to be protected, i.e. protected from the
      * CollisionTreeController, set protect to true.
-     * 
+     *
      * @param type
      *            the type of collision tree to generate.
      * @param mesh
@@ -200,7 +200,7 @@ public enum CollisionTreeManager {
      * placed in the cache. If the cache's size then becomes too large, the cache is sent to the CollisionTreeController
      * for clean-up. If this tree is to be protected, i.e. protected from the CollisionTreeController, set protect to
      * true.
-     * 
+     *
      * @param tree
      *            the tree to use for generation
      * @param mesh
@@ -226,7 +226,7 @@ public enum CollisionTreeManager {
 
     /**
      * removes a collision tree from the manager based on the mesh supplied.
-     * 
+     *
      * @param mesh
      *            the mesh to remove the corresponding collision tree.
      */
@@ -237,7 +237,7 @@ public enum CollisionTreeManager {
 
     /**
      * removes all collision trees associated with a Spatial object.
-     * 
+     *
      * @param object
      *            the spatial to remove all collision trees from.
      */
@@ -255,7 +255,7 @@ public enum CollisionTreeManager {
     /**
      * updates the existing tree for a supplied mesh. If this tree does not exist, the tree is not updated. If the tree
      * is not in the cache, no further operations are handled.
-     * 
+     *
      * @param mesh
      *            the mesh key for the tree to update.
      */
@@ -269,7 +269,7 @@ public enum CollisionTreeManager {
     /**
      * updates the existing tree(s) for a supplied spatial. If this tree does not exist, the tree is not updated. If the
      * tree is not in the cache, no further operations are handled.
-     * 
+     *
      * @param object
      *            the object on which to update the tree.
      */
@@ -286,7 +286,7 @@ public enum CollisionTreeManager {
 
     /**
      * returns true if the manager is set to sort new generated trees. False otherwise.
-     * 
+     *
      * @return true to sort tree, false otherwise.
      */
     public boolean isDoSort() {
@@ -295,7 +295,7 @@ public enum CollisionTreeManager {
 
     /**
      * set if this manager should have newly generated trees sort primitives.
-     * 
+     *
      * @param doSort
      *            true to sort trees, false otherwise.
      */
@@ -305,7 +305,7 @@ public enum CollisionTreeManager {
 
     /**
      * returns true if the manager will automatically generate new trees as needed, false otherwise.
-     * 
+     *
      * @return true if this manager is generating trees, false otherwise.
      */
     public boolean isGenerateTrees() {
@@ -314,7 +314,7 @@ public enum CollisionTreeManager {
 
     /**
      * set if this manager should generate new trees as needed.
-     * 
+     *
      * @param generateTrees
      *            true to generate trees, false otherwise.
      */
@@ -341,7 +341,7 @@ public enum CollisionTreeManager {
 
     /**
      * returns the maximum number of primitives a leaf of the collision tree may contain.
-     * 
+     *
      * @return the maximum number of primitives a leaf may contain.
      */
     public int getMaxPrimitivesPerLeaf() {
@@ -350,7 +350,7 @@ public enum CollisionTreeManager {
 
     /**
      * set the maximum number of primitives a leaf of the collision tree may contain.
-     * 
+     *
      * @param maxPrimitivesPerLeaf
      *            the maximum number of primitives a leaf may contain.
      */
@@ -360,7 +360,7 @@ public enum CollisionTreeManager {
 
     /**
      * returns the maximum number of CollisionTree elements this manager will hold on to before starting to clear some.
-     * 
+     *
      * @return the maximum number of CollisionTree elements.
      */
     public int getMaxElements() {
@@ -369,7 +369,7 @@ public enum CollisionTreeManager {
 
     /**
      * set the maximum number of CollisionTree elements this manager will hold on to before starting to clear some.
-     * 
+     *
      * @param maxElements
      *            the maximum number of CollisionTree elements.
      */
@@ -381,7 +381,7 @@ public enum CollisionTreeManager {
      * Add the given mesh to our "protected" list. This will signal to our cleanup operation that when deciding which
      * trees to trim in an effort to keep our cache size to a certain desired size, do not trim the tree associated with
      * this mesh.
-     * 
+     *
      * @param meshToProtect
      *            the mesh whose CollisionTree we want to protect.
      */
@@ -393,7 +393,7 @@ public enum CollisionTreeManager {
 
     /**
      * Removes the supplied mesh from the "protected" list.
-     * 
+     *
      * @param mesh
      */
     public void removeProtected(final Mesh mesh) {
@@ -401,7 +401,7 @@ public enum CollisionTreeManager {
     }
 
     /**
-     * 
+     *
      * @return an immutable copy of the list of protected meshes.
      */
     public List<Mesh> getProtectedMeshes() {

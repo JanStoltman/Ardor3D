@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -16,8 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.MapMaker;
+import java.util.WeakHashMap;
 
 public class ContextIdReference<T> extends PhantomReference<T> {
 
@@ -32,7 +31,7 @@ public class ContextIdReference<T> extends PhantomReference<T> {
     public ContextIdReference(final T reference, final ReferenceQueue<? super T> queue) {
         super(reference, queue);
         if (Constants.useMultipleContexts) {
-            _idCache = new MapMaker().initialCapacity(2).weakKeys().makeMap();
+            _idCache = new WeakHashMap<Object, Integer>(2);
         } else {
             _idCache = null;
         }

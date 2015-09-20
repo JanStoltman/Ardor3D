@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,7 @@
 package com.ardor3d.extension.animation.skeletal.blendtree;
 
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import com.ardor3d.extension.animation.skeletal.AnimationApplier;
 import com.ardor3d.extension.animation.skeletal.AnimationManager;
@@ -22,7 +23,6 @@ import com.ardor3d.extension.animation.skeletal.clip.TriggerData;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.MapMaker;
 import com.google.common.collect.Multimap;
 
 /**
@@ -32,7 +32,7 @@ public class SimpleAnimationApplier implements AnimationApplier {
 
     private final Multimap<String, TriggerCallback> _triggerCallbacks = ArrayListMultimap.create(0, 0);
 
-    private final Map<String, Spatial> _spatialCache = new MapMaker().weakValues().makeMap();
+    private final Map<String, Spatial> _spatialCache = new WeakHashMap<String, Spatial>();
 
     @Override
     public void apply(final Spatial root, final AnimationManager manager) {

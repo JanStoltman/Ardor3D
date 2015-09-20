@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,8 +13,7 @@ package com.ardor3d.renderer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.MapMaker;
+import java.util.WeakHashMap;
 
 public class ContextManager {
 
@@ -22,7 +21,7 @@ public class ContextManager {
 
     private static List<ContextCleanListener> _cleanListeners = new ArrayList<ContextCleanListener>();
 
-    protected static final Map<Object, RenderContext> contextStore = new MapMaker().weakKeys().makeMap();
+    protected static final Map<Object, RenderContext> contextStore = new WeakHashMap<Object, RenderContext>();
 
     /**
      * @return a RenderContext object representing the current OpenGL context.
@@ -53,7 +52,7 @@ public class ContextManager {
 
     /**
      * Find the first context we manage that uses the given shared opengl context.
-     * 
+     *
      * @param glref
      * @return
      */
