@@ -8,7 +8,7 @@
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
-package com.ardor3d.extension.ui.text;
+package com.ardor3d.ui.text;
 
 public interface CopyPasteImpl {
     String getClipBoardContents();

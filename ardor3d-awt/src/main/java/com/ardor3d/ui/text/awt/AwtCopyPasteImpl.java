@@ -8,13 +8,15 @@
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
-package com.ardor3d.extension.ui.text;
+package com.ardor3d.ui.text.awt;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+
+import com.ardor3d.ui.text.CopyPasteImpl;
 
 public class AwtCopyPasteImpl implements CopyPasteImpl {
 
