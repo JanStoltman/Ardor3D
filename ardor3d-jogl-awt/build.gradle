@@ -1,0 +1,7 @@
+
+description = 'Ardor 3D JOGL AWT'
+dependencies {
+  compile project(':ardor3d-core')
+  compile project(':ardor3d-awt')
+  compile project(':ardor3d-jogl')
+}

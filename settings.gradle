@@ -7,6 +7,7 @@ include ':ardor3d-jogl'
 include ':ardor3d-swt'
 include ':ardor3d-jogl-swt'
 include ':ardor3d-awt'
+include ':ardor3d-jogl-awt'
 include ':ardor3d-extras'
 include ':ardor3d-effects'
 include ':ardor3d-collada'
@@ -24,6 +25,7 @@ project(':ardor3d-jogl').projectDir = "$rootDir/ardor3d-jogl" as File
 project(':ardor3d-swt').projectDir = "$rootDir/ardor3d-swt" as File
 project(':ardor3d-jogl-swt').projectDir = "$rootDir/ardor3d-jogl-swt" as File
 project(':ardor3d-awt').projectDir = "$rootDir/ardor3d-awt" as File
+project(':ardor3d-jogl-awt').projectDir = "$rootDir/ardor3d-jogl-awt" as File
 project(':ardor3d-extras').projectDir = "$rootDir/ardor3d-extras" as File
 project(':ardor3d-effects').projectDir = "$rootDir/ardor3d-effects" as File
 project(':ardor3d-collada').projectDir = "$rootDir/ardor3d-collada" as File

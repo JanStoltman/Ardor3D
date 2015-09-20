@@ -53,6 +53,7 @@
         <module>ardor3d-swt</module>
         <module>ardor3d-jogl-swt</module>
         <module>ardor3d-awt</module>
+	<module>ardor3d-jogl-awt</module>
         <module>ardor3d-extras</module>
         <module>ardor3d-effects</module>
         <module>ardor3d-collada</module>
