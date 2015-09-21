@@ -66,17 +66,17 @@
  
     <reporting>
         <plugins>
-            <plugin>
+            <!--<plugin>-->
                 <!-- NOTE: At least 'compile' has to be done before
                      running findbugs! (see http://stackoverflow.com/a/8939723/60982)
                 -->
-                <groupId>org.codehaus.mojo</groupId>
+                <!--<groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.5.2</version>
                 <configuration>
                     <threshold>Normal</threshold>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>

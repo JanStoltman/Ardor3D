@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -84,6 +84,8 @@ import com.ardor3d.util.screen.ScreenExporter;
 import com.ardor3d.util.stat.StatCollector;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
 
 public abstract class ExampleBase implements Runnable, Updater, Scene {
     private static final Logger logger = Logger.getLogger(ExampleBase.class.getName());
@@ -135,17 +137,37 @@ public abstract class ExampleBase implements Runnable, Updater, Scene {
     @Override
     public void run() {
         try {
+            if (_canvas instanceof JoglNewtWindow) {
+                ((JoglNewtWindow) _canvas).addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowDestroyNotify(final WindowEvent e) {
+                        final CanvasRenderer cr = _canvas.getCanvasRenderer();
+                        // grab the graphics context so cleanup will work out.
+                        cr.makeCurrentContext();
+                        ContextGarbageCollector.doFinalCleanup(cr.getRenderer());
+                        cr.releaseCurrentContext();
+                    }
+                });
+            }
+            // else if (_canvas instanceof JoglAwtWindow) {
+            // ((JoglAwtWindow) _canvas).addWindowListener(new java.awt.event.WindowAdapter() {
+            // @Override
+            // public void windowClosing(final java.awt.event.WindowEvent e) {
+            // final CanvasRenderer cr = _canvas.getCanvasRenderer();
+            // // grab the graphics context so cleanup will work out.
+            // cr.makeCurrentContext();
+            // ContextGarbageCollector.doFinalCleanup(cr.getRenderer());
+            // cr.releaseCurrentContext();
+            // }
+            // });
+            // }
+
             _frameHandler.init();
 
             while (!_exit) {
                 _frameHandler.updateFrame();
                 Thread.yield();
             }
-            // grab the graphics context so cleanup will work out.
-            final CanvasRenderer cr = _canvas.getCanvasRenderer();
-            cr.makeCurrentContext();
-            quit(cr.getRenderer());
-            cr.releaseCurrentContext();
         } catch (final Throwable t) {
             System.err.println("Throwable caught in MainThread - exiting");
             t.printStackTrace(System.err);
@@ -358,7 +380,6 @@ public abstract class ExampleBase implements Runnable, Updater, Scene {
         example._settings = settings;
 
         // get our framework
-        // if (prefs.getRenderer().startsWith("JOGL")) {
         final JoglCanvasRenderer canvasRenderer = new JoglCanvasRenderer(example);
         example._canvas = new JoglNewtWindow(canvasRenderer, settings);
         final JoglNewtWindow canvas = (JoglNewtWindow) example._canvas;
@@ -366,7 +387,6 @@ public abstract class ExampleBase implements Runnable, Updater, Scene {
         example._physicalLayer = new PhysicalLayer(new JoglNewtKeyboardWrapper(canvas), new JoglNewtMouseWrapper(
                 canvas, example._mouseManager), DummyControllerWrapper.INSTANCE, new JoglNewtFocusWrapper(canvas));
         TextureRendererFactory.INSTANCE.setProvider(new JoglTextureRendererProvider());
-        // }
 
         example._logicalLayer.registerInput(example._canvas, example._physicalLayer);
 

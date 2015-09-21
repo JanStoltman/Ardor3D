@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 
 import com.ardor3d.bounding.BoundingBox;
 import com.ardor3d.example.Purpose;
+import com.ardor3d.framework.CanvasRenderer;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.Scene;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
@@ -36,6 +37,8 @@ import com.ardor3d.util.TextureManager;
 import com.ardor3d.util.Timer;
 import com.ardor3d.util.resource.ResourceLocatorTool;
 import com.ardor3d.util.resource.SimpleResourceLocator;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
 
 /**
  * <p>
@@ -85,17 +88,23 @@ public class JoglBasicExample implements Scene {
     private void start() {
         initExample();
 
+        _canvas.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowDestroyNotify(final WindowEvent e) {
+                final CanvasRenderer cr = _canvas.getCanvasRenderer();
+                cr.makeCurrentContext();
+                // Done, do cleanup
+                ContextGarbageCollector.doFinalCleanup(cr.getRenderer());
+                cr.releaseCurrentContext();
+            }
+        });
+
         // Run in this same thread.
         while (!_exit) {
             updateExample();
             _canvas.draw(null);
             Thread.yield();
         }
-        _canvas.getCanvasRenderer().makeCurrentContext();
-
-        // Done, do cleanup
-        ContextGarbageCollector.doFinalCleanup(_canvas.getCanvasRenderer().getRenderer());
-        _canvas.close();
     }
 
     /**
