@@ -122,6 +122,7 @@ public class JoglRenderer extends AbstractRenderer {
      * Constructor instantiates a new <code>JoglRenderer</code> object.
      */
     public JoglRenderer() {
+        super();
         logger.fine("JoglRenderer created.");
     }
 
