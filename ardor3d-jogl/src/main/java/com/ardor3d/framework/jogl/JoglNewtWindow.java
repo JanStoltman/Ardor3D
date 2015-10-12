@@ -13,15 +13,12 @@ package com.ardor3d.framework.jogl;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import com.jogamp.nativewindow.util.Dimension;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLRunnable;
-
 import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.NativeCanvas;
 import com.ardor3d.image.Image;
+import com.jogamp.nativewindow.ScalableSurface;
+import com.jogamp.nativewindow.util.Dimension;
 import com.jogamp.newt.MonitorDevice;
 import com.jogamp.newt.MonitorMode;
 import com.jogamp.newt.event.KeyListener;
@@ -31,6 +28,9 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.event.WindowListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.util.MonitorModeUtil;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLRunnable;
 
 /**
  * Ardor3D NEWT lightweight window, NEWT "top level" component for the OpenGL rendering of Ardor3D with JOGL that
@@ -64,6 +64,9 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
             final boolean fboRequested, final CapsUtil capsUtil) {
         _newtWindow = GLWindow.create(capsUtil.getCapsForSettings(settings, onscreen, bitmapRequested,
                 pbufferRequested, fboRequested));
+        // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
+        _newtWindow.setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
+                ScalableSurface.IDENTITY_PIXELSCALE });
         _drawerGLRunnable = new JoglDrawerRunnable(canvasRenderer);
         _settings = settings;
         _canvasRenderer = canvasRenderer;

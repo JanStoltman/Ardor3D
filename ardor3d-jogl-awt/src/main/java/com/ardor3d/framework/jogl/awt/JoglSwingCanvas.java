@@ -21,6 +21,7 @@ import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.jogl.CapsUtil;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
 import com.ardor3d.framework.jogl.JoglDrawerRunnable;
+import com.jogamp.nativewindow.ScalableSurface;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLRunnable;
 import com.jogamp.opengl.awt.GLJPanel;
@@ -64,6 +65,9 @@ public class JoglSwingCanvas extends GLJPanel implements Canvas {
         setSize(_settings.getWidth(), _settings.getHeight());
         setIgnoreRepaint(true);
         setAutoSwapBufferMode(false);
+        // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
+        setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
+                ScalableSurface.IDENTITY_PIXELSCALE });
     }
 
     @Override

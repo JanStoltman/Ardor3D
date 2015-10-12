@@ -21,6 +21,7 @@ import com.ardor3d.framework.jogl.CapsUtil;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
 import com.ardor3d.framework.jogl.JoglDrawerRunnable;
 import com.ardor3d.framework.jogl.NewtWindowContainer;
+import com.jogamp.nativewindow.ScalableSurface;
 import com.jogamp.newt.awt.NewtCanvasAWT;
 import com.jogamp.newt.opengl.GLWindow;
 
@@ -51,6 +52,9 @@ public class JoglNewtAwtCanvas extends NewtCanvasAWT implements Canvas, NewtWind
         setSize(_settings.getWidth(), _settings.getHeight());
         setIgnoreRepaint(true);
         getNewtWindow().setAutoSwapBufferMode(false);
+        // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
+        getNewtWindow().setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
+                ScalableSurface.IDENTITY_PIXELSCALE });
     }
 
     @Override

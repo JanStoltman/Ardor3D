@@ -13,6 +13,7 @@ package com.ardor3d.framework.jogl.awt;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CountDownLatch;
 
+import com.jogamp.nativewindow.ScalableSurface;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLRunnable;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -61,6 +62,9 @@ public class JoglAwtCanvas extends GLCanvas implements Canvas {
         setSize(_settings.getWidth(), _settings.getHeight());
         setIgnoreRepaint(true);
         setAutoSwapBufferMode(false);
+        // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
+        setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
+                ScalableSurface.IDENTITY_PIXELSCALE });
     }
 
     @Override
