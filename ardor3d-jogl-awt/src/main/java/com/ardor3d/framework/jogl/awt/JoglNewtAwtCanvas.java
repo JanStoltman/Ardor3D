@@ -42,7 +42,12 @@ public class JoglNewtAwtCanvas extends NewtCanvasAWT implements Canvas, NewtWind
 
     public JoglNewtAwtCanvas(final DisplaySettings settings, final JoglCanvasRenderer canvasRenderer,
             final CapsUtil capsUtil) {
-        super(GLWindow.create(capsUtil.getCapsForSettings(settings)));
+        this(createNewtChildWindow(settings, capsUtil), settings, canvasRenderer, capsUtil);
+    }
+    
+    public JoglNewtAwtCanvas(final GLWindow newtChildWindow, final DisplaySettings settings, final JoglCanvasRenderer canvasRenderer,
+            final CapsUtil capsUtil) {
+    	super(newtChildWindow);
         _drawerGLRunnable = new JoglDrawerRunnable(canvasRenderer);
         getNewtWindow().setUndecorated(true);
         _settings = settings;
@@ -52,9 +57,14 @@ public class JoglNewtAwtCanvas extends NewtCanvasAWT implements Canvas, NewtWind
         setSize(_settings.getWidth(), _settings.getHeight());
         setIgnoreRepaint(true);
         getNewtWindow().setAutoSwapBufferMode(false);
-        // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
-        getNewtWindow().setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
+    }
+    
+    private static GLWindow createNewtChildWindow(final DisplaySettings settings, final CapsUtil capsUtil) {
+    	final GLWindow newtChildWindow = GLWindow.create(capsUtil.getCapsForSettings(settings));
+    	// disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
+    	newtChildWindow.setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
                 ScalableSurface.IDENTITY_PIXELSCALE });
+    	return newtChildWindow;
     }
 
     @Override
