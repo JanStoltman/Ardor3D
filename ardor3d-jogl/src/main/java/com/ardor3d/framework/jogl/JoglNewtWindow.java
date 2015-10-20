@@ -10,6 +10,8 @@
 
 package com.ardor3d.framework.jogl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -19,6 +21,7 @@ import com.ardor3d.framework.NativeCanvas;
 import com.ardor3d.image.Image;
 import com.jogamp.nativewindow.ScalableSurface;
 import com.jogamp.nativewindow.util.Dimension;
+import com.jogamp.nativewindow.util.DimensionImmutable;
 import com.jogamp.newt.MonitorDevice;
 import com.jogamp.newt.MonitorMode;
 import com.jogamp.newt.event.KeyListener;
@@ -49,6 +52,9 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
 
     private final GLWindow _newtWindow;
 
+    /** list of monitor devices used in fullscreen mode, ignored in windowed mode */
+    private List<MonitorDevice> _monitorDevices;
+
     public JoglNewtWindow(final JoglCanvasRenderer canvasRenderer, final DisplaySettings settings) {
         this(canvasRenderer, settings, true, false, false, false);
     }
@@ -62,13 +68,29 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
     public JoglNewtWindow(final JoglCanvasRenderer canvasRenderer, final DisplaySettings settings,
             final boolean onscreen, final boolean bitmapRequested, final boolean pbufferRequested,
             final boolean fboRequested, final CapsUtil capsUtil) {
-        _newtWindow = GLWindow.create(capsUtil.getCapsForSettings(settings, onscreen, bitmapRequested,
+        // FIXME rather pass the monitor(s) to the constructor, create a screen to get the primary monitor
+        _newtWindow = GLWindow.create(capsUtil.getCapsForSettingsWithHints(settings, onscreen, bitmapRequested,
                 pbufferRequested, fboRequested));
+        _monitorDevices = new ArrayList<MonitorDevice>();
+        // uses the primary monitor by default
+        _newtWindow.getScreen().createNative();
+        final MonitorDevice primaryMonitor = _newtWindow.getScreen().getPrimaryMonitor();
+        _monitorDevices.add(primaryMonitor);
         // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
         _newtWindow.setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
                 ScalableSurface.IDENTITY_PIXELSCALE });
         _drawerGLRunnable = new JoglDrawerRunnable(canvasRenderer);
-        _settings = settings;
+        if (settings.isFullScreen() && settings.getWidth() == 0 || settings.getHeight() == 0) {
+            // FIXME use all available monitor devices to compute the size
+            final DimensionImmutable currentResolution = primaryMonitor.queryCurrentMode().getSurfaceSize()
+                    .getResolution();
+            _settings = new DisplaySettings(currentResolution.getWidth(), currentResolution.getHeight(),
+                    settings.getColorDepth(), settings.getFrequency(), settings.getAlphaBits(),
+                    settings.getDepthBits(), settings.getStencilBits(), settings.getSamples(), true,
+                    settings.isStereo(), settings.getShareContext(), settings.getRotation());
+        } else {
+            _settings = settings;
+        }
         _canvasRenderer = canvasRenderer;
         _canvasRenderer._doSwap = true;// true - do swap in renderer.
         setAutoSwapBufferMode(false);// false - doesn't swap automatically in JOGL itself
@@ -77,27 +99,78 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
     /**
      * Applies all settings not related to OpenGL (screen resolution, screen size, etc...)
      * */
-    private void applySettings() {
+    protected void applySettings() {
         _newtWindow.setUndecorated(_settings.isFullScreen());
-        _newtWindow.setFullscreen(_settings.isFullScreen());
-        // FIXME Ardor3D does not allow to change the resolution
-        /**
-         * uses the filtering relying on resolution with the size to fetch only the screen mode matching with the
-         * current resolution
-         */
         if (_settings.isFullScreen()) {
-            final MonitorDevice monitor = _newtWindow.getMainMonitor();
-            List<MonitorMode> monitorModes = monitor.getSupportedModes();
-            // the resolution is provided by the user
-            final Dimension dimension = new Dimension(_settings.getWidth(), _settings.getHeight());
-            monitorModes = MonitorModeUtil.filterByResolution(monitorModes, dimension);
-            monitorModes = MonitorModeUtil.getHighestAvailableBpp(monitorModes);
-            if (_settings.getFrequency() > 0) {
-                monitorModes = MonitorModeUtil.filterByRate(monitorModes, _settings.getFrequency());
-            } else {
-                monitorModes = MonitorModeUtil.getHighestAvailableRate(monitorModes);
+            _newtWindow.setFullscreen(_monitorDevices);
+            for (final MonitorDevice monitorDevice : _monitorDevices) {
+                List<MonitorMode> monitorModes = monitorDevice.getSupportedModes();
+                final MonitorMode currentMode = monitorDevice.getCurrentMode();
+                if (monitorDevice == _monitorDevices.get(0)) {
+                    final Dimension dimension;
+                    // the resolution is taken into account only if it is valid
+                    if (_settings.getWidth() > 0 && _settings.getHeight() > 0) {
+                        dimension = new Dimension(_settings.getWidth(), _settings.getHeight());
+                    } else {
+                        final DimensionImmutable currentResolution = currentMode.getSurfaceSize().getResolution();
+                        dimension = new Dimension(currentResolution.getWidth(), currentResolution.getHeight());
+                    }
+                    monitorModes = MonitorModeUtil.filterByResolution(monitorModes, dimension);
+                } else {
+                    // FIXME the display settings should store the size of the other monitors
+                }
+                // if the frequency may be valid (greater than zero), it tries to use it
+                final List<MonitorMode> byRateMonitorModes;
+                if (_settings.getFrequency() > 0) {
+                    byRateMonitorModes = MonitorModeUtil.filterByRate(monitorModes, _settings.getFrequency());
+                } else {
+                    // if the frequency is set to zero, it tries to preserve the refresh rate
+                    if (_settings.getFrequency() == 0) {
+                        byRateMonitorModes = MonitorModeUtil.filterByRate(monitorModes, currentMode.getRefreshRate());
+                    } else {
+                        // otherwise it picks the highest available rate
+                        byRateMonitorModes = MonitorModeUtil.getHighestAvailableRate(monitorModes);
+                    }
+                }
+                if (!byRateMonitorModes.isEmpty()) {
+                    monitorModes = byRateMonitorModes;
+                }
+                final List<MonitorMode> byBppMonitorModes;
+                switch (_settings.getColorDepth()) {
+                    case 16:
+                    case 24:
+                    case 32: {
+                        byBppMonitorModes = MonitorModeUtil.filterByBpp(monitorModes, _settings.getColorDepth());
+                        break;
+                    }
+                    case 0: {
+                        byBppMonitorModes = MonitorModeUtil.filterByBpp(monitorModes, currentMode.getSurfaceSize()
+                                .getBitsPerPixel());
+                        break;
+                    }
+                    case -1: {
+                        byBppMonitorModes = MonitorModeUtil.getHighestAvailableBpp(monitorModes);
+                        break;
+                    }
+                    default: {
+                        byBppMonitorModes = monitorModes;
+                    }
+                }
+                if (!byBppMonitorModes.isEmpty()) {
+                    monitorModes = byBppMonitorModes;
+                }
+                if (_settings.getRotation() == 0 || _settings.getRotation() == 90 || _settings.getRotation() == 180
+                        || _settings.getRotation() == 270) {
+                    final List<MonitorMode> rotatedMonitorModes = MonitorModeUtil.filterByRotation(monitorModes,
+                            _settings.getRotation());
+                    if (!rotatedMonitorModes.isEmpty()) {
+                        monitorModes = rotatedMonitorModes;
+                    }
+                }
+                monitorDevice.setCurrentMode(monitorModes.get(0));
             }
-            monitor.setCurrentMode(monitorModes.get(0));
+        } else {
+            _newtWindow.setFullscreen(false);
         }
     }
 
@@ -227,7 +300,13 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
         }
 
         // Set the size very early to prevent the default one from being used (typically when exiting full screen mode)
-        setSize(_settings.getWidth(), _settings.getHeight());
+        if (_settings.getWidth() == 0 || _settings.getHeight() == 0) {
+            final DimensionImmutable currentResolution = _monitorDevices.get(0).queryCurrentMode().getSurfaceSize()
+                    .getResolution();
+            setSize(currentResolution.getWidth(), currentResolution.getHeight());
+        } else {
+            setSize(_settings.getWidth(), _settings.getHeight());
+        }
         // Make the window visible to realize the OpenGL surface.
         setVisible(true);
         if (_newtWindow.isRealized()) {
@@ -329,6 +408,64 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
     @Override
     public void moveWindowTo(final int locX, final int locY) {
         _newtWindow.setTopLevelPosition(locX, locY);
+    }
+
+    public boolean isResizable() {
+        return _newtWindow.isResizable();
+    }
+
+    public void setResizable(final boolean resizable) {
+        _newtWindow.setResizable(resizable);
+    }
+
+    public boolean isDecorated() {
+        return !_newtWindow.isUndecorated();
+    }
+
+    public void setDecorated(final boolean decorated) {
+        _newtWindow.setUndecorated(!decorated);
+    }
+
+    public boolean isSticky() {
+        return _newtWindow.isSticky();
+    }
+
+    public void setSticky(final boolean sticky) {
+        _newtWindow.setSticky(sticky);
+    }
+
+    public boolean isAlwaysOnTop() {
+        return _newtWindow.isAlwaysOnTop();
+    }
+
+    public void setAlwaysOnTop(final boolean alwaysOnTop) {
+        _newtWindow.setAlwaysOnTop(alwaysOnTop);
+    }
+
+    public boolean isAlwaysOnBottom() {
+        return _newtWindow.isAlwaysOnBottom();
+    }
+
+    public void setAlwaysOnBottom(final boolean alwaysOnBottom) {
+        _newtWindow.setAlwaysOnBottom(alwaysOnBottom);
+    }
+
+    /**
+     * Returns a list of monitor devices used in fullscreen mode, ignored in windowed mode
+     *
+     * @return list of monitor devices used in fullscreen mode, ignored in windowed mode
+     */
+    public List<MonitorDevice> getMonitorDevices() {
+        return Collections.unmodifiableList(_monitorDevices);
+    }
+
+    public void setMonitorDevices(final List<MonitorDevice> monitorDevices) {
+        if (_monitorDevices == null || _monitorDevices.isEmpty()) {
+            throw new IllegalArgumentException("The list of monitor devices cannot be null or empty");
+        }
+
+        _monitorDevices = monitorDevices;
+        // FIXME recompute the width and the height of the settings, apply the settings anew
     }
 
     @Override

@@ -41,6 +41,29 @@ public class CapsUtil {
         return getCapsForSettings(settings, true, false, false, false);
     }
 
+    /**
+     * for internal use only, tolerates artificial display settings containing hints
+     *
+     * @param settings
+     * @param onscreen
+     * @param bitmapRequested
+     * @param pbufferRequested
+     * @param fboRequested
+     * @return
+     */
+    GLCapabilities getCapsForSettingsWithHints(final DisplaySettings settings, final boolean onscreen,
+            final boolean bitmapRequested, final boolean pbufferRequested, final boolean fboRequested) {
+        final DisplaySettings realSettings;
+        if (settings.isFullScreen() && (settings.getWidth() == 0 || settings.getHeight() == 0)) {
+            realSettings = new DisplaySettings(1, 1, settings.getColorDepth(), settings.getFrequency(),
+                    settings.getAlphaBits(), settings.getDepthBits(), settings.getStencilBits(), settings.getSamples(),
+                    true, settings.isStereo(), settings.getShareContext(), settings.getRotation());
+        } else {
+            realSettings = settings;
+        }
+        return getCapsForSettings(realSettings, onscreen, bitmapRequested, pbufferRequested, fboRequested);
+    }
+
     public GLCapabilities getCapsForSettings(final DisplaySettings settings, final boolean onscreen,
             final boolean bitmapRequested, final boolean pbufferRequested, final boolean fboRequested) {
 
@@ -51,7 +74,7 @@ public class CapsUtil {
 
         // Validate bit depth.
         if ((settings.getColorDepth() != 32) && (settings.getColorDepth() != 16) && (settings.getColorDepth() != 24)
-                && (settings.getColorDepth() != -1)) {
+                && (settings.getColorDepth() != 0) && (settings.getColorDepth() != -1)) {
             throw new Ardor3dException("Invalid pixel depth: " + settings.getColorDepth());
         }
 

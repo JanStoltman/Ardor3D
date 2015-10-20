@@ -22,11 +22,64 @@ public class DisplaySettings {
     private final boolean _fullScreen;
     private final boolean _stereo;
     private final CanvasRenderer _shareContext;
+    private final int _rotation;
 
     /**
-     * Convenience method equivalent to <code>DisplaySettings(width, height, 0, 0, 0, 8, 0, 0, 
-     * false, false, null)</code>
-     * 
+     * Creates a new <code>DisplaySettings</code> object.
+     *
+     * @param width
+     *            the canvas width
+     * @param height
+     *            the canvas height
+     * @param colorDepth
+     *            the number of color bits used to represent the color of a single pixel
+     * @param frequency
+     *            the number of times per second to repaint the canvas
+     * @param alphaBits
+     *            the numner of bits used to represent the translucency of a single pixel
+     * @param depthBits
+     *            the number of bits making up the z-buffer
+     * @param stencilBits
+     *            the number of bits making up the stencil buffer
+     * @param samples
+     *            the number of samples used to anti-alias
+     * @param fullScreen
+     *            true if the canvas should assume exclusive access to the screen
+     * @param stereo
+     *            true if the canvas should be rendered stereoscopically (for 3D glasses)
+     * @param shareContext
+     *            the renderer used to render the canvas (see "ardor3d.useMultipleContexts" property)
+     * @param rotation
+     *            the rotation of the first monitor
+     * @see http://en.wikipedia.org/wiki/Z-buffering
+     * @see http://en.wikipedia.org/wiki/Multisample_anti-aliasing
+     * @see http://en.wikipedia.org/wiki/Refresh_rate
+     * @see http://en.wikipedia.org/wiki/Alpha_compositing
+     * @see http://en.wikipedia.org/wiki/Stencil_buffer
+     * @see http://en.wikipedia.org/wiki/Stereoscopy
+     * @see http://www.ardor3d.com/forums/viewtopic.php?f=13&t=318&p=2311&hilit=ardor3d.useMultipleContexts#p2311
+     */
+    public DisplaySettings(final int width, final int height, final int colorDepth, final int frequency,
+            final int alphaBits, final int depthBits, final int stencilBits, final int samples,
+            final boolean fullScreen, final boolean stereo, final CanvasRenderer shareContext, final int rotation) {
+        super();
+        _width = width;
+        _height = height;
+        _colorDepth = colorDepth;
+        _frequency = frequency;
+        _alphaBits = alphaBits;
+        _depthBits = depthBits;
+        _stencilBits = stencilBits;
+        _samples = samples;
+        _fullScreen = fullScreen;
+        _stereo = stereo;
+        _shareContext = shareContext;
+        _rotation = rotation;
+    }
+
+    /**
+     * Convenience method
+     *
      * @param width
      *            the canvas width
      * @param height
@@ -39,23 +92,12 @@ public class DisplaySettings {
      * @see http://en.wikipedia.org/wiki/Multisample_anti-aliasing
      */
     public DisplaySettings(final int width, final int height, final int depthBits, final int samples) {
-        _width = width;
-        _height = height;
-        _colorDepth = 0;
-        _frequency = 0;
-        _alphaBits = 0;
-        _depthBits = depthBits;
-        _stencilBits = 0;
-        _samples = samples;
-        _fullScreen = false;
-        _stereo = false;
-        _shareContext = null;
+        this(width, height, 0, 0, 0, depthBits, 0, samples, false, false, null, 0);
     }
 
     /**
-     * Convenience method equivalent to <code>DisplaySettings(width, height, colorDepth, frequency, 
-     * 0, 8, 0, 0, fullScreen, false, null)</code>
-     * 
+     * Convenience method
+     *
      * @param width
      *            the canvas width
      * @param height
@@ -70,23 +112,13 @@ public class DisplaySettings {
      */
     public DisplaySettings(final int width, final int height, final int colorDepth, final int frequency,
             final boolean fullScreen) {
-        _width = width;
-        _height = height;
-        _colorDepth = colorDepth;
-        _frequency = frequency;
-        _alphaBits = 0;
-        _depthBits = 8;
-        _stencilBits = 0;
-        _samples = 0;
-        _fullScreen = fullScreen;
-        _stereo = false;
-        _shareContext = null;
+        this(width, height, colorDepth, frequency, 0, 8, 0, 0, fullScreen, false, null, 0);
     }
 
     /**
-     * Convenience method equivalent to <code>DisplaySettings(width, height, colorDepth, frequency, 
-     * alphaBits, depthBits, stencilBits, samples, fullScreen, stereo, null)</code>
-     * 
+     * Convenience method equivalent to <code>DisplaySettings(width, height, colorDepth, frequency,
+     * alphaBits, depthBits, stencilBits, samples, fullScreen, stereo, null, 0)</code>
+     *
      * @param width
      *            the canvas width
      * @param height
@@ -115,22 +147,13 @@ public class DisplaySettings {
     public DisplaySettings(final int width, final int height, final int colorDepth, final int frequency,
             final int alphaBits, final int depthBits, final int stencilBits, final int samples,
             final boolean fullScreen, final boolean stereo) {
-        _width = width;
-        _height = height;
-        _colorDepth = colorDepth;
-        _frequency = frequency;
-        _alphaBits = alphaBits;
-        _depthBits = depthBits;
-        _stencilBits = stencilBits;
-        _samples = samples;
-        _fullScreen = fullScreen;
-        _stereo = stereo;
-        _shareContext = null;
+        this(width, height, colorDepth, frequency, alphaBits, depthBits, stencilBits, samples, fullScreen, stereo,
+                null, 0);
     }
 
     /**
-     * Creates a new <code>DisplaySettings</code> object.
-     * 
+     * Creates a new <code>DisplaySettings</code> object with no rotation.
+     *
      * @param width
      *            the canvas width
      * @param height
@@ -164,17 +187,8 @@ public class DisplaySettings {
     public DisplaySettings(final int width, final int height, final int colorDepth, final int frequency,
             final int alphaBits, final int depthBits, final int stencilBits, final int samples,
             final boolean fullScreen, final boolean stereo, final CanvasRenderer shareContext) {
-        _width = width;
-        _height = height;
-        _colorDepth = colorDepth;
-        _frequency = frequency;
-        _alphaBits = alphaBits;
-        _depthBits = depthBits;
-        _stencilBits = stencilBits;
-        _samples = samples;
-        _fullScreen = fullScreen;
-        _stereo = stereo;
-        _shareContext = shareContext;
+        this(width, height, colorDepth, frequency, alphaBits, depthBits, stencilBits, samples, fullScreen, stereo,
+                shareContext, 0);
     }
 
     public CanvasRenderer getShareContext() {
@@ -221,6 +235,10 @@ public class DisplaySettings {
         return _stereo;
     }
 
+    public int getRotation() {
+        return _rotation;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -243,7 +261,7 @@ public class DisplaySettings {
                 && _samples != that._samples
                 && _stereo != that._stereo
                 && ((_shareContext == that._shareContext) || (_shareContext != null && _shareContext
-                        .equals(that._shareContext)));
+                .equals(that._shareContext)));
     }
 
     @Override
