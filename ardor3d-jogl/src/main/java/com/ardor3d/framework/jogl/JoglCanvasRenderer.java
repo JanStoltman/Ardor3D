@@ -12,12 +12,6 @@ package com.ardor3d.framework.jogl;
 
 import java.util.logging.Logger;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLDrawableFactory;
-import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.GLPipelineFactory;
-
 import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.CanvasRenderer;
 import com.ardor3d.framework.DisplaySettings;
@@ -35,6 +29,11 @@ import com.ardor3d.renderer.jogl.JoglRenderContext;
 import com.ardor3d.renderer.jogl.JoglRenderer;
 import com.ardor3d.util.Ardor3dException;
 import com.ardor3d.util.geom.jogl.DirectNioBuffersSet;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLDrawableFactory;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.GLPipelineFactory;
 
 public class JoglCanvasRenderer implements CanvasRenderer {
 
@@ -203,6 +202,7 @@ public class JoglCanvasRenderer implements CanvasRenderer {
             _renderer.setBackgroundColor(ColorRGBA.BLACK);
 
             if (_camera == null) {
+                // TODO take into account the rotation
                 /** Set up how our camera sees. */
                 _camera = new Camera(settings.getWidth(), settings.getHeight());
                 _camera.setFrustumPerspective(45.0f, (float) settings.getWidth() / (float) settings.getHeight(), 1,

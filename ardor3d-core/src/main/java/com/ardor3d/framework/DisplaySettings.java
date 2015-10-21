@@ -11,26 +11,34 @@
 package com.ardor3d.framework;
 
 public class DisplaySettings {
+    /** canvas (unrotated) width */
     private final int _width;
+    /** canvas (unrotated) height */
     private final int _height;
+    /** number of color bits used to represent the color of a single pixel */
     private final int _colorDepth;
     private final int _frequency;
     private final int _alphaBits;
     private final int _depthBits;
     private final int _stencilBits;
+    /** number of samples used to anti-alias */
     private final int _samples;
+    /** true if the canvas should assume exclusive access to the screen */
     private final boolean _fullScreen;
+    /** true if the canvas should be rendered stereoscopically (for 3D glasses) */
     private final boolean _stereo;
+    /** OpenGL shared canvas renderer, can be null */
     private final CanvasRenderer _shareContext;
+    /** rotation in degrees, can be equal to 0, 90, 180 or 270 */
     private final int _rotation;
 
     /**
      * Creates a new <code>DisplaySettings</code> object.
      *
      * @param width
-     *            the canvas width
+     *            the canvas (unrotated) width
      * @param height
-     *            the canvas height
+     *            the canvas (unrotated) height
      * @param colorDepth
      *            the number of color bits used to represent the color of a single pixel
      * @param frequency
@@ -81,9 +89,9 @@ public class DisplaySettings {
      * Convenience method
      *
      * @param width
-     *            the canvas width
+     *            the canvas (unrotated) width
      * @param height
-     *            the canvas height
+     *            the canvas (unrotated) height
      * @param depthBits
      *            the number of bits making up the z-buffer
      * @param samples
@@ -99,9 +107,9 @@ public class DisplaySettings {
      * Convenience method
      *
      * @param width
-     *            the canvas width
+     *            the canvas (unrotated) width
      * @param height
-     *            the canvas height
+     *            the canvas (unrotated) height
      * @param colorDepth
      *            the number of color bits used to represent the color of a single pixel
      * @param frequency
@@ -120,9 +128,9 @@ public class DisplaySettings {
      * alphaBits, depthBits, stencilBits, samples, fullScreen, stereo, null, 0)</code>
      *
      * @param width
-     *            the canvas width
+     *            the canvas (unrotated) width
      * @param height
-     *            the canvas height
+     *            the canvas (unrotated) height
      * @param colorDepth
      *            the number of color bits used to represent the color of a single pixel
      * @param frequency
@@ -155,9 +163,9 @@ public class DisplaySettings {
      * Creates a new <code>DisplaySettings</code> object with no rotation.
      *
      * @param width
-     *            the canvas width
+     *            the canvas (unrotated) width
      * @param height
-     *            the canvas height
+     *            the canvas (unrotated) height
      * @param colorDepth
      *            the number of color bits used to represent the color of a single pixel
      * @param frequency
@@ -252,16 +260,16 @@ public class DisplaySettings {
 
         return _colorDepth == that._colorDepth
                 && _frequency == that._frequency
-                && _fullScreen != that._fullScreen
-                && _height != that._height
-                && _width != that._width
-                && _alphaBits != that._alphaBits
-                && _depthBits != that._depthBits
-                && _stencilBits != that._stencilBits
-                && _samples != that._samples
-                && _stereo != that._stereo
+                && _fullScreen == that._fullScreen
+                && _height == that._height
+                && _width == that._width
+                && _alphaBits == that._alphaBits
+                && _depthBits == that._depthBits
+                && _stencilBits == that._stencilBits
+                && _samples == that._samples
+                && _stereo == that._stereo
                 && ((_shareContext == that._shareContext) || (_shareContext != null && _shareContext
-                .equals(that._shareContext)));
+                        .equals(that._shareContext))) && _rotation == that._rotation;
     }
 
     @Override
@@ -278,7 +286,8 @@ public class DisplaySettings {
         result = 31 * result + _samples;
         result = 31 * result + (_fullScreen ? 1 : 0);
         result = 31 * result + (_stereo ? 1 : 0);
-        result = 31 * result + (_shareContext != null ? _shareContext.hashCode() : 0);
+        result = 31 * result + (_shareContext == null ? 0 : _shareContext.hashCode());
+        result = 31 * result + _rotation;
         return result;
     }
 }

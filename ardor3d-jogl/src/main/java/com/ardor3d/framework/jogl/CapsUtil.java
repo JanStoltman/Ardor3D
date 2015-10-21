@@ -10,9 +10,12 @@
 
 package com.ardor3d.framework.jogl;
 
+import com.ardor3d.framework.CanvasRenderer;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.util.Ardor3dException;
+import com.jogamp.newt.MonitorMode;
 import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLCapabilitiesImmutable;
 import com.jogamp.opengl.GLProfile;
 
 public class CapsUtil {
@@ -78,6 +81,12 @@ public class CapsUtil {
             throw new Ardor3dException("Invalid pixel depth: " + settings.getColorDepth());
         }
 
+        // Validate rotation
+        if (settings.getRotation() != MonitorMode.ROTATE_0 && settings.getRotation() != MonitorMode.ROTATE_90
+                && settings.getRotation() != MonitorMode.ROTATE_180 && settings.getRotation() != MonitorMode.ROTATE_270) {
+            throw new Ardor3dException("Invalid rotation: " + settings.getRotation());
+        }
+
         final GLCapabilities caps = new GLCapabilities(getProfile());
         caps.setHardwareAccelerated(true);
         caps.setDoubleBuffered(true);
@@ -109,4 +118,12 @@ public class CapsUtil {
         return caps;
     }
 
+    public DisplaySettings getSettingsForCaps(final GLCapabilitiesImmutable glCaps, final int width, final int height,
+            final int frequency, final boolean fullscreen, final CanvasRenderer shareContext, final int rotation) {
+        final int colorDepth = glCaps.getRedBits() + glCaps.getGreenBits() + glCaps.getBlueBits();
+        final DisplaySettings settings = new DisplaySettings(width, height, colorDepth, frequency,
+                glCaps.getAlphaBits(), glCaps.getDepthBits(), glCaps.getStencilBits(), glCaps.getNumSamples(),
+                fullscreen, glCaps.getStereo(), shareContext, rotation);
+        return settings;
+    }
 }

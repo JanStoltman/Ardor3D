@@ -32,6 +32,7 @@ import com.jogamp.newt.event.WindowListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.util.MonitorModeUtil;
 import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilitiesImmutable;
 import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLRunnable;
 
@@ -45,8 +46,8 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
     private final JoglCanvasRenderer _canvasRenderer;
     private boolean _inited = false;
     private boolean _isClosing = false;
-
-    private final DisplaySettings _settings;
+    /** chosen display settings. Note that they may differ from the requested display settings */
+    private DisplaySettings _settings;
 
     private final JoglDrawerRunnable _drawerGLRunnable;
 
@@ -54,6 +55,8 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
 
     /** list of monitor devices used in fullscreen mode, ignored in windowed mode */
     private List<MonitorDevice> _monitorDevices;
+
+    private final CapsUtil _capsUtil;
 
     public JoglNewtWindow(final JoglCanvasRenderer canvasRenderer, final DisplaySettings settings) {
         this(canvasRenderer, settings, true, false, false, false);
@@ -68,6 +71,7 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
     public JoglNewtWindow(final JoglCanvasRenderer canvasRenderer, final DisplaySettings settings,
             final boolean onscreen, final boolean bitmapRequested, final boolean pbufferRequested,
             final boolean fboRequested, final CapsUtil capsUtil) {
+        _capsUtil = capsUtil;
         // FIXME rather pass the monitor(s) to the constructor, create a screen to get the primary monitor
         _newtWindow = GLWindow.create(capsUtil.getCapsForSettingsWithHints(settings, onscreen, bitmapRequested,
                 pbufferRequested, fboRequested));
@@ -80,17 +84,20 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
         _newtWindow.setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
                 ScalableSurface.IDENTITY_PIXELSCALE });
         _drawerGLRunnable = new JoglDrawerRunnable(canvasRenderer);
+        final int width, height;
         if (settings.isFullScreen() && settings.getWidth() == 0 || settings.getHeight() == 0) {
             // FIXME use all available monitor devices to compute the size
             final DimensionImmutable currentResolution = primaryMonitor.queryCurrentMode().getSurfaceSize()
                     .getResolution();
-            _settings = new DisplaySettings(currentResolution.getWidth(), currentResolution.getHeight(),
-                    settings.getColorDepth(), settings.getFrequency(), settings.getAlphaBits(),
-                    settings.getDepthBits(), settings.getStencilBits(), settings.getSamples(), true,
-                    settings.isStereo(), settings.getShareContext(), settings.getRotation());
+            width = currentResolution.getWidth();
+            height = currentResolution.getHeight();
         } else {
-            _settings = settings;
+            width = settings.getWidth();
+            height = settings.getHeight();
         }
+        _settings = new DisplaySettings(width, height, settings.getColorDepth(), settings.getFrequency(),
+                settings.getAlphaBits(), settings.getDepthBits(), settings.getStencilBits(), settings.getSamples(),
+                settings.isFullScreen(), settings.isStereo(), settings.getShareContext(), settings.getRotation());
         _canvasRenderer = canvasRenderer;
         _canvasRenderer._doSwap = true;// true - do swap in renderer.
         setAutoSwapBufferMode(false);// false - doesn't swap automatically in JOGL itself
@@ -159,8 +166,9 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
                 if (!byBppMonitorModes.isEmpty()) {
                     monitorModes = byBppMonitorModes;
                 }
-                if (_settings.getRotation() == 0 || _settings.getRotation() == 90 || _settings.getRotation() == 180
-                        || _settings.getRotation() == 270) {
+                if (_settings.getRotation() == MonitorMode.ROTATE_0 || _settings.getRotation() == MonitorMode.ROTATE_90
+                        || _settings.getRotation() == MonitorMode.ROTATE_180
+                        || _settings.getRotation() == MonitorMode.ROTATE_270) {
                     final List<MonitorMode> rotatedMonitorModes = MonitorModeUtil.filterByRotation(monitorModes,
                             _settings.getRotation());
                     if (!rotatedMonitorModes.isEmpty()) {
@@ -300,16 +308,14 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
         }
 
         // Set the size very early to prevent the default one from being used (typically when exiting full screen mode)
-        if (_settings.getWidth() == 0 || _settings.getHeight() == 0) {
-            final DimensionImmutable currentResolution = _monitorDevices.get(0).queryCurrentMode().getSurfaceSize()
-                    .getResolution();
-            setSize(currentResolution.getWidth(), currentResolution.getHeight());
-        } else {
-            setSize(_settings.getWidth(), _settings.getHeight());
-        }
+        setSize(_settings.getWidth(), _settings.getHeight());
         // Make the window visible to realize the OpenGL surface.
         setVisible(true);
         if (_newtWindow.isRealized()) {
+            final GLCapabilitiesImmutable glCaps = _newtWindow.getChosenGLCapabilities();
+            _settings = _capsUtil.getSettingsForCaps(glCaps, _settings.getWidth(), _settings.getHeight(),
+                    _settings.getFrequency(), _settings.isFullScreen(), _settings.getShareContext(),
+                    _settings.getRotation());
             _newtWindow.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowDestroyNotify(final WindowEvent e) {
@@ -467,6 +473,8 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
         _monitorDevices = monitorDevices;
         // FIXME recompute the width and the height of the settings, apply the settings anew
     }
+
+    // TODO return all available monitor modes
 
     @Override
     public GLWindow getNewtWindow() {
