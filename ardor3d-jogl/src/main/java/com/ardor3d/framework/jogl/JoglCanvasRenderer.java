@@ -202,11 +202,10 @@ public class JoglCanvasRenderer implements CanvasRenderer {
             _renderer.setBackgroundColor(ColorRGBA.BLACK);
 
             if (_camera == null) {
-                // TODO take into account the rotation
                 /** Set up how our camera sees. */
-                _camera = new Camera(settings.getWidth(), settings.getHeight());
-                _camera.setFrustumPerspective(45.0f, (float) settings.getWidth() / (float) settings.getHeight(), 1,
-                        1000);
+                _camera = new Camera(settings.getRotatedWidth(), settings.getRotatedHeight());
+                _camera.setFrustumPerspective(45.0f,
+                        (float) settings.getRotatedWidth() / (float) settings.getRotatedHeight(), 1, 1000);
                 _camera.setProjectionMode(ProjectionMode.Perspective);
 
                 final Vector3 loc = new Vector3(0.0f, 0.0f, 10.0f);
@@ -218,8 +217,8 @@ public class JoglCanvasRenderer implements CanvasRenderer {
             } else {
                 // use new width and height to set ratio.
                 _camera.setFrustumPerspective(_camera.getFovY(),
-                        (float) settings.getWidth() / (float) settings.getHeight(), _camera.getFrustumNear(),
-                        _camera.getFrustumFar());
+                        (float) settings.getRotatedWidth() / (float) settings.getRotatedHeight(),
+                        _camera.getFrustumNear(), _camera.getFrustumFar());
             }
         } finally {
             releaseCurrentContext();

@@ -247,6 +247,34 @@ public class DisplaySettings {
         return _rotation;
     }
 
+    public int getRotatedWidth() {
+        switch (_rotation) {
+            case 0:
+            case 180: {
+                return getWidth();
+            }
+            case 90:
+            case 270:
+            default: {
+                return getHeight();
+            }
+        }
+    }
+
+    public int getRotatedHeight() {
+        switch (_rotation) {
+            case 0:
+            case 180: {
+                return getHeight();
+            }
+            case 90:
+            case 270:
+            default: {
+                return getWidth();
+            }
+        }
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
