@@ -276,6 +276,7 @@ public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelL
                 break;
             case MouseEvent.BUTTON3:
                 button = MouseButton.RIGHT;
+                break;
             case 4:
                 button = MouseButton.FOUR;
                 break;
