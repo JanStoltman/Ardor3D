@@ -254,10 +254,12 @@ public class DisplaySettings {
                 return getWidth();
             }
             case 90:
-            case 270:
-            default: {
+            case 270: {
                 return getHeight();
             }
+            default:
+                throw new IllegalStateException("The rotation is invalid: " + _rotation
+                        + " There is no valid rotated width");
         }
     }
 
@@ -268,10 +270,12 @@ public class DisplaySettings {
                 return getHeight();
             }
             case 90:
-            case 270:
-            default: {
+            case 270: {
                 return getWidth();
             }
+            default:
+                throw new IllegalStateException("The rotation is invalid: " + _rotation
+                        + " There is no valid rotated height");
         }
     }
 
