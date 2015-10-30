@@ -20,6 +20,12 @@ import com.jogamp.opengl.GLProfile;
 
 public class CapsUtil {
 
+    static {
+        // The GLSL mode of GLJPanel used in JoglSwingCanvas seems to cause a lot of troubles when using our own GLSL
+        // shaders and with the wireframe state. Therefore, it is disabled as early as possible
+        System.setProperty("jogl.gljpanel.noglsl", "true");
+    }
+
     public GLProfile getProfile() {
         // tries to get the most capable profile, programmable or fixed, desktop or embedded, forward or backward
         // compatible

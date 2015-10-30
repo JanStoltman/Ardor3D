@@ -31,12 +31,9 @@ import com.jogamp.opengl.awt.GLJPanel;
  * the AWT input system directly and its abstraction in Ardor3D (com.ardor3d.input.awt). As this canvas is generally
  * slower and heavier (in term of memory footprint) than JoglAwtCanvas, use it if and only if you have some problems
  * when mixing heavyweight and lightweight components.
- *
- * N.B: This canvas uses GLSL internally when it is available and supported, setting the property jogl.gljpanel.noglsl
- * to true is recommended to avoid any conflicts with the effects based on GLSL including the bloom effect.
  */
 public class JoglSwingCanvas extends GLJPanel implements Canvas {
-
+	
     private static final long serialVersionUID = 1L;
 
     private final JoglCanvasRenderer _canvasRenderer;
