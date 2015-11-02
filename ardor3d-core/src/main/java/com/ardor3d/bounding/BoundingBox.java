@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -65,15 +65,41 @@ public class BoundingBox extends BoundingVolume {
     }
 
     @Override
-    public boolean equals(final Object other) {
-        if (other == this) {
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(_xExtent);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_yExtent);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_zExtent);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(other instanceof BoundingBox)) {
+        if (!super.equals(obj)) {
             return false;
         }
-        final BoundingBox b = (BoundingBox) other;
-        return _center.equals(b._center) && _xExtent == b._xExtent && _yExtent == b._yExtent && _zExtent == b._zExtent;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BoundingBox other = (BoundingBox) obj;
+        if (Double.doubleToLongBits(_xExtent) != Double.doubleToLongBits(other._xExtent)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(_yExtent) != Double.doubleToLongBits(other._yExtent)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(_zExtent) != Double.doubleToLongBits(other._zExtent)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -217,7 +243,7 @@ public class BoundingBox extends BoundingVolume {
     /**
      * <code>computeFromPoints</code> creates a new Bounding Box from a given set of points. It uses the
      * <code>containAABB</code> method as default.
-     * 
+     *
      * @param points
      *            the points to contain.
      */
@@ -282,7 +308,7 @@ public class BoundingBox extends BoundingVolume {
     /**
      * <code>containAABB</code> creates a minimum-volume axis-aligned bounding box of the points, then selects the
      * smallest enclosing sphere of the box with the sphere centered at the boxes center.
-     * 
+     *
      * @param points
      *            the list of points.
      */
@@ -333,7 +359,7 @@ public class BoundingBox extends BoundingVolume {
     /**
      * <code>whichSide</code> takes a plane (typically provided by a view frustum) to determine which side this bound is
      * on.
-     * 
+     *
      * @param plane
      *            the plane to check against.
      */
@@ -357,7 +383,7 @@ public class BoundingBox extends BoundingVolume {
     /**
      * <code>merge</code> combines this sphere with a second bounding sphere. This new sphere contains both bounding
      * spheres and is returned.
-     * 
+     *
      * @param volume
      *            the sphere to combine with this sphere.
      * @return the new sphere
@@ -395,7 +421,7 @@ public class BoundingBox extends BoundingVolume {
     /**
      * <code>mergeLocal</code> combines this sphere with a second bounding sphere locally. Altering this sphere to
      * contain both the original and the additional sphere volumes;
-     * 
+     *
      * @param volume
      *            the sphere to combine with this sphere.
      * @return this
@@ -455,7 +481,7 @@ public class BoundingBox extends BoundingVolume {
 
     /**
      * Merges this AABB with the given OBB.
-     * 
+     *
      * @param volume
      *            the OBB to merge this AABB with.
      * @return This AABB extended to fit the given OBB.
@@ -518,7 +544,7 @@ public class BoundingBox extends BoundingVolume {
 
     /**
      * <code>merge</code> combines this bounding box with another box which is defined by the center, x, y, z extents.
-     * 
+     *
      * @param boxCenter
      *            the center of the box to merge with
      * @param boxX
@@ -580,7 +606,7 @@ public class BoundingBox extends BoundingVolume {
 
     /**
      * <code>clone</code> creates a new BoundingBox object containing the same data as this one.
-     * 
+     *
      * @param store
      *            where to store the cloned information. if null or wrong class, a new store is created.
      * @return the new BoundingBox
@@ -604,7 +630,7 @@ public class BoundingBox extends BoundingVolume {
     /**
      * <code>toString</code> returns the string representation of this object. The form is:
      * "Radius: RRR.SSSS Center: <Vector>".
-     * 
+     *
      * @return the string representation of this.
      */
     @Override
@@ -802,7 +828,7 @@ public class BoundingBox extends BoundingVolume {
 
     /**
      * Get our corners using the bounding center and extents.
-     * 
+     *
      * @param store
      *            An optional store. Must be at least length of 8. If null, one will be created for you.
      * @return array filled with our corners.
@@ -829,7 +855,7 @@ public class BoundingBox extends BoundingVolume {
 
     /**
      * <code>clip</code> determines if a line segment intersects the current test plane.
-     * 
+     *
      * @param denom
      *            the denominator of the line segment.
      * @param numer
@@ -865,7 +891,7 @@ public class BoundingBox extends BoundingVolume {
 
     /**
      * Query extent.
-     * 
+     *
      * @param store
      *            where extent gets stored - null to return a new vector
      * @return store / new vector

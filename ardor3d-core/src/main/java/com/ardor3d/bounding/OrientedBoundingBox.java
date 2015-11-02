@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -12,6 +12,7 @@ package com.ardor3d.bounding;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import com.ardor3d.intersection.IntersectionRecord;
 import com.ardor3d.math.Matrix3;
@@ -58,6 +59,68 @@ public class OrientedBoundingBox extends BoundingVolume {
         for (int x = 0; x < 8; x++) {
             _vectorStore[x] = new Vector3();
         }
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((_extent == null) ? 0 : _extent.hashCode());
+        result = prime * result + Arrays.hashCode(_vectorStore);
+        result = prime * result + ((_xAxis == null) ? 0 : _xAxis.hashCode());
+        result = prime * result + ((_yAxis == null) ? 0 : _yAxis.hashCode());
+        result = prime * result + ((_zAxis == null) ? 0 : _zAxis.hashCode());
+        result = prime * result + (correctCorners ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OrientedBoundingBox other = (OrientedBoundingBox) obj;
+        if (_extent == null) {
+            if (other._extent != null) {
+                return false;
+            }
+        } else if (!_extent.equals(other._extent)) {
+            return false;
+        }
+        if (!Arrays.equals(_vectorStore, other._vectorStore)) {
+            return false;
+        }
+        if (_xAxis == null) {
+            if (other._xAxis != null) {
+                return false;
+            }
+        } else if (!_xAxis.equals(other._xAxis)) {
+            return false;
+        }
+        if (_yAxis == null) {
+            if (other._yAxis != null) {
+                return false;
+            }
+        } else if (!_yAxis.equals(other._yAxis)) {
+            return false;
+        }
+        if (_zAxis == null) {
+            if (other._zAxis != null) {
+                return false;
+            }
+        } else if (!_zAxis.equals(other._zAxis)) {
+            return false;
+        }
+        if (correctCorners != other.correctCorners) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -120,7 +183,7 @@ public class OrientedBoundingBox extends BoundingVolume {
 
     /**
      * Calculates an AABB of the given point values for this OBB.
-     * 
+     *
      * @param points
      *            The points this OBB should contain.
      */
@@ -239,29 +302,29 @@ public class OrientedBoundingBox extends BoundingVolume {
             mergeBuf.put((float) _vectorStore[i].getZ());
         }
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         containAABB(mergeBuf);
         correctCorners = false;
         return this;
@@ -290,29 +353,29 @@ public class OrientedBoundingBox extends BoundingVolume {
             mergeBuf.put((float) _vectorStore[i].getZ());
         }
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         containAABB(mergeBuf);
         correctCorners = false;
         return this;
@@ -1305,7 +1368,7 @@ public class OrientedBoundingBox extends BoundingVolume {
 
     /**
      * <code>clip</code> determines if a line segment intersects the current test plane.
-     * 
+     *
      * @param denom
      *            the denominator of the line segment.
      * @param numer

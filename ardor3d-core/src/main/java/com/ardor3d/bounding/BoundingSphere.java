@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -55,7 +55,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * Constructor instantiates a new <code>BoundingSphere</code> object.
-     * 
+     *
      * @param r
      *            the radius of the sphere.
      * @param c
@@ -64,6 +64,34 @@ public class BoundingSphere extends BoundingVolume {
     public BoundingSphere(final double r, final ReadOnlyVector3 c) {
         _center.set(c);
         setRadius(r);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(_radius);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BoundingSphere other = (BoundingSphere) obj;
+        if (Double.doubleToLongBits(_radius) != Double.doubleToLongBits(other._radius)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -100,7 +128,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * <code>getRadius</code> returns the radius of the bounding sphere.
-     * 
+     *
      * @return the radius of the bounding sphere.
      */
     @Override
@@ -110,7 +138,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * <code>setRadius</code> sets the radius of this bounding sphere.
-     * 
+     *
      * @param radius
      *            the new radius of the bounding sphere.
      */
@@ -121,7 +149,7 @@ public class BoundingSphere extends BoundingVolume {
     /**
      * <code>computeFromPoints</code> creates a new Bounding Sphere from a given set of points. It uses the
      * <code>calcWelzl</code> method as default.
-     * 
+     *
      * @param points
      *            the points to contain.
      */
@@ -159,7 +187,7 @@ public class BoundingSphere extends BoundingVolume {
      * Calculates a minimum bounding sphere for the set of points. The algorithm was originally found at
      * http://www.flipcode.com/cgi-bin/msg.cgi?showThread=COTD-SmallestEnclosingSpheres&forum=cotd&id=-1 in C++ and
      * translated to java by Cep21
-     * 
+     *
      * @param points
      *            The points to calculate the minimum bounds from.
      */
@@ -172,7 +200,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * Used from calcWelzl. This function recurses to calculate a minimum bounding sphere a few points at a time.
-     * 
+     *
      * @param points
      *            The array of points to look through.
      * @param p
@@ -250,7 +278,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * Calculates the minimum bounding sphere of 4 points. Used in welzl's algorithm.
-     * 
+     *
      * @param O
      *            The 1st point inside the sphere.
      * @param A
@@ -283,7 +311,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * Calculates the minimum bounding sphere of 3 points. Used in welzl's algorithm.
-     * 
+     *
      * @param O
      *            The 1st point inside the sphere.
      * @param A
@@ -313,7 +341,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * Calculates the minimum bounding sphere of 2 points. Used in welzl's algorithm.
-     * 
+     *
      * @param O
      *            The 1st point inside the sphere.
      * @param A
@@ -330,7 +358,7 @@ public class BoundingSphere extends BoundingVolume {
     /**
      * <code>averagePoints</code> selects the sphere center to be the average of the points and the sphere radius to be
      * the smallest value to enclose all points.
-     * 
+     *
      * @param points
      *            the list of points to contain.
      */
@@ -360,7 +388,7 @@ public class BoundingSphere extends BoundingVolume {
     /**
      * <code>whichSide</code> takes a plane (typically provided by a view frustum) to determine which side this bound is
      * on.
-     * 
+     *
      * @param plane
      *            the plane to check against.
      * @return side
@@ -381,7 +409,7 @@ public class BoundingSphere extends BoundingVolume {
     /**
      * <code>merge</code> combines this sphere with a second bounding sphere. This new sphere contains both bounding
      * spheres and is returned.
-     * 
+     *
      * @param volume
      *            the sphere to combine with this sphere.
      * @return a new sphere
@@ -425,7 +453,7 @@ public class BoundingSphere extends BoundingVolume {
     /**
      * <code>mergeLocal</code> combines this sphere with a second bounding sphere locally. Altering this sphere to
      * contain both the original and the additional sphere volumes;
-     * 
+     *
      * @param volume
      *            the sphere to combine with this sphere.
      * @return this
@@ -464,7 +492,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * Merges this sphere with the given OBB.
-     * 
+     *
      * @param volume
      *            The OBB to merge.
      * @return This sphere, after merging.
@@ -594,7 +622,7 @@ public class BoundingSphere extends BoundingVolume {
 
     /**
      * <code>clone</code> creates a new BoundingSphere object containing the same data as this one.
-     * 
+     *
      * @param store
      *            where to store the cloned information. if null or wrong class, a new store is created.
      * @return the new BoundingSphere
