@@ -3,34 +3,44 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.util.geom;
 
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.scenegraph.FloatBufferData;
 import com.ardor3d.scenegraph.IndexBufferData;
 import com.ardor3d.scenegraph.Mesh;
+import com.ardor3d.scenegraph.MeshData;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
 
 /**
  * This tool assists in reducing geometry information.<br>
- * 
+ *
  * Note: Does not work with geometry using texcoords other than 2d coords. <br>
  * TODO: Consider adding an option for "close enough" vertex matches... ie, smaller than X distance apart.<br>
  */
 public class GeometryTool {
     private static final Logger logger = Logger.getLogger(GeometryTool.class.getName());
+
+    /**
+     * flag indicating whether the NIO buffers are allocated on the heap
+     */
+    private final boolean nioBuffersAllocationOnHeapEnabled;
 
     /**
      * Condition options for determining if one vertex is "equal" to another.
@@ -47,14 +57,19 @@ public class GeometryTool {
     }
 
     public GeometryTool() {
+        this(false);
+    }
+
+    public GeometryTool(final boolean nioBuffersAllocationOnHeapEnabled) {
         super();
+        this.nioBuffersAllocationOnHeapEnabled = nioBuffersAllocationOnHeapEnabled;
     }
 
     /**
      * Attempt to collapse duplicate vertex data in a given mesh. Vertices are considered duplicate if they occupy the
      * same place in space and match the supplied conditions. All vertices in the mesh are considered part of the same
      * vertex "group".
-     * 
+     *
      * @param mesh
      *            the mesh to reduce
      * @param conditions
@@ -70,7 +85,7 @@ public class GeometryTool {
     /**
      * Attempt to collapse duplicate vertex data in a given mesh. Vertices are consider duplicate if they occupy the
      * same place in space and match the supplied conditions. The conditions are supplied per vertex group.
-     * 
+     *
      * @param mesh
      *            the mesh to reduce
      * @param groupData
@@ -163,22 +178,32 @@ public class GeometryTool {
                 }
             }
 
-            mesh.getMeshData().setVertexBuffer(BufferUtils.createFloatBuffer(0, good, verts));
+            mesh.getMeshData().setVertexBuffer(
+                    nioBuffersAllocationOnHeapEnabled ? BufferUtils.createFloatBufferOnHeap(0, good, verts)
+                            : BufferUtils.createFloatBuffer(0, good, verts));
             if (norms != null) {
-                mesh.getMeshData().setNormalBuffer(BufferUtils.createFloatBuffer(0, good, norms));
+                mesh.getMeshData().setNormalBuffer(
+                        nioBuffersAllocationOnHeapEnabled ? BufferUtils.createFloatBufferOnHeap(0, good, norms)
+                                : BufferUtils.createFloatBuffer(0, good, norms));
             }
             if (colors != null) {
-                mesh.getMeshData().setColorBuffer(BufferUtils.createFloatBuffer(0, good, colors));
+                mesh.getMeshData().setColorBuffer(
+                        nioBuffersAllocationOnHeapEnabled ? BufferUtils.createFloatBufferOnHeap(0, good, colors)
+                                : BufferUtils.createFloatBuffer(0, good, colors));
             }
 
             for (int x = 0; x < tex.length; x++) {
                 if (tex[x] != null) {
-                    mesh.getMeshData().setTextureBuffer(BufferUtils.createFloatBuffer(0, good, tex[x]), x);
+                    mesh.getMeshData().setTextureBuffer(
+                            nioBuffersAllocationOnHeapEnabled ? BufferUtils.createFloatBufferOnHeap(0, good, tex[x])
+                                    : BufferUtils.createFloatBuffer(0, good, tex[x]), x);
                 }
             }
 
             if (mesh.getMeshData().getIndices() == null || mesh.getMeshData().getIndices().getBufferCapacity() == 0) {
-                final IndexBufferData<?> indexBuffer = BufferUtils.createIndexBufferData(oldCount, oldCount);
+                final IndexBufferData<?> indexBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
+                        .createIndexBufferDataOnHeap(oldCount, oldCount) : BufferUtils.createIndexBufferData(oldCount,
+                        oldCount);
                 mesh.getMeshData().setIndices(indexBuffer);
                 for (int i = 0; i < oldCount; i++) {
                     if (indexRemap.containsKey(i)) {
@@ -228,6 +253,119 @@ public class GeometryTool {
             if (node.getNumberOfChildren() <= 0) {
                 spatial.removeFromParent();
             }
+        }
+    }
+
+    /**
+     * Converts an indexed geometry into a non indexed geometry
+     *
+     * TODO use BufferUtils, take nioBuffersAllocationOnHeapEnabled into account
+     *
+     * @param meshData
+     *            mesh data
+     */
+    public void convertIndexedGeometryIntoNonIndexedGeometry(final MeshData meshData) {
+        final IndexBufferData<?> indices = meshData.getIndices();
+        if (indices != null) {
+            final FloatBuffer previousVertexBuffer = meshData.getVertexBuffer();
+            if (previousVertexBuffer != null) {
+                final int valuesPerVertexTuple = meshData.getVertexCoords().getValuesPerTuple();
+                final FloatBuffer nextVertexBuffer = FloatBuffer.allocate(indices.capacity() * valuesPerVertexTuple);
+                for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                    final int vertexIndex = indices.get(indexIndex);
+                    for (int coordIndex = 0; coordIndex < valuesPerVertexTuple; coordIndex++) {
+                        final float vertexCoordValue = previousVertexBuffer.get((vertexIndex * valuesPerVertexTuple)
+                                + coordIndex);
+                        nextVertexBuffer.put((indexIndex * valuesPerVertexTuple) + coordIndex, vertexCoordValue);
+                    }
+                }
+                meshData.setVertexCoords(new FloatBufferData(nextVertexBuffer, valuesPerVertexTuple));
+            }
+            final FloatBuffer previousNormalBuffer = meshData.getNormalBuffer();
+            if (previousNormalBuffer != null) {
+                final int valuesPerNormalTuple = meshData.getNormalCoords().getValuesPerTuple();
+                final FloatBuffer nextNormalBuffer = FloatBuffer.allocate(indices.capacity() * valuesPerNormalTuple);
+                for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                    final int vertexIndex = indices.get(indexIndex);
+                    for (int coordIndex = 0; coordIndex < valuesPerNormalTuple; coordIndex++) {
+                        final float normalCoordValue = previousNormalBuffer.get((vertexIndex * valuesPerNormalTuple)
+                                + coordIndex);
+                        nextNormalBuffer.put((indexIndex * valuesPerNormalTuple) + coordIndex, normalCoordValue);
+                    }
+                }
+                meshData.setNormalCoords(new FloatBufferData(nextNormalBuffer, valuesPerNormalTuple));
+            }
+            final FloatBuffer previousColorBuffer = meshData.getColorBuffer();
+            if (previousColorBuffer != null) {
+                final int valuesPerColorTuple = meshData.getColorCoords().getValuesPerTuple();
+                final FloatBuffer nextColorBuffer = FloatBuffer.allocate(indices.capacity() * valuesPerColorTuple);
+                for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                    final int vertexIndex = indices.get(indexIndex);
+                    for (int coordIndex = 0; coordIndex < valuesPerColorTuple; coordIndex++) {
+                        final float colorCoordValue = previousColorBuffer.get((vertexIndex * valuesPerColorTuple)
+                                + coordIndex);
+                        nextColorBuffer.put((indexIndex * valuesPerColorTuple) + coordIndex, colorCoordValue);
+                    }
+                }
+                meshData.setColorCoords(new FloatBufferData(nextColorBuffer, valuesPerColorTuple));
+            }
+            final FloatBuffer previousFogBuffer = meshData.getFogBuffer();
+            if (previousFogBuffer != null) {
+                final int valuesPerFogTuple = meshData.getFogCoords().getValuesPerTuple();
+                final FloatBuffer nextFogBuffer = FloatBuffer.allocate(indices.capacity() * valuesPerFogTuple);
+                for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                    final int vertexIndex = indices.get(indexIndex);
+                    for (int coordIndex = 0; coordIndex < valuesPerFogTuple; coordIndex++) {
+                        final float fogCoordValue = previousFogBuffer.get((vertexIndex * valuesPerFogTuple)
+                                + coordIndex);
+                        nextFogBuffer.put((indexIndex * valuesPerFogTuple) + coordIndex, fogCoordValue);
+                    }
+                }
+                meshData.setFogCoords(new FloatBufferData(nextFogBuffer, valuesPerFogTuple));
+            }
+            final FloatBuffer previousTangentBuffer = meshData.getTangentBuffer();
+            if (previousTangentBuffer != null) {
+                final int valuesPerTangentTuple = meshData.getTangentCoords().getValuesPerTuple();
+                final FloatBuffer nextTangentBuffer = FloatBuffer.allocate(indices.capacity() * valuesPerTangentTuple);
+                for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                    final int vertexIndex = indices.get(indexIndex);
+                    for (int coordIndex = 0; coordIndex < valuesPerTangentTuple; coordIndex++) {
+                        final float tangentCoordValue = previousTangentBuffer.get((vertexIndex * valuesPerTangentTuple)
+                                + coordIndex);
+                        nextTangentBuffer.put((indexIndex * valuesPerTangentTuple) + coordIndex, tangentCoordValue);
+                    }
+                }
+                meshData.setTangentCoords(new FloatBufferData(nextTangentBuffer, valuesPerTangentTuple));
+            }
+            final int numberOfUnits = meshData.getNumberOfUnits();
+            if (numberOfUnits > 0) {
+                final List<FloatBufferData> previousTextureCoordsList = meshData.getTextureCoords();
+                final List<FloatBufferData> nextTextureCoordsList = new ArrayList<FloatBufferData>();
+                for (int unitIndex = 0; unitIndex < numberOfUnits; unitIndex++) {
+                    final FloatBufferData previousTextureCoords = previousTextureCoordsList.get(unitIndex);
+                    if (previousTextureCoords == null) {
+                        nextTextureCoordsList.add(null);
+                    } else {
+                        final FloatBuffer previousTextureBuffer = previousTextureCoords.getBuffer();
+                        final int valuesPerTextureTuple = previousTextureCoords.getValuesPerTuple();
+                        final FloatBuffer nextTextureBuffer = FloatBuffer.allocate(indices.capacity()
+                                * valuesPerTextureTuple);
+                        for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                            final int vertexIndex = indices.get(indexIndex);
+                            for (int coordIndex = 0; coordIndex < valuesPerTextureTuple; coordIndex++) {
+                                final float textureCoordValue = previousTextureBuffer
+                                        .get((vertexIndex * valuesPerTextureTuple) + coordIndex);
+                                nextTextureBuffer.put((indexIndex * valuesPerTextureTuple) + coordIndex,
+                                        textureCoordValue);
+                            }
+                        }
+                        nextTextureCoordsList.add(new FloatBufferData(nextTextureBuffer, valuesPerTextureTuple));
+                    }
+                }
+                meshData.setTextureCoords(nextTextureCoordsList);
+            }
+            // removes the index buffer
+            meshData.setIndices(null);
         }
     }
 }
