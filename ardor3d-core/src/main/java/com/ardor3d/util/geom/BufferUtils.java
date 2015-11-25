@@ -1182,6 +1182,88 @@ public final class BufferUtils {
         return buff;
     }
 
+    /**
+     * Generate a new FloatBuffer using the given array of Vector2 objects. The FloatBuffer will be 2 * data.length long
+     * and contain the vector data as data[0].x, data[0].y, data[1].x... etc.
+     *
+     * @param offset
+     *            the starting index to read from in our data array
+     * @param length
+     *            the number of vectors to read
+     * @param data
+     *            array of Vector2 objects to place into a new FloatBuffer
+     */
+    public static FloatBuffer createFloatBufferOnHeap(final int offset, final int length, final ReadOnlyVector2... data) {
+        if (data == null) {
+            return null;
+        }
+        final FloatBuffer buff = BufferUtils.createFloatBufferOnHeap(2 * length);
+        for (int x = offset; x < length; x++) {
+            if (data[x] != null) {
+                buff.put(data[x].getXf()).put(data[x].getYf());
+            } else {
+                buff.put(0).put(0);
+            }
+        }
+        buff.flip();
+        return buff;
+    }
+
+    /**
+     * Generate a new FloatBuffer using the given array of Vector3 objects. The FloatBuffer will be 3 * data.length long
+     * and contain the vector data as data[0].x, data[0].y, data[0].z, data[1].x... etc.
+     *
+     * @param offset
+     *            the starting index to read from in our data array
+     * @param length
+     *            the number of vectors to read
+     * @param data
+     *            array of Vector3 objects to place into a new FloatBuffer
+     */
+    public static FloatBuffer createFloatBufferOnHeap(final int offset, final int length, final ReadOnlyVector3... data) {
+        if (data == null) {
+            return null;
+        }
+        final FloatBuffer buff = BufferUtils.createFloatBufferOnHeap(3 * length);
+        for (int x = offset; x < length; x++) {
+            if (data[x] != null) {
+                buff.put(data[x].getXf()).put(data[x].getYf()).put(data[x].getZf());
+            } else {
+                buff.put(0).put(0).put(0);
+            }
+        }
+        buff.flip();
+        return buff;
+    }
+
+    /**
+     * Generate a new FloatBuffer using the given array of ColorRGBA objects. The FloatBuffer will be 4 * data.length
+     * long and contain the color data as data[0].r, data[0].g, data[0].b, data[0].a, data[1].r... etc.
+     *
+     * @param offset
+     *            the starting index to read from in our data array
+     * @param length
+     *            the number of colors to read
+     * @param data
+     *            array of ColorRGBA objects to place into a new FloatBuffer
+     */
+    public static FloatBuffer createFloatBufferOnHeap(final int offset, final int length,
+            final ReadOnlyColorRGBA... data) {
+        if (data == null) {
+            return null;
+        }
+        final FloatBuffer buff = BufferUtils.createFloatBufferOnHeap(4 * length);
+        for (int x = offset; x < length; x++) {
+            if (data[x] != null) {
+                buff.put(data[x].getRed()).put(data[x].getGreen()).put(data[x].getBlue()).put(data[x].getAlpha());
+            } else {
+                buff.put(0).put(0).put(0).put(0);
+            }
+        }
+        buff.flip();
+        return buff;
+    }
+
     public static IntBuffer createIntBuffer(final IntBuffer reuseStore, final int... data) {
         if (data == null) {
             return null;
@@ -1548,6 +1630,28 @@ public final class BufferUtils {
             return createIndexBufferData(size, ShortBufferData.class);
         } else {
             return createIndexBufferData(size, IntBufferData.class);
+        }
+    }
+
+    /**
+     * Create a new IndexBufferData of the specified size. The specific implementation will be chosen based on the max
+     * value you need to store in your buffer. If that value is less than 2^8, a ByteBufferData is used. If it is less
+     * than 2^16, a ShortBufferData is used. Otherwise an IntBufferData is used.
+     *
+     * @param size
+     *            required number of values to store.
+     * @param maxValue
+     *            the largest value you will need to store in your buffer. Often this is equal to
+     *            ("size of vertex buffer" - 1).
+     * @return the new IndexBufferData
+     */
+    public static IndexBufferData<?> createIndexBufferDataOnHeap(final int size, final int maxValue) {
+        if (maxValue < 256) { // 2^8
+            return new ByteBufferData(BufferUtils.createByteBufferOnHeap(size));
+        } else if (maxValue < 65536) { // 2^16
+            return new ShortBufferData(BufferUtils.createShortBufferOnHeap(size));
+        } else {
+            return new IntBufferData(BufferUtils.createIntBufferOnHeap(size));
         }
     }
 
