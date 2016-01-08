@@ -134,6 +134,7 @@
                         <source>1.6</source>
                         <target>1.6</target>
                         <encoding>UTF-8</encoding>
+                        <debug>true</debug>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -267,6 +268,7 @@
     <!-- these properties help simplify specifying some commonly occurring variables -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jogamp.version>2.3.2</jogamp.version>
         <swt.version>3.8</swt.version>
     </properties>
