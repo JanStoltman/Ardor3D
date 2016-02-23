@@ -14,28 +14,39 @@ import com.ardor3d.framework.DisplaySettings;
 
 public class JoglSwingInitializerRunnable implements Runnable {
 
-    private final JoglSwingCanvas _joglSwingCanvas;
+	private final JoglSwingCanvas _joglSwingCanvas;
 
-    private final DisplaySettings _settings;
+	private final DisplaySettings _settings;
 
-    public JoglSwingInitializerRunnable(final JoglSwingCanvas joglSwingCanvas, final DisplaySettings settings) {
-        _joglSwingCanvas = joglSwingCanvas;
-        _settings = settings;
-    }
+	public JoglSwingInitializerRunnable(final JoglSwingCanvas joglSwingCanvas, final DisplaySettings settings) {
+		_joglSwingCanvas = joglSwingCanvas;
+		_settings = settings;
+	}
 
-    @Override
-    public void run() {
-        // Make the window visible to realize the OpenGL surface.
-        _joglSwingCanvas.setVisible(true);
-        // Force the realization
-        _joglSwingCanvas.display();
-        if (_joglSwingCanvas.getDelegatedDrawable().isRealized()) {
-            // Request the focus here as it cannot work when the window is not visible
-            _joglSwingCanvas.requestFocus();
-            // The OpenGL context has been created after the realization of the surface
-            _joglSwingCanvas.getCanvasRenderer().setContext(_joglSwingCanvas.getContext());
-            // As the canvas renderer knows the OpenGL context, it can be initialized
-            _joglSwingCanvas.getCanvasRenderer().init(_settings, true);
-        }
-    }
+	@Override
+	public void run() {
+		// Make the window visible to realize the OpenGL surface.
+		_joglSwingCanvas.setVisible(true);
+		// Force the initialization of the backend used inside the GLJPanel
+		if (_joglSwingCanvas.getDelegatedDrawable() == null) {
+			// Do it on the current thread, return only when it's done
+			_joglSwingCanvas.initializeBackend(false);
+		}
+		// Check whether the backend has been successfully initialized
+		if (_joglSwingCanvas.getDelegatedDrawable() != null) {
+			// Force the realization
+			_joglSwingCanvas.display();
+			if (_joglSwingCanvas.getDelegatedDrawable().isRealized()) {
+				// Request the focus here as it cannot work when the window is
+				// not visible
+				_joglSwingCanvas.requestFocus();
+				// The OpenGL context has been created after the realization of
+				// the surface
+				_joglSwingCanvas.getCanvasRenderer().setContext(_joglSwingCanvas.getContext());
+				// As the canvas renderer knows the OpenGL context, it can be
+				// initialized
+				_joglSwingCanvas.getCanvasRenderer().init(_settings, true);
+			}
+		}
+	}
 }
