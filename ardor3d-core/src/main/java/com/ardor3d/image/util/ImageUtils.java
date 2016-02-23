@@ -25,7 +25,8 @@ public abstract class ImageUtils {
     }
 
     public static final TextureStoreFormat getTextureStoreFormat(final TextureStoreFormat format, final Image image) {
-        if (format != TextureStoreFormat.GuessCompressedFormat && format != TextureStoreFormat.GuessNoCompressedFormat) {
+        if (format != TextureStoreFormat.GuessCompressedFormat
+                && format != TextureStoreFormat.GuessNoCompressedFormat) {
             return format;
         }
         if (image == null) {
@@ -246,23 +247,23 @@ public abstract class ImageUtils {
                 break;
             case RG:
                 argb = (0xFF << 24) | ((imgData.get(dataIndex) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (0x00);
+                        | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (0x00);
                 break;
             case RGB:
                 argb = (0xFF << 24) | ((imgData.get(dataIndex) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex + 2) & 0xFF);
+                        | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex + 2) & 0xFF);
                 break;
             case BGR:
                 argb = (0xFF << 24) | ((imgData.get(dataIndex + 2) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex) & 0xFF);
+                        | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex) & 0xFF);
                 break;
             case RGBA:
                 argb = ((imgData.get(dataIndex + 3) & 0xFF) << 24) | ((imgData.get(dataIndex) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex + 2) & 0xFF);
+                        | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex + 2) & 0xFF);
                 break;
             case BGRA:
                 argb = ((imgData.get(dataIndex + 3) & 0xFF) << 24) | ((imgData.get(dataIndex + 2) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex) & 0xFF);
+                        | ((imgData.get(dataIndex + 1) & 0xFF) << 8) | (imgData.get(dataIndex) & 0xFF);
                 break;
             default:
                 throw new UnsupportedOperationException("Image data format " + img.getDataFormat() + " not supported!");
@@ -294,23 +295,23 @@ public abstract class ImageUtils {
                 break;
             case RG:
                 rgba = ((imgData.get(dataIndex) & 0xFF) << 24) | ((imgData.get(dataIndex + 1) & 0xFF) << 16)
-                | (0x00 << 8) | (0xFF);
+                        | (0x00 << 8) | (0xFF);
                 break;
             case RGB:
                 rgba = ((imgData.get(dataIndex) & 0xFF) << 24) | ((imgData.get(dataIndex + 1) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 2) & 0xFF) << 8) | (0xFF);
+                        | ((imgData.get(dataIndex + 2) & 0xFF) << 8) | (0xFF);
                 break;
             case BGR:
                 rgba = ((imgData.get(dataIndex + 2) & 0xFF) << 24) | ((imgData.get(dataIndex + 1) & 0xFF) << 16)
-                | ((imgData.get(dataIndex) & 0xFF) << 8) | (0xFF);
+                        | ((imgData.get(dataIndex) & 0xFF) << 8) | (0xFF);
                 break;
             case RGBA:
                 rgba = ((imgData.get(dataIndex) & 0xFF) << 24) | ((imgData.get(dataIndex + 1) & 0xFF) << 16)
-                | ((imgData.get(dataIndex + 2) & 0xFF) << 8) | (imgData.get(dataIndex + 3) & 0xFF);
+                        | ((imgData.get(dataIndex + 2) & 0xFF) << 8) | (imgData.get(dataIndex + 3) & 0xFF);
                 break;
             case BGRA:
                 rgba = ((imgData.get(dataIndex + 2) & 0xFF) << 24) | ((imgData.get(dataIndex + 1) & 0xFF) << 16)
-                | ((imgData.get(dataIndex) & 0xFF) << 8) | (imgData.get(dataIndex + 3) & 0xFF);
+                        | ((imgData.get(dataIndex) & 0xFF) << 8) | (imgData.get(dataIndex + 3) & 0xFF);
                 break;
             default:
                 throw new UnsupportedOperationException("Image data format " + img.getDataFormat() + " not supported!");
