@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -63,7 +63,7 @@ public abstract class AbstractTwoStateLerpTransition extends AbstractTransitionS
 
     /**
      * Construct a new AbstractTwoStateLerpTransition.
-     * 
+     *
      * @param targetState
      *            the name of the steady state we want the Animation Layer to be in at the end of the transition.
      * @param fadeTime
@@ -105,7 +105,7 @@ public abstract class AbstractTwoStateLerpTransition extends AbstractTransitionS
     }
 
     /**
-     * @param stateA
+     * @param stateB
      *            sets the end state. Updates the state's owner to point to this transition.
      */
     public void setStateB(final AbstractFiniteState stateB) {
@@ -186,10 +186,10 @@ public abstract class AbstractTwoStateLerpTransition extends AbstractTransitionS
     @Override
     public Map<String, ? extends Object> getCurrentSourceData(final AnimationManager manager) {
         // grab our data maps from the two states
-        final Map<String, ? extends Object> sourceAData = getStateA() != null ? getStateA().getCurrentSourceData(
-                manager) : null;
-        final Map<String, ? extends Object> sourceBData = getStateB() != null ? getStateB().getCurrentSourceData(
-                manager) : null;
+        final Map<String, ? extends Object> sourceAData = getStateA() != null
+                ? getStateA().getCurrentSourceData(manager) : null;
+        final Map<String, ? extends Object> sourceBData = getStateB() != null
+                ? getStateB().getCurrentSourceData(manager) : null;
 
         // reuse previous _sourceData transforms to avoid re-creating
         // too many new transform data objects. This assumes that a

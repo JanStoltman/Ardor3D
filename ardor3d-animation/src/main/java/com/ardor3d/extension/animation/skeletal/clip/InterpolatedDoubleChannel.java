@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -31,12 +31,12 @@ public class InterpolatedDoubleChannel extends AbstractAnimationChannel {
 
     /**
      * Construct a new InterpolatedDoubleChannel.
-     * 
+     *
      * @param channelName
      *            the name of this channel.
      * @param times
      *            the time samples
-     * @param keys
+     * @param values
      *            our key samples. Entries may be null. Should have as many entries as the times array.
      */
     public InterpolatedDoubleChannel(final String channelName, final float[] times, final double[] values) {
@@ -65,7 +65,8 @@ public class InterpolatedDoubleChannel extends AbstractAnimationChannel {
     }
 
     @Override
-    public InterpolatedDoubleChannel getSubchannelBySample(final String name, final int startSample, final int endSample) {
+    public InterpolatedDoubleChannel getSubchannelBySample(final String name, final int startSample,
+            final int endSample) {
         if (startSample > endSample) {
             throw new IllegalArgumentException("startSample > endSample");
         }
@@ -86,7 +87,8 @@ public class InterpolatedDoubleChannel extends AbstractAnimationChannel {
     }
 
     @Override
-    public InterpolatedDoubleChannel getSubchannelByTime(final String name, final float startTime, final float endTime) {
+    public InterpolatedDoubleChannel getSubchannelByTime(final String name, final float startTime,
+            final float endTime) {
         if (startTime > endTime) {
             throw new IllegalArgumentException("startTime > endTime");
         }

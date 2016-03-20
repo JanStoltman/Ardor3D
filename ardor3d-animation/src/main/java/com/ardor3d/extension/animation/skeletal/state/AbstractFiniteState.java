@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -32,7 +32,7 @@ public abstract class AbstractFiniteState {
     /**
      * Reset the clip instances held by this state's blend tree (or other leaf nodes in our blend tree) to a start time
      * using the current global time from the given manager.
-     * 
+     *
      * @param manager
      *            our manager.
      */
@@ -43,7 +43,7 @@ public abstract class AbstractFiniteState {
     /**
      * Reset the clip instances held by this state's blend tree (or other leaf nodes in our blend tree) to given start
      * time.
-     * 
+     *
      * @param manager
      *            our manager.
      * @param globalStartTime
@@ -55,7 +55,7 @@ public abstract class AbstractFiniteState {
 
     /**
      * Update this state using the current global time.
-     * 
+     *
      * @param globalTime
      *            the current global time.
      * @param layer
@@ -65,13 +65,16 @@ public abstract class AbstractFiniteState {
 
     /**
      * Post update. If the state has no more clips and no end transition, this will clear this state from the layer.
-     * 
+     *
      * @param layer
      *            the layer this state belongs to.
      */
     public abstract void postUpdate(final AnimationLayer layer);
 
     /**
+     * @param manager
+     *            animation manager
+     *
      * @return the current map of source channel data for this layer.
      */
     public abstract Map<String, ? extends Object> getCurrentSourceData(AnimationManager manager);

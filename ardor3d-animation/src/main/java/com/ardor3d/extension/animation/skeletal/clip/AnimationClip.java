@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -38,6 +38,9 @@ public class AnimationClip implements Savable {
 
     /**
      * Construct a new animation clip with no channels.
+     *
+     * @param name
+     *            clip's name, should be unique
      */
     public AnimationClip(final String name) {
         _name = name;
@@ -46,7 +49,10 @@ public class AnimationClip implements Savable {
 
     /**
      * Construct a new animation clip, copying in a given list of channels.
-     * 
+     *
+     * @param name
+     *            clip's name, should be unique
+     *
      * @param channels
      *            a list of channels to shallow copy locally.
      */
@@ -65,7 +71,7 @@ public class AnimationClip implements Savable {
 
     /**
      * Update an instance of this clip.
-     * 
+     *
      * @param clockTime
      *            the current local clip time (where 0 == start of clip)
      * @param instance
@@ -82,7 +88,7 @@ public class AnimationClip implements Savable {
 
     /**
      * Add a channel to this clip.
-     * 
+     *
      * @param channel
      *            the channel to add.
      */
@@ -93,7 +99,7 @@ public class AnimationClip implements Savable {
 
     /**
      * Locate a channel in this clip using its channel name.
-     * 
+     *
      * @param channelName
      *            the name to match against.
      * @return the first channel with a name matching the given channelName, or null if no matches are found.
@@ -109,7 +115,7 @@ public class AnimationClip implements Savable {
 
     /**
      * Remove a given channel from this clip.
-     * 
+     *
      * @param channel
      *            the channel to remove.
      * @return true if this clip had the given channel and it was removed.

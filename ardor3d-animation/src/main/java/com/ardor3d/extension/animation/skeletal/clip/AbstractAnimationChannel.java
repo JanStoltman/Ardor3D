@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -27,12 +27,15 @@ public abstract class AbstractAnimationChannel implements Savable {
     /** The name of this channel. */
     protected final String _channelName;
 
-    /** Our time indices. Each index of the array should contain a value that is > the value in the previous index. */
+    /**
+     * Our time indices. Each index of the array should contain a value that is greater than the value in the previous
+     * index.
+     */
     protected final float[] _times;
 
     /**
      * Construct a new channel.
-     * 
+     *
      * @param channelName
      *            the name of our channel. This is immutable to this instance of the class.
      * @param times
@@ -63,7 +66,7 @@ public abstract class AbstractAnimationChannel implements Savable {
 
     /**
      * Update the given applyTo object with information from this channel at the given time position.
-     * 
+     *
      * @param clockTime
      *            the current local clip time (where 0 == start of clip)
      * @param applyTo
@@ -98,7 +101,7 @@ public abstract class AbstractAnimationChannel implements Savable {
     /**
      * Sets data on the given applyTo Object for the given sampleIndex and a percent progress towards the sample
      * following it.
-     * 
+     *
      * @param sampleIndex
      *            the sample to pull information from.
      * @param progressPercent
@@ -118,7 +121,7 @@ public abstract class AbstractAnimationChannel implements Savable {
     /**
      * Returns a new channel of the same name and content as this, but trimmed to just the times between start and end
      * sample.
-     * 
+     *
      * @param startSample
      *            the sample to start with (inclusive). Sample counting starts at 0.
      * @param endSample
@@ -130,9 +133,9 @@ public abstract class AbstractAnimationChannel implements Savable {
     }
 
     /**
-     * 
+     *
      * Returns a new channel of the same content as this, but trimmed to just the times between start and end sample.
-     * 
+     *
      * @param name
      *            the new name for our subchannel.
      * @param startSample
@@ -141,14 +144,14 @@ public abstract class AbstractAnimationChannel implements Savable {
      *            the sample to end with (inclusive). max is getSampleCount() - 1.
      * @return the new channel.
      * @throws IllegalArgumentException
-     *             if start > end or end >= getSampleCount.
+     *             if start greater than end or end greater than or equal to getSampleCount.
      */
     public abstract AbstractAnimationChannel getSubchannelBySample(String name, int startSample, int endSample);
 
     /**
      * Returns a new channel of the same name and content as this, but trimmed to just the times between start and end
      * times.
-     * 
+     *
      * @param startTime
      *            the time to start with (inclusive)
      * @param endTime
@@ -160,9 +163,9 @@ public abstract class AbstractAnimationChannel implements Savable {
     }
 
     /**
-     * 
+     *
      * Returns a new channel of the same content as this, but trimmed to just the times between start and end sample.
-     * 
+     *
      * @param name
      *            the new name for our subchannel.
      * @param startTime
@@ -171,7 +174,7 @@ public abstract class AbstractAnimationChannel implements Savable {
      *            the time to end with (inclusive)
      * @return the new channel.
      * @throws IllegalArgumentException
-     *             if start > end or end >= getSampleCount.
+     *             if start greater than end or end greater than or equal to getSampleCount.
      */
     public abstract AbstractAnimationChannel getSubchannelByTime(String name, float startTime, float endTime);
 

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -91,7 +91,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
      * Flag for enabling automatically updating the skin's model bound when the pose changes. Only effective in CPU
      * skinning mode. Default is false as this is currently expensive.
      * </p>
-     * 
+     *
      * XXX: If we can find a better way to update the bounds, maybe we should make this default to true or remove this
      * altogether.
      */
@@ -111,7 +111,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
 
     /**
      * Constructs a new SkinnedMesh with a given name.
-     * 
+     *
      * @param name
      *            the name of the skinned mesh.
      */
@@ -128,7 +128,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
 
     /**
      * Sets the bind pose mesh data object used by this skinned mesh.
-     * 
+     *
      * @param poseData
      *            the new bind pose
      */
@@ -197,8 +197,9 @@ public class SkinnedMesh extends Mesh implements PoseListener {
     /**
      * Sets the joint indices used by this skinned mesh to compute mesh deformation. Each entry is interpreted as an
      * 16bit signed integer index into a Skeleton's Joint.
-     * 
+     *
      * @param jointIndices
+     *            the joint indices
      */
     public void setJointIndices(final short[] jointIndices) {
         _jointIndices = jointIndices;
@@ -209,7 +210,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
 
     /**
      * @return this skinned mesh's joint weights.
-     * @see #setWeights(FloatBuffer)
+     * @see #setWeights(float[])
      */
     public float[] getWeights() {
         return _weights;
@@ -217,7 +218,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
 
     /**
      * Sets the joint weights used by this skinned mesh.
-     * 
+     *
      * @param weights
      *            the new weights.
      */
@@ -275,7 +276,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
 
     /**
      * This should be set after setting up gpu attribute params.
-     * 
+     *
      * @param useGPU
      *            true if we should do skinning on the card (GPU) or false if on the CPU.
      */
@@ -337,7 +338,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
      * Set custom logic for how this skin should react when it is told its pose has updated. This might include
      * throttling skin application, ignoring skin application when the skin is outside of the camera view, etc. If null,
      * (the default) the skin will always apply the new pose and optionally update the model bound.
-     * 
+     *
      * @param customApplier
      *            the new custom logic, or null to use the default behavior.
      */
@@ -609,9 +610,10 @@ public class SkinnedMesh extends Mesh implements PoseListener {
     /**
      * Rewrites the weights on this SkinnedMesh, if necessary, to reduce the number of weights per vert to the given
      * max. This is done by dropping the least significant weight and balancing the remainder to total 1.0 again.
-     * 
+     *
      * @param maxCount
-     *            the desired maximum weightsPerVert. If this is >= the current weightsPerVert, this method is a NOOP.
+     *            the desired maximum weightsPerVert. If this is greater than or equal to the current weightsPerVert,
+     *            this method is a NOOP.
      */
     public void constrainWeightCount(final int maxCount) {
         if (maxCount >= _weightsPerVert) {

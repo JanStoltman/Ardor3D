@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * This class essentially just wraps a KEY->VALUE HashMap, providing extra logging when a VALUE is not found, or
+ * This class essentially just wraps a KEY/VALUE HashMap, providing extra logging when a VALUE is not found, or
  * duplicate VALUE objects are added. An optional callback may be provided to try to load values not present in this
  * map. These are loaded using the string representation of the key and casting the return from Object to the value
  * class. If the value is still null, a default value is returned.
@@ -45,7 +45,7 @@ public class LoggingMap<KEY, VALUE> {
     /**
      * Add a value to the store. Logs a warning if a value by the same key was already in the store and logOnReplace is
      * true.
-     * 
+     *
      * @param key
      *            the key to add.
      * @param value
@@ -62,7 +62,7 @@ public class LoggingMap<KEY, VALUE> {
     /**
      * Retrieves a value from our store by key. Logs a warning if a value by that key is not found and logOnMissing is
      * true. If missing, defaultValue is returned.
-     * 
+     *
      * @param key
      *            the key of the value to find.
      * @return the associated value, or null if none is found.
@@ -80,8 +80,8 @@ public class LoggingMap<KEY, VALUE> {
         // value still null...
         if (value == null) {
             if (isLogOnMissing()) {
-                LoggingMap.logger.warning("Value not found with key: " + key + " Returning defaultValue: "
-                        + _defaultValue);
+                LoggingMap.logger
+                        .warning("Value not found with key: " + key + " Returning defaultValue: " + _defaultValue);
             }
             return getDefaultValue();
         }
@@ -90,7 +90,7 @@ public class LoggingMap<KEY, VALUE> {
 
     /**
      * Removes the mapping for the given key.
-     * 
+     *
      * @param key
      *            the key of the value to remove.
      * @return the previously associated value, or null if none was found.

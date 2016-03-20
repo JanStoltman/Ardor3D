@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -22,9 +22,6 @@ public class IgnoreTransitionState extends AbstractTransitionState {
 
     /**
      * Construct a new transition state.
-     * 
-     * @param targetState
-     *            the name of the state to transition to.
      */
     public IgnoreTransitionState() {
         super(null);

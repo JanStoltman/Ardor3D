@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -18,12 +18,12 @@ import com.ardor3d.extension.animation.skeletal.layer.AnimationLayer;
 public abstract class AbstractTransitionState extends AbstractFiniteState {
 
     /**
-     * @see {@link AbstractTransitionState#setStartWindow(double)}
+     * @see AbstractTransitionState#setStartWindow(double)
      */
     private double _startWindow = -1;
 
     /**
-     * @see {@link AbstractTransitionState#setEndWindow(double)}
+     * @see AbstractTransitionState#setEndWindow(double)
      */
     private double _endWindow = -1;
 
@@ -34,7 +34,7 @@ public abstract class AbstractTransitionState extends AbstractFiniteState {
 
     /**
      * Construct a new transition state.
-     * 
+     *
      * @param targetState
      *            the name of the steady state we want the Animation Layer to be in at the end of the transition.
      */
@@ -51,9 +51,10 @@ public abstract class AbstractTransitionState extends AbstractFiniteState {
 
     /**
      * @param startWindow
-     *            our new start window value. If greater than 0, this transition is only valid if the current time is >=
-     *            startWindow. Note that animations are separate from states, so time scaling an animation will not
-     *            affect transition windows directly and must be factored into the start/end values.
+     *            our new start window value. If greater than 0, this transition is only valid if the current time is
+     *            greater than or equal to startWindow. Note that animations are separate from states, so time scaling
+     *            an animation will not affect transition windows directly and must be factored into the start/end
+     *            values.
      */
     public void setStartWindow(final double startWindow) {
         _startWindow = startWindow;
@@ -69,9 +70,9 @@ public abstract class AbstractTransitionState extends AbstractFiniteState {
 
     /**
      * @param endWindow
-     *            our new end window value. If greater than 0, this transition is only valid if the current time is <=
-     *            endWindow. Note that animations are separate from states, so time scaling an animation will not affect
-     *            transition windows directly and must be factored into the start/end values.
+     *            our new end window value. If greater than 0, this transition is only valid if the current time is less
+     *            than or equal to endWindow. Note that animations are separate from states, so time scaling an
+     *            animation will not affect transition windows directly and must be factored into the start/end values.
      */
     public void setEndWindow(final double endWindow) {
         _endWindow = endWindow;
@@ -87,7 +88,7 @@ public abstract class AbstractTransitionState extends AbstractFiniteState {
 
     /**
      * Request that this state perform a transition to another.
-     * 
+     *
      * @param callingState
      *            the state calling for this transition.
      * @param layer
@@ -137,7 +138,7 @@ public abstract class AbstractTransitionState extends AbstractFiniteState {
 
     /**
      * Do the transition logic for this transition state.
-     * 
+     *
      * @param callingState
      *            the state calling for this transition.
      * @param layer

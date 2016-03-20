@@ -64,7 +64,7 @@ public class AnimationManager {
     protected final List<AnimationLayer> _layers = new ArrayList<AnimationLayer>();
 
     /**
-     * A map of key->Double values, allowing control over elements under this manager without needing precise knowledge
+     * A map of key / Double values, allowing control over elements under this manager without needing precise knowledge
      * of the layout of those layers, blend trees, etc. Missing keys will return 0.0 and log a warning.
      */
     protected final LoggingMap<String, Double> _valuesStore = new LoggingMap<String, Double>();

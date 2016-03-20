@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -17,16 +17,16 @@ import com.ardor3d.extension.animation.skeletal.layer.AnimationLayer;
  * A two state transition that freezes the starting state at its current position and blends that over time with a
  * target state. The target state moves forward in time during the blend as normal.
  * </p>
- * 
+ *
  * XXX: Might be able to make this more efficient by capturing the getCurrentSourceData of stateA and reusing.
  */
 public class FrozenTransitionState extends AbstractTwoStateLerpTransition {
 
     /**
      * Construct a new FrozenTransitionState.
-     * 
-     * @param the
-     *            name of the steady state we want the Animation Layer to be in at the end of the transition.
+     *
+     * @param targetState
+     *            the name of the steady state we want the Animation Layer to be in at the end of the transition.
      * @param fadeTime
      *            the amount of time we should take to do the transition.
      * @param type

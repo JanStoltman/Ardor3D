@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -19,7 +19,6 @@ import com.ardor3d.extension.animation.skeletal.blendtree.BinaryLERPSource;
  * <p>
  * A layer blender that uses linear interpolation to merge the results of two layers.
  * </p>
- * See also {@link BinaryLERPSource#combineSourceData(Map, Map, double)}
  */
 public class LayerLERPBlender implements LayerBlender {
 
@@ -66,8 +65,8 @@ public class LayerLERPBlender implements LayerBlender {
         // set A
         final Map<String, ? extends Object> sourceAData = getLayerA().getCurrentSourceData();
         // set B
-        final Map<String, ? extends Object> sourceBData = getLayerB().getCurrentState() != null ? getLayerB()
-                .getCurrentState().getCurrentSourceData(manager) : null;
+        final Map<String, ? extends Object> sourceBData = getLayerB().getCurrentState() != null
+                ? getLayerB().getCurrentState().getCurrentSourceData(manager) : null;
 
         return BinaryLERPSource.combineSourceData(sourceAData, sourceBData, manager.getValuesStore().get(_blendKey));
     }

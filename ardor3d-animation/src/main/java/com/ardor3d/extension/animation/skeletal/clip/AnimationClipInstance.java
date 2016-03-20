@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -39,7 +39,7 @@ public class AnimationClipInstance {
     /** The global start time of our clip instance. */
     private double _startTime = 0.0;
 
-    /** Map of channel name -> state tracking objects. */
+    /** Map of channel name to state tracking objects. */
     private final Map<String, Object> _clipStateObjects = new HashMap<String, Object>();
 
     /** List of callbacks for animation events. */
@@ -47,7 +47,7 @@ public class AnimationClipInstance {
 
     /**
      * Add an animation listener to our callback list.
-     * 
+     *
      * @param animationListener
      *            the listener to add.
      */
@@ -60,7 +60,7 @@ public class AnimationClipInstance {
 
     /**
      * Remove an animation listener from our callback list.
-     * 
+     *
      * @param animationListener
      *            the listener to remove.
      * @return true if the listener was found in our list

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -41,7 +41,7 @@ public class Joint implements Savable {
 
     /**
      * Construct a new Joint object using the given name.
-     * 
+     *
      * @param name
      *            the name
      */
@@ -50,7 +50,7 @@ public class Joint implements Savable {
     }
 
     /**
-     * @return the inverse of the joint space -> model space transformation.
+     * @return the inverse of the joint space to model space transformation.
      */
     public ReadOnlyTransform getInverseBindPose() {
         return _inverseBindPose;
@@ -69,7 +69,7 @@ public class Joint implements Savable {
 
     /**
      * Set the index of this joint's parent within the containing Skeleton's joint array.
-     * 
+     *
      * @param parentIndex
      *            the index, or NO_PARENT if this Joint is root (has no parent)
      */

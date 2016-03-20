@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -50,6 +50,7 @@ public class SkeletalDebugger {
 
     protected static final BoundingSphere measureSphere = new BoundingSphere();
     protected static final BasicText jointText = BasicText.createDefaultTextLabel("", "");
+
     static {
         // No lighting, replace texturing
         SkeletalDebugger.jointText.getSceneHints().setLightCombineMode(LightCombineMode.Off);
@@ -65,7 +66,7 @@ public class SkeletalDebugger {
 
     /**
      * Traverse the given scene and draw the currently posed Skeleton of any SkinnedMesh we encounter.
-     * 
+     *
      * @param scene
      *            the scene
      * @param renderer
@@ -78,7 +79,7 @@ public class SkeletalDebugger {
     /**
      * Traverse the given scene and draw the currently posed Skeleton of any SkinnedMesh we encounter. If showLabels is
      * true, joint names will be drawn over the joints.
-     * 
+     *
      * @param scene
      *            the scene
      * @param renderer
@@ -130,10 +131,11 @@ public class SkeletalDebugger {
 
     /**
      * Draw a skeleton in a specific pose.
-     * 
+     *
      * @param pose
      *            the posed skeleton to draw
      * @param scene
+     *            the scene
      * @param renderer
      *            the Renderer to draw with.
      * @param showLabels
@@ -165,8 +167,8 @@ public class SkeletalDebugger {
 
                 final Transform t = scene.getWorldTransform().multiply(globals[i], store);
                 point.zero();
-                SkeletalDebugger.jointText.setTranslation(Camera.getCurrentCamera().getScreenCoordinates(
-                        t.applyForward(point)));
+                SkeletalDebugger.jointText
+                        .setTranslation(Camera.getCurrentCamera().getScreenCoordinates(t.applyForward(point)));
 
                 final double size = SkeletalDebugger.LABEL_RATIO;
                 SkeletalDebugger.jointText.setScale(size, size, -size);
@@ -183,13 +185,14 @@ public class SkeletalDebugger {
 
     /** Our bone shape. */
     private static final Pyramid bone = new Pyramid("bone", 1, 1);
+
     static {
         // Alter the primitive to better represent our bone.
         // Set color to white
         SkeletalDebugger.setBoneColor(ColorRGBA.WHITE);
         // Rotate the vertices of our bone to point along the Z axis instead of the Y.
-        SkeletalDebugger.bone.getMeshData().rotatePoints(
-                new Quaternion().fromAngleAxis(90 * MathUtils.DEG_TO_RAD, Vector3.UNIT_X));
+        SkeletalDebugger.bone.getMeshData()
+                .rotatePoints(new Quaternion().fromAngleAxis(90 * MathUtils.DEG_TO_RAD, Vector3.UNIT_X));
         // Drop the normals
         SkeletalDebugger.bone.getMeshData().setNormalBuffer(null);
 
@@ -208,12 +211,13 @@ public class SkeletalDebugger {
 
     /**
      * Draw a single bone using the given world-space joint transformations.
-     * 
+     *
      * @param start
      *            our parent joint transform
      * @param end
      *            our child joint transform
      * @param scene
+     *            the scene
      * @param renderer
      *            the Renderer to draw with.
      */
@@ -254,8 +258,8 @@ public class SkeletalDebugger {
         SkeletalDebugger.bone.setWorldRotation(q);
 
         // Offset with skin transform
-        SkeletalDebugger.bone.setWorldTransform(scene.getWorldTransform().multiply(
-                SkeletalDebugger.bone.getWorldTransform(), null));
+        SkeletalDebugger.bone
+                .setWorldTransform(scene.getWorldTransform().multiply(SkeletalDebugger.bone.getWorldTransform(), null));
 
         // Release some temp vars.
         Matrix3.releaseTempInstance(orient);
@@ -268,7 +272,7 @@ public class SkeletalDebugger {
 
     /**
      * Set the color of the joint label object used in showing joint names.
-     * 
+     *
      * @param color
      *            the new color to use for joint labels.
      */
@@ -278,7 +282,7 @@ public class SkeletalDebugger {
 
     /**
      * Set the color of the bone object used in skeleton drawing.
-     * 
+     *
      * @param color
      *            the new color to use for skeleton bones.
      */
@@ -288,6 +292,7 @@ public class SkeletalDebugger {
 
     /** Our joint shape. */
     private static final Sphere joint = new Sphere("joint", 3, 4, 0.5);
+
     static {
         // Alter the primitive to better represent our joint.
         // Set color to cyan
@@ -307,15 +312,17 @@ public class SkeletalDebugger {
         // Update our joint and make it ready for use.
         SkeletalDebugger.joint.updateGeometricState(0);
     }
+
     private static Transform spTransform = new Transform();
     private static Matrix3 spMatrix = new Matrix3();
 
     /**
      * Draw a single Joint using the given world-space joint transform.
-     * 
+     *
      * @param jntTransform
      *            our joint transform
      * @param scene
+     *            the scene
      * @param renderer
      *            the Renderer to draw with.
      */
@@ -337,7 +344,7 @@ public class SkeletalDebugger {
 
     /**
      * Set the color of the joint object used in skeleton drawing.
-     * 
+     *
      * @param color
      *            the new color to use for skeleton joints.
      */

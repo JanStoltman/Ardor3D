@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -53,11 +53,11 @@ public class TriggerData {
     /**
      * Try to set a given trigger/index as armed. If we already have this trigger and index set, we don't change the
      * state of armed.
-     * 
-     * @param trigger
-     *            our trigger name
+     *
      * @param index
      *            our sample index
+     * @param triggers
+     *            our triggers names
      */
     public synchronized void arm(final int index, final String... triggers) {
         if (triggers == null || triggers.length == 0) {
