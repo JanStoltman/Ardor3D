@@ -53,7 +53,7 @@
         <module>ardor3d-swt</module>
         <module>ardor3d-jogl-swt</module>
         <module>ardor3d-awt</module>
-	<module>ardor3d-jogl-awt</module>
+	    <module>ardor3d-jogl-awt</module>
         <module>ardor3d-extras</module>
         <module>ardor3d-effects</module>
         <module>ardor3d-collada</module>
@@ -102,6 +102,7 @@
                     <show>private</show>
                     <sourcepath>${basedir}${path.separator}src${path.separator}main${path.separator}java</sourcepath>
                     <encoding>UTF-8</encoding>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
 		        <reportSets>
 		          <reportSet>
@@ -286,7 +287,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.10</version>
+                <version>4.12</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
