@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -37,8 +37,15 @@ public abstract class AbstractStatGrapher implements StatListener {
 
     /**
      * Must be constructed in the GL thread.
-     * 
-     * @param factory
+     *
+     * @param width
+     *            width
+     * @param height
+     *            height
+     * @param renderer
+     *            GL renderer
+     * @param caps
+     *            context capabilities
      */
     public AbstractStatGrapher(final int width, final int height, final Renderer renderer,
             final ContextCapabilities caps) {

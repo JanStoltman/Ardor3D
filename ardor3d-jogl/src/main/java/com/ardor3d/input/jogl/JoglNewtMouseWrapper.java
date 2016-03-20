@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -224,8 +224,9 @@ public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
     private void addNewState(final MouseEvent mouseEvent, final EnumMap<MouseButton, ButtonState> enumMap,
             final Multiset<MouseButton> clicks) {
         final MouseState newState = new MouseState(mouseEvent.getX(), getArdor3DY(mouseEvent), getDX(mouseEvent),
-                getDY(mouseEvent), (int) (mouseEvent.isShiftDown() ? mouseEvent.getRotation()[0]
-                        : mouseEvent.getRotation()[1]), enumMap, clicks);
+                getDY(mouseEvent),
+                (int) (mouseEvent.isShiftDown() ? mouseEvent.getRotation()[0] : mouseEvent.getRotation()[1]), enumMap,
+                clicks);
 
         synchronized (JoglNewtMouseWrapper.this) {
             _upcomingEvents.add(newState);
@@ -242,7 +243,7 @@ public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
     }
 
     /**
-     * @param e
+     * @param me
      *            our mouseEvent
      * @return the Y coordinate of the event, flipped relative to the component since we expect an origin in the lower
      *         left corner.
