@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -69,7 +69,7 @@ public abstract class ImageLoaderUtil {
 
         Image imageData = null;
         try {
-            ImageLoader loader = loaders.get(type.toLowerCase());
+            ImageLoader loader = type == null ? null : loaders.get(type.toLowerCase());
             if (loader == null) {
                 loader = defaultLoader;
             }
@@ -92,7 +92,7 @@ public abstract class ImageLoaderUtil {
     /**
      * Register an ImageLoader to handle all files with a specific type. An ImageLoader can be registered to handle
      * several formats without problems.
-     * 
+     *
      * @param handler
      *            the handler to use
      * @param types
