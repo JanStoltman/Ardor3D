@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -42,7 +42,7 @@ import com.ardor3d.scenegraph.Spatial;
  * intersection tests, but increases the creation time for the tree. The number of triangles a leaf node is responsible
  * for is defined in CollisionTreeManager. It is actually recommended to allow CollisionTreeManager to maintain the
  * collision trees for a scene.
- * 
+ *
  * @see com.ardor3d.bounding.CollisionTreeManager
  */
 public class CollisionTree implements Serializable {
@@ -87,7 +87,7 @@ public class CollisionTree implements Serializable {
 
     /**
      * Constructor creates a new instance of CollisionTree.
-     * 
+     *
      * @param type
      *            the type of collision tree to make
      * @see Type
@@ -98,7 +98,7 @@ public class CollisionTree implements Serializable {
 
     /**
      * Recreate this Collision Tree for the given Node and child index.
-     * 
+     *
      * @param childIndex
      *            the index of the child to generate the tree for.
      * @param parent
@@ -120,7 +120,7 @@ public class CollisionTree implements Serializable {
 
     /**
      * Recreate this Collision Tree for the given mesh.
-     * 
+     *
      * @param mesh
      *            The mesh that this tree should represent.
      * @param doSort
@@ -199,7 +199,7 @@ public class CollisionTree implements Serializable {
     /**
      * Creates a Collision Tree by recursively creating children nodes, splitting the primitives this node is
      * responsible for in half until the desired primitive count is reached.
-     * 
+     *
      * @param start
      *            The start index of the primitivesArray, inclusive.
      * @param end
@@ -224,6 +224,8 @@ public class CollisionTree implements Serializable {
         // check to see if we are a leaf, if the number of primitives we reference is less than or equal to the maximum
         // defined by the CollisionTreeManager we are done.
         if (_end - _start + 1 <= CollisionTreeManager.getInstance().getMaxPrimitivesPerLeaf()) {
+            _left = null;
+            _right = null;
             return;
         }
 
@@ -254,7 +256,7 @@ public class CollisionTree implements Serializable {
     /**
      * Tests if the world bounds of the node at this level intersects a provided bounding volume. If an intersection
      * occurs, true is returned, otherwise false is returned. If the provided volume is invalid, false is returned.
-     * 
+     *
      * @param volume
      *            the volume to intersect with.
      * @return true if there is an intersect, false otherwise.
@@ -276,7 +278,7 @@ public class CollisionTree implements Serializable {
     /**
      * Determines if this Collision Tree intersects the given CollisionTree. If a collision occurs, true is returned,
      * otherwise false is returned. If the provided collisionTree is invalid, false is returned.
-     * 
+     *
      * @param collisionTree
      *            The Tree to test.
      * @return True if they intersect, false otherwise.
@@ -355,7 +357,7 @@ public class CollisionTree implements Serializable {
      * otherwise false is returned. If the provided collisionTree is invalid, false is returned. All collisions that
      * occur are stored in lists as an integer index into the mesh's triangle buffer. where aList is the primitives for
      * this mesh and bList is the primitives for the test tree.
-     * 
+     *
      * @param collisionTree
      *            The Tree to test.
      * @param aList
@@ -437,7 +439,7 @@ public class CollisionTree implements Serializable {
      * intersect checks for collisions between this collision tree and a provided Ray. Any collisions are stored in a
      * provided list as primitive index values. The ray is assumed to have a normalized direction for accurate
      * calculations.
-     * 
+     *
      * @param ray
      *            the ray to test for intersections.
      * @param store
@@ -487,7 +489,7 @@ public class CollisionTree implements Serializable {
 
     /**
      * Returns the bounding volume for this tree node in local space.
-     * 
+     *
      * @return the bounding volume for this tree node in local space.
      */
     public BoundingVolume getBounds() {
@@ -496,7 +498,7 @@ public class CollisionTree implements Serializable {
 
     /**
      * Returns the bounding volume for this tree node in world space.
-     * 
+     *
      * @return the bounding volume for this tree node in world space.
      */
     public BoundingVolume getWorldBounds() {
@@ -551,13 +553,15 @@ public class CollisionTree implements Serializable {
             case OBB:
                 // determine the longest length of the box, this axis will be best for sorting.
                 if (((OrientedBoundingBox) _bounds)._extent.getX() > ((OrientedBoundingBox) _bounds)._extent.getY()) {
-                    if (((OrientedBoundingBox) _bounds)._extent.getX() > ((OrientedBoundingBox) _bounds)._extent.getZ()) {
+                    if (((OrientedBoundingBox) _bounds)._extent.getX() > ((OrientedBoundingBox) _bounds)._extent
+                            .getZ()) {
                         _comparator.setAxis(TreeComparator.Axis.X);
                     } else {
                         _comparator.setAxis(TreeComparator.Axis.Z);
                     }
                 } else {
-                    if (((OrientedBoundingBox) _bounds)._extent.getY() > ((OrientedBoundingBox) _bounds)._extent.getZ()) {
+                    if (((OrientedBoundingBox) _bounds)._extent.getY() > ((OrientedBoundingBox) _bounds)._extent
+                            .getZ()) {
                         _comparator.setAxis(TreeComparator.Axis.Y);
                     } else {
                         _comparator.setAxis(TreeComparator.Axis.Z);
