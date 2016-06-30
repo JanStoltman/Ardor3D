@@ -13,6 +13,7 @@ package com.ardor3d.bounding;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
+import java.util.Objects;
 
 import com.ardor3d.intersection.IntersectionRecord;
 import com.ardor3d.math.Matrix3;
@@ -63,15 +64,8 @@ public class OrientedBoundingBox extends BoundingVolume {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((_extent == null) ? 0 : _extent.hashCode());
-        result = prime * result + Arrays.hashCode(_vectorStore);
-        result = prime * result + ((_xAxis == null) ? 0 : _xAxis.hashCode());
-        result = prime * result + ((_yAxis == null) ? 0 : _yAxis.hashCode());
-        result = prime * result + ((_zAxis == null) ? 0 : _zAxis.hashCode());
-        result = prime * result + (correctCorners ? 1231 : 1237);
-        return result;
+        return Objects.hash(Integer.valueOf(super.hashCode()), getExtent(),
+                Integer.valueOf(Arrays.hashCode(_vectorStore)), getXAxis(), getYAxis(), getZAxis());
     }
 
     @Override
@@ -302,29 +296,29 @@ public class OrientedBoundingBox extends BoundingVolume {
             mergeBuf.put((float) _vectorStore[i].getZ());
         }
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() + mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() + mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() + mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         mergeBuf.put((float) (mergeSphere._center.getX() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
-        .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
+                .put((float) (mergeSphere._center.getY() - mergeSphere.getRadius()))
+                .put((float) (mergeSphere._center.getZ() - mergeSphere.getRadius()));
         containAABB(mergeBuf);
         correctCorners = false;
         return this;
@@ -353,29 +347,29 @@ public class OrientedBoundingBox extends BoundingVolume {
             mergeBuf.put((float) _vectorStore[i].getZ());
         }
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() + mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() + mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() + mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         mergeBuf.put((float) (mergeBox._center.getX() - mergeBox.getXExtent()))
-        .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
-        .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
+                .put((float) (mergeBox._center.getY() - mergeBox.getYExtent()))
+                .put((float) (mergeBox._center.getZ() - mergeBox.getZExtent()));
         containAABB(mergeBuf);
         correctCorners = false;
         return this;
@@ -600,10 +594,10 @@ public class OrientedBoundingBox extends BoundingVolume {
         final int vertsPerPrimitive = data.getIndexMode(section).getVertexCount();
         Vector3[] store = new Vector3[vertsPerPrimitive];
 
-        final Vector3 min = _compVect1
-                .set(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-        final Vector3 max = _compVect2
-                .set(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+        final Vector3 min = _compVect1.set(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
+        final Vector3 max = _compVect2.set(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.NEGATIVE_INFINITY);
 
         Vector3 point;
         for (int i = start; i < end; i++) {

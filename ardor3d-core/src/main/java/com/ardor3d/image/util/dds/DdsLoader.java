@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -58,39 +58,40 @@ public class DdsLoader implements ImageLoader {
 
     @Override
     public Image load(final InputStream is, final boolean flipVertically) throws IOException {
-        final LittleEndianDataInput in = new LittleEndianDataInput(is);
+        try (final LittleEndianDataInput in = new LittleEndianDataInput(is)) {
 
-        // Read and check magic word...
-        final int dwMagic = in.readInt();
-        if (dwMagic != getInt("DDS ")) {
-            throw new Error("Not a dds file.");
+            // Read and check magic word...
+            final int dwMagic = in.readInt();
+            if (dwMagic != getInt("DDS ")) {
+                throw new Error("Not a dds file.");
+            }
+            logger.finest("Reading DDS file.");
+
+            // Create our data store;
+            final DdsImageInfo info = new DdsImageInfo();
+
+            info.flipVertically = flipVertically;
+
+            // Read standard dds header
+            info.header = DdsHeader.read(in);
+
+            // if applicable, read DX10 header
+            info.headerDX10 = info.header.ddpf.dwFourCC == getInt("DX10") ? DdsHeaderDX10.read(in) : null;
+
+            // Create our new image
+            final Image image = new Image();
+            image.setWidth(info.header.dwWidth);
+            image.setHeight(info.header.dwHeight);
+
+            // update depth based on flags / header
+            updateDepth(image, info);
+
+            // add our format and image data.
+            populateImage(image, info, in);
+
+            // return the loaded image
+            return image;
         }
-        logger.finest("Reading DDS file.");
-
-        // Create our data store;
-        final DdsImageInfo info = new DdsImageInfo();
-
-        info.flipVertically = flipVertically;
-
-        // Read standard dds header
-        info.header = DdsHeader.read(in);
-
-        // if applicable, read DX10 header
-        info.headerDX10 = info.header.ddpf.dwFourCC == getInt("DX10") ? DdsHeaderDX10.read(in) : null;
-
-        // Create our new image
-        final Image image = new Image();
-        image.setWidth(info.header.dwWidth);
-        image.setHeight(info.header.dwHeight);
-
-        // update depth based on flags / header
-        updateDepth(image, info);
-
-        // add our format and image data.
-        populateImage(image, info, in);
-
-        // return the loaded image
-        return image;
     }
 
     private static final void updateDepth(final Image image, final DdsImageInfo info) {
@@ -254,7 +255,7 @@ public class DdsLoader implements ImageLoader {
         }
 
         // Go through and load in image data
-        final List<ByteBuffer> imageData = new ArrayList<ByteBuffer>();
+        final List<ByteBuffer> imageData = new ArrayList<>();
         for (int i = 0; i < image.getDepth(); i++) {
             // read in compressed data
             if (compressedFormat) {

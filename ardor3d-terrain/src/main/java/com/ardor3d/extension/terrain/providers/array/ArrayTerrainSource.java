@@ -52,7 +52,7 @@ public class ArrayTerrainSource implements TerrainSource {
     @Override
     public Set<Tile> getValidTiles(final int clipmapLevel, final int tileX, final int tileY, final int numTilesX,
             final int numTilesY) throws Exception {
-        final Set<Tile> validTiles = new HashSet<Tile>();
+        final Set<Tile> validTiles = new HashSet<>();
 
         final int heightMapSize = heightMapSizes.get(clipmapLevel);
         for (int y = 0; y < numTilesY; y++) {

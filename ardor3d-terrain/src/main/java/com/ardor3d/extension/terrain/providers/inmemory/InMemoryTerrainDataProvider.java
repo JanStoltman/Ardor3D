@@ -40,7 +40,7 @@ public class InMemoryTerrainDataProvider implements TerrainDataProvider {
 
     @Override
     public Map<Integer, String> getAvailableMaps() throws Exception {
-        final Map<Integer, String> maps = new HashMap<Integer, String>();
+        final Map<Integer, String> maps = new HashMap<>();
         maps.put(0, "InMemoryData");
 
         return maps;
@@ -64,7 +64,7 @@ public class InMemoryTerrainDataProvider implements TerrainDataProvider {
                         inMemoryTerrainData.getSide(), inMemoryTerrainData.getMaxHeight(), inMemoryTerrainData
                                 .getScale().getX(), inMemoryTerrainData.getScale().getY());
 
-                final List<Integer> heightMapSizes = new ArrayList<Integer>();
+                final List<Integer> heightMapSizes = new ArrayList<>();
                 int currentSize = inMemoryTerrainData.getSide();
                 heightMapSizes.add(currentSize);
                 for (int i = 0; i < inMemoryTerrainData.getClipmapLevels(); i++) {

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +39,7 @@ public class URLResourceSource implements ResourceSource {
 
     /**
      * Construct a new URLResourceSource from a specific URL.
-     * 
+     *
      * @param sourceUrl
      *            The url to load the resource from. Must not be null. If the URL has a valid URL filename (see
      *            {@link URL#getFile()}) and an extension (eg. http://url/myFile.png) then the extension (.png in this
@@ -62,7 +63,7 @@ public class URLResourceSource implements ResourceSource {
 
     /**
      * Construct a new URLResourceSource from a specific URL and type.
-     * 
+     *
      * @param sourceUrl
      *            The url to load the resource from. Must not be null.
      * @param type
@@ -136,11 +137,7 @@ public class URLResourceSource implements ResourceSource {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_type == null) ? 0 : _type.hashCode());
-        result = prime * result + ((_urlToString == null) ? 0 : _urlToString.hashCode());
-        return result;
+        return Objects.hash(getType(), getName());
     }
 
     @Override

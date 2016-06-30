@@ -49,7 +49,7 @@ public class GuaranteedTriggerChannel extends TriggerChannel {
         if (oldIndex == newIndex) {
             triggerData.arm(newIndex, _keys[newIndex]);
         } else {
-            final List<String> triggers = new ArrayList<String>();
+            final List<String> triggers = new ArrayList<>();
             for (int i = oldIndex + 1; i <= newIndex; i++) {
                 if (_keys[i] != null) {
                     triggers.add(_keys[i]);
@@ -85,8 +85,8 @@ public class GuaranteedTriggerChannel extends TriggerChannel {
         if (startTime > endTime) {
             throw new IllegalArgumentException("startTime > endTime");
         }
-        final List<Float> times = new ArrayList<Float>();
-        final List<String> keys = new ArrayList<String>();
+        final List<Float> times = new ArrayList<>();
+        final List<String> keys = new ArrayList<>();
 
         final TriggerData tData = new TriggerData();
 

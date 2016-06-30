@@ -28,7 +28,7 @@ public class LoggingMap<KEY, VALUE> {
     private static final Logger logger = Logger.getLogger(LoggingMap.class.getName());
 
     /** Our map of values. */
-    protected final Map<KEY, VALUE> _wrappedMap = new HashMap<KEY, VALUE>();
+    protected final Map<KEY, VALUE> _wrappedMap = new HashMap<>();
 
     /** If not null, this callback is asked to load the missing value using the key. */
     private MissingCallback<KEY, VALUE> _missCallback = null;

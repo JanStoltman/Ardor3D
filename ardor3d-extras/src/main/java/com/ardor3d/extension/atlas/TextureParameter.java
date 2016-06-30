@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,7 @@
 package com.ardor3d.extension.atlas;
 
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 import com.ardor3d.image.Texture;
 import com.ardor3d.renderer.state.RenderState;
@@ -88,10 +89,7 @@ public class TextureParameter {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (textureKey == null ? 0 : textureKey.hashCode());
-        return result;
+        return Objects.hashCode(textureKey);
     }
 
     @Override
@@ -106,14 +104,7 @@ public class TextureParameter {
             return false;
         }
         final TextureParameter other = (TextureParameter) obj;
-        if (textureKey == null) {
-            if (other.textureKey != null) {
-                return false;
-            }
-        } else if (!textureKey.equals(other.textureKey)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(textureKey, other.textureKey);
     }
 
     public int getTargetTextureIndex() {

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -35,7 +35,7 @@ public class InteractManager {
     /**
      * List of widgets currently managed by this manager.
      */
-    protected final List<AbstractInteractWidget> _widgets = new ArrayList<AbstractInteractWidget>();
+    protected final List<AbstractInteractWidget> _widgets = new ArrayList<>();
 
     /**
      * The logical layer used by this manager to receive input events prior to forwarding them to the scene.
@@ -66,7 +66,7 @@ public class InteractManager {
     /**
      * List of filters to modify state prior to applying to a Spatial target.
      */
-    protected List<UpdateFilter> _filters = new ArrayList<UpdateFilter>();
+    protected List<UpdateFilter> _filters = new ArrayList<>();
 
     public InteractManager() {
         setupLogicalLayer();
@@ -143,7 +143,7 @@ public class InteractManager {
     /**
      * Convenience method for setting up the manager's connection to the Ardor3D input system, along with a forwarding
      * address for input events that the manager does not care about.
-     * 
+     *
      * @param canvas
      *            the canvas to register with
      * @param physicalLayer

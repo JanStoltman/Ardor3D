@@ -359,7 +359,7 @@ public class ColladaExample extends ExampleBase {
 
     private List<File> findFiles(final File rootDir, final String name, List<File> fileList) {
         if (fileList == null) {
-            fileList = new ArrayList<File>();
+            fileList = new ArrayList<>();
         }
         final File[] files = rootDir.listFiles();
         for (int i = 0; i < files.length; i++) {

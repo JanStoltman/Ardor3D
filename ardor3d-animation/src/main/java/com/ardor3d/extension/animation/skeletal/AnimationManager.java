@@ -55,19 +55,19 @@ public class AnimationManager {
     protected final Spatial _sceneRoot;
 
     /** Local instance information for any clips referenced by the layers/blend trees in this manager. */
-    protected final Map<AnimationClip, AnimationClipInstance> _clipInstances = new WeakHashMap<AnimationClip, AnimationClipInstance>();
+    protected final Map<AnimationClip, AnimationClipInstance> _clipInstances = new WeakHashMap<>();
 
     /** A logic object responsible for taking animation data and applying it to skeleton poses. */
     protected AnimationApplier _applier;
 
     /** Our animation layers. */
-    protected final List<AnimationLayer> _layers = new ArrayList<AnimationLayer>();
+    protected final List<AnimationLayer> _layers = new ArrayList<>();
 
     /**
      * A map of key / Double values, allowing control over elements under this manager without needing precise knowledge
      * of the layout of those layers, blend trees, etc. Missing keys will return 0.0 and log a warning.
      */
-    protected final LoggingMap<String, Double> _valuesStore = new LoggingMap<String, Double>();
+    protected final LoggingMap<String, Double> _valuesStore = new LoggingMap<>();
 
     /**
      * The throttle rate of animation. Default is 60fps (1/60.0). Set to 0 to disable throttling.
@@ -97,7 +97,7 @@ public class AnimationManager {
     /**
      * Listeners for changes to this manager's AnimationUpdateState.
      */
-    protected final List<AnimationUpdateStateListener> _updateStateListeners = new ArrayList<AnimationUpdateStateListener>();
+    protected final List<AnimationUpdateStateListener> _updateStateListeners = new ArrayList<>();
 
     /**
      * Construct a new AnimationManager.
@@ -130,7 +130,7 @@ public class AnimationManager {
         layer.setManager(this);
         _layers.add(layer);
 
-        _applyToPoses = new ArrayList<SkeletonPose>();
+        _applyToPoses = new ArrayList<>();
         if (pose != null) {
             _applyToPoses.add(pose);
         }

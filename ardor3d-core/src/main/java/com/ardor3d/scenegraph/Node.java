@@ -494,7 +494,7 @@ public class Node extends Spatial {
     @Override
     public void write(final OutputCapsule capsule) throws IOException {
         super.write(capsule);
-        capsule.writeSavableList(new ArrayList<Spatial>(_children), "children", null);
+        capsule.writeSavableList(new ArrayList<>(_children), "children", null);
     }
 
     @Override

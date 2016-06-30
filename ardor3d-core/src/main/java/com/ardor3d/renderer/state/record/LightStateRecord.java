@@ -18,7 +18,7 @@ import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.util.geom.BufferUtils;
 
 public class LightStateRecord extends StateRecord {
-    private final List<LightRecord> lightList = new ArrayList<LightRecord>();
+    private final List<LightRecord> lightList = new ArrayList<>();
     private int lightMask;
     private int backLightMask;
     private boolean twoSidedOn;

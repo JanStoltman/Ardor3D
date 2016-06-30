@@ -31,7 +31,7 @@ public class SkinData implements Savable {
 
     private SkeletonPose _pose;
     private Node _skinBaseNode;
-    private final List<SkinnedMesh> _skins = new ArrayList<SkinnedMesh>();
+    private final List<SkinnedMesh> _skins = new ArrayList<>();
     private final String _name;
 
     /**

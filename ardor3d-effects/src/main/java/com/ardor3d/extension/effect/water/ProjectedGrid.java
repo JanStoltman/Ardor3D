@@ -84,7 +84,7 @@ public class ProjectedGrid extends Mesh {
 
     private int nrUpdateThreads = 1;
     private final ExecutorService executorService = Executors.newCachedThreadPool(new DeamonThreadFactory());
-    private final Stack<Future<?>> futureStack = new Stack<Future<?>>();
+    private final Stack<Future<?>> futureStack = new Stack<>();
 
     private final int connections[] = { 0, 1, 2, 3, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 6, 7, };
 

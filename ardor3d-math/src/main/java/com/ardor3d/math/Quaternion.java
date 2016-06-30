@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
 import com.ardor3d.math.type.ReadOnlyMatrix3;
 import com.ardor3d.math.type.ReadOnlyQuaternion;
@@ -25,7 +26,7 @@ import com.ardor3d.util.export.Savable;
 /**
  * Quaternion represents a 4 value math object used in Ardor3D to describe rotations. It has the advantage of being able
  * to avoid lock by adding a 4th dimension to rotation.
- * 
+ *
  * Note: some algorithms in this class were ported from Eberly, Wolfram, Game Gems and others to Java.
  */
 public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQuaternion, Poolable {
@@ -57,7 +58,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Constructs a new quaternion set to the (x, y, z, w) values of the given source quaternion.
-     * 
+     *
      * @param source
      */
     public Quaternion(final ReadOnlyQuaternion source) {
@@ -66,7 +67,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Constructs a new quaternion set to (x, y, z, w).
-     * 
+     *
      * @param x
      * @param y
      * @param z
@@ -121,7 +122,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Stores the double values of this quaternion in the given double array as (x,y,z,w).
-     * 
+     *
      * @param store
      *            The array in which to store the values of this quaternion. If null, a new double[4] array is created.
      * @return the double array
@@ -143,7 +144,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the x component of this quaternion to the given double value.
-     * 
+     *
      * @param x
      */
     public void setX(final double x) {
@@ -152,7 +153,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the y component of this quaternion to the given double value.
-     * 
+     *
      * @param y
      */
     public void setY(final double y) {
@@ -161,7 +162,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the z component of this quaternion to the given double value.
-     * 
+     *
      * @param z
      */
     public void setZ(final double z) {
@@ -170,7 +171,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the w component of this quaternion to the given double value.
-     * 
+     *
      * @param w
      */
     public void setW(final double w) {
@@ -179,7 +180,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the value of this quaternion to (x, y, z, w)
-     * 
+     *
      * @param x
      * @param y
      * @param z
@@ -196,7 +197,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the value of this quaternion to the (x, y, z, w) values of the provided source quaternion.
-     * 
+     *
      * @param source
      * @return this quaternion for chaining
      * @throws NullPointerException
@@ -213,7 +214,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Updates this quaternion from the given Euler rotation angles, applied in the given order: heading, attitude,
      * bank.
-     * 
+     *
      * @param angles
      *            the Euler angles of rotation (in radians) stored as heading, attitude, and bank.
      * @return this quaternion for chaining
@@ -229,7 +230,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Updates this quaternion from the given Euler rotation angles, applied in the given order: heading, attitude,
      * bank.
-     * 
+     *
      * @param heading
      *            the Euler heading angle in radians. (rotation about the y axis)
      * @param attitude
@@ -237,8 +238,8 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * @param bank
      *            the Euler bank angle in radians. (rotation about the x axis)
      * @return this quaternion for chaining
-     * @see <a
-     *      href="http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm">euclideanspace.com-eulerToQuaternion</a>
+     * @see <a href="http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm">
+     *      euclideanspace.com-eulerToQuaternion</a>
      */
     public Quaternion fromEulerAngles(final double heading, final double attitude, final double bank) {
         double angle = heading * 0.5;
@@ -269,14 +270,14 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Converts this quaternion to Euler rotation angles in radians (heading, attitude, bank).
-     * 
+     *
      * @param store
      *            the double[] array to store the computed angles in. If null, a new double[] will be created
      * @return the double[] array, filled with heading, attitude and bank in that order..
      * @throws ArrayIndexOutOfBoundsException
      *             if non-null store is not at least length 3
-     * @see <a
-     *      href="http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm">euclideanspace.com-quaternionToEuler</a>
+     * @see <a href="http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm">
+     *      euclideanspace.com-quaternionToEuler</a>
      * @see #fromEulerAngles(double, double, double)
      */
     @Override
@@ -313,7 +314,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the value of this quaternion to the rotation described by the given matrix.
-     * 
+     *
      * @param matrix
      * @return this quaternion for chaining
      * @throws NullPointerException
@@ -326,7 +327,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the value of this quaternion to the rotation described by the given matrix values.
-     * 
+     *
      * @param m00
      * @param m01
      * @param m02
@@ -387,7 +388,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * @param store
      *            the matrix to store our result in. If null, a new matrix is created.
      * @return the rotation matrix representation of this quaternion (normalized)
-     * 
+     *
      *         if store is not null and is read only.
      */
     @Override
@@ -534,7 +535,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * Sets the values of this quaternion to the values represented by a given angle and axis of rotation. Note that
      * this method creates an object, so use fromAngleNormalAxis if your axis is already normalized. If axis == 0,0,0
      * the quaternion is set to identity.
-     * 
+     *
      * @param angle
      *            the angle to rotate (in radians).
      * @param axis
@@ -553,7 +554,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Sets the values of this quaternion to the values represented by a given angle and unit length axis of rotation.
      * If axis == 0,0,0 the quaternion is set to identity.
-     * 
+     *
      * @param angle
      *            the angle to rotate (in radians).
      * @param axis
@@ -578,7 +579,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Returns the rotation angle represented by this quaternion. If a non-null vector is provided, the axis of rotation
      * is stored in that vector as well.
-     * 
+     *
      * @param axisStore
      *            the object we'll store the computed axis in. If null, no computations are done to determine axis.
      * @return the angle of rotation in radians.
@@ -610,7 +611,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Sets this quaternion to that which will rotate vector "from" into vector "to". from and to do not have to be the
      * same length.
-     * 
+     *
      * @param from
      *            the source vector to rotate
      * @param to
@@ -696,7 +697,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * Calculates the <i>multiplicative inverse</i> <code>Q<sup>-1</sup></code> of this quaternion <code>Q</code> such
      * that <code>QQ<sup>-1</sup> = [0,0,0,1]</code> (the identity quaternion). Note that for unit quaternions, a
      * quaternion's inverse is equal to its (far easier to calculate) conjugate.
-     * 
+     *
      * @param store
      *            the <code>Quaternion</code> to store the result in. If <code>null</code>, a new one is created.
      * @see #conjugate(Quaternion)
@@ -719,9 +720,9 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * Locally sets this quaternion <code>Q</code> to its <i>multiplicative inverse</i> <code>Q<sup>-1</sup></code> such
      * that <code>QQ<sup>-1</sup> = [0,0,0,1]</code> (the identity quaternion). Note that for unit quaternions, a
      * quaternion's inverse is equal to its (far easier to calculate) conjugate.
-     * 
+     *
      * @see #conjugate(Quaternion)
-     * 
+     *
      * @return this <code>Quaternion</code> for chaining.
      */
     public Quaternion invertLocal() {
@@ -736,7 +737,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Creates a new quaternion that is the conjugate <code>[-x, -y, -z, w]</code> of this quaternion.
-     * 
+     *
      * @param store
      *            the <code>Quaternion</code> to store the result in. If <code>null</code>, a new one is created.
      * @return the conjugate to this quaternion.
@@ -751,7 +752,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Internally sets this quaternion to its conjugate <code>[-x, -y, -z, w]</code>.
-     * 
+     *
      * @return this <code>Quaternion</code> for chaining.
      */
     public Quaternion conjugateLocal() {
@@ -760,7 +761,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Adds this quaternion to another and places the result in the given store.
-     * 
+     *
      * @param quat
      * @param store
      *            the Quaternion to store the result in. if null, a new one is created.
@@ -778,7 +779,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Internally increments the fields of this quaternion with the field values of the given quaternion.
-     * 
+     *
      * @param quat
      * @return this quaternion for chaining
      */
@@ -808,7 +809,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Internally decrements the fields of this quaternion by the field values of the given quaternion.
-     * 
+     *
      * @param quat
      * @return this quaternion for chaining.
      */
@@ -822,7 +823,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Multiplies each value of this quaternion by the given scalar value.
-     * 
+     *
      * @param scalar
      *            the quaternion to multiply this quaternion by.
      * @param store
@@ -841,7 +842,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Multiplies each value of this quaternion by the given scalar value. The result is stored in this quaternion.
-     * 
+     *
      * @param scalar
      *            the quaternion to multiply this quaternion by.
      * @return this quaternion for chaining.
@@ -857,15 +858,15 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Multiplies this quaternion by the supplied quaternion. The result is stored in the given store quaternion or a
      * new quaternion if store is null.
-     * 
+     *
      * It IS safe for quat and store to be the same object.
-     * 
+     *
      * @param quat
      *            the quaternion to multiply this quaternion by.
      * @param store
      *            the quaternion to store the result in.
      * @return the new quaternion.
-     * 
+     *
      *         if the given store is read only.
      */
     @Override
@@ -882,7 +883,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Multiplies this quaternion by the supplied quaternion. The result is stored locally.
-     * 
+     *
      * @param quat
      *            The Quaternion to multiply this one by.
      * @return this quaternion for chaining
@@ -895,7 +896,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Multiplies this quaternion by the supplied matrix. The result is stored locally.
-     * 
+     *
      * @param matrix
      *            the matrix to apply to this quaternion.
      * @return this quaternion for chaining
@@ -916,7 +917,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Multiplies this quaternion by the supplied quaternion values. The result is stored locally.
-     * 
+     *
      * @param qx
      * @param qy
      * @param qz
@@ -934,7 +935,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Multiply this quaternion by a rotational quaternion made from the given angle and axis. The axis must be a
      * normalized vector.
-     * 
+     *
      * @param angle
      *            in radians
      * @param x
@@ -968,7 +969,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Apply rotation around X
-     * 
+     *
      * @param angle
      *            in radians
      * @return this quaternion for chaining.
@@ -988,7 +989,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Apply rotation around Y
-     * 
+     *
      * @param angle
      *            in radians
      * @return this quaternion for chaining.
@@ -1008,7 +1009,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Apply rotation around Z
-     * 
+     *
      * @param angle
      *            in radians
      * @return this quaternion for chaining.
@@ -1028,7 +1029,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Rotates the given vector by this quaternion. If supplied, the result is stored into the supplied "store" vector.
-     * 
+     *
      * @param vec
      *            the vector to multiply this quaternion by.
      * @param store
@@ -1037,7 +1038,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * @return the store vector, or a new vector if store is null.
      * @throws NullPointerException
      *             if vec is null
-     * 
+     *
      *             if the given store is read only.
      */
     @Override
@@ -1048,15 +1049,15 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
         if (vec.equals(Vector3.ZERO)) {
             store.set(0, 0, 0);
         } else {
-            final double x = getW() * getW() * vec.getX() + 2 * getY() * getW() * vec.getZ() - 2 * getZ() * getW()
-                    * vec.getY() + getX() * getX() * vec.getX() + 2 * getY() * getX() * vec.getY() + 2 * getZ()
-                    * getX() * vec.getZ() - getZ() * getZ() * vec.getX() - getY() * getY() * vec.getX();
-            final double y = 2 * getX() * getY() * vec.getX() + getY() * getY() * vec.getY() + 2 * getZ() * getY()
-                    * vec.getZ() + 2 * getW() * getZ() * vec.getX() - getZ() * getZ() * vec.getY() + getW() * getW()
-                    * vec.getY() - 2 * getX() * getW() * vec.getZ() - getX() * getX() * vec.getY();
-            final double z = 2 * getX() * getZ() * vec.getX() + 2 * getY() * getZ() * vec.getY() + getZ() * getZ()
-                    * vec.getZ() - 2 * getW() * getY() * vec.getX() - getY() * getY() * vec.getZ() + 2 * getW()
-                    * getX() * vec.getY() - getX() * getX() * vec.getZ() + getW() * getW() * vec.getZ();
+            final double x = getW() * getW() * vec.getX() + 2 * getY() * getW() * vec.getZ()
+                    - 2 * getZ() * getW() * vec.getY() + getX() * getX() * vec.getX() + 2 * getY() * getX() * vec.getY()
+                    + 2 * getZ() * getX() * vec.getZ() - getZ() * getZ() * vec.getX() - getY() * getY() * vec.getX();
+            final double y = 2 * getX() * getY() * vec.getX() + getY() * getY() * vec.getY()
+                    + 2 * getZ() * getY() * vec.getZ() + 2 * getW() * getZ() * vec.getX() - getZ() * getZ() * vec.getY()
+                    + getW() * getW() * vec.getY() - 2 * getX() * getW() * vec.getZ() - getX() * getX() * vec.getY();
+            final double z = 2 * getX() * getZ() * vec.getX() + 2 * getY() * getZ() * vec.getY()
+                    + getZ() * getZ() * vec.getZ() - 2 * getW() * getY() * vec.getX() - getY() * getY() * vec.getZ()
+                    + 2 * getW() * getX() * vec.getY() - getX() * getX() * vec.getZ() + getW() * getW() * vec.getZ();
             store.set(x, y, z);
         }
         return store;
@@ -1066,7 +1067,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      * Updates this quaternion to represent a rotation formed by the given three axes. These axes are assumed to be
      * orthogonal and no error checking is applied. It is the user's job to insure that the three axes being provided
      * indeed represent a proper right handed coordinate system.
-     * 
+     *
      * @param xAxis
      *            vector representing the x-axis of the coordinate system.
      * @param yAxis
@@ -1082,7 +1083,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Converts this quaternion to a rotation matrix and then extracts rotation axes.
-     * 
+     *
      * @param axes
      *            the array of vectors to be filled.
      * @throws ArrayIndexOutOfBoundsException
@@ -1102,7 +1103,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Does a spherical linear interpolation between this quaternion and the given end quaternion by the given change
      * amount.
-     * 
+     *
      * @param endQuat
      * @param changeAmnt
      * @param store
@@ -1118,7 +1119,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Does a spherical linear interpolation between this quaternion and the given end quaternion by the given change
      * amount. Stores the results locally in this quaternion.
-     * 
+     *
      * @param endQuat
      * @param changeAmnt
      * @return this quaternion for chaining.
@@ -1130,7 +1131,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Does a spherical linear interpolation between the given start and end quaternions by the given change amount.
      * Returns the result as a new quaternion.
-     * 
+     *
      * @param startQuat
      * @param endQuat
      * @param changeAmnt
@@ -1198,7 +1199,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Does a spherical linear interpolation between the given start and end quaternions by the given change amount.
      * Stores the result locally.
-     * 
+     *
      * @param startQuat
      * @param endQuat
      * @param changeAmnt
@@ -1264,7 +1265,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Does a spherical linear interpolation between the given start and end quaternions by the given change amount.
      * Stores the result locally.
-     * 
+     *
      * @param startQuat
      * @param endQuat
      * @param changeAmnt
@@ -1283,7 +1284,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Modifies this quaternion to equal the rotation required to point the z-axis at 'direction' and the y-axis to
      * 'up'.
-     * 
+     *
      * @param direction
      *            where to 'look' at
      * @param up
@@ -1351,7 +1352,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Sets the value of this quaternion to (0, 0, 0, 1). Equivalent to calling set(0, 0, 0, 1)
-     * 
+     *
      * @return this quaternion for chaining
      */
     public Quaternion setIdentity() {
@@ -1368,7 +1369,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Check a quaternion... if it is null or its doubles are NaN or infinite, return false. Else return true.
-     * 
+     *
      * @param quat
      *            the quaternion to check
      * @return true or false as stated above.
@@ -1406,21 +1407,8 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
      */
     @Override
     public int hashCode() {
-        int result = 17;
-
-        final long x = Double.doubleToLongBits(getX());
-        result += 31 * result + (int) (x ^ x >>> 32);
-
-        final long y = Double.doubleToLongBits(getY());
-        result += 31 * result + (int) (y ^ y >>> 32);
-
-        final long z = Double.doubleToLongBits(getZ());
-        result += 31 * result + (int) (z ^ z >>> 32);
-
-        final long w = Double.doubleToLongBits(getW());
-        result += 31 * result + (int) (w ^ w >>> 32);
-
-        return result;
+        return Objects.hash(Double.valueOf(getX()), Double.valueOf(getY()), Double.valueOf(getZ()),
+                Double.valueOf(getW()));
     }
 
     /**
@@ -1500,7 +1488,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param in
      *            ObjectInput
      * @throws IOException
@@ -1516,7 +1504,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param out
      *            ObjectOutput
      * @throws IOException
@@ -1548,7 +1536,7 @@ public class Quaternion implements Cloneable, Savable, Externalizable, ReadOnlyQ
     /**
      * Releases a Quaternion back to be used by a future call to fetchTempInstance. TAKE CARE: this Quaternion object
      * should no longer have other classes referencing it or "Bad Things" will happen.
-     * 
+     *
      * @param mat
      *            the Quaternion to release.
      */

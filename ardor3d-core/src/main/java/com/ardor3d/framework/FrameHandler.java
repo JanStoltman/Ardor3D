@@ -48,8 +48,8 @@ public final class FrameHandler {
 
     public FrameHandler(final Timer timer) {
         _timer = timer;
-        _updaters = new CopyOnWriteArrayList<Updater>();
-        _canvases = new CopyOnWriteArrayList<Canvas>();
+        _updaters = new CopyOnWriteArrayList<>();
+        _canvases = new CopyOnWriteArrayList<>();
     }
 
     @MainThread

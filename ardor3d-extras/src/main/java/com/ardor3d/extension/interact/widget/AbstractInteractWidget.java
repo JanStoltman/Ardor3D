@@ -51,7 +51,7 @@ public abstract class AbstractInteractWidget {
     /**
      * List of filters to modify state after applying input.
      */
-    protected List<UpdateFilter> _filters = new ArrayList<UpdateFilter>();
+    protected List<UpdateFilter> _filters = new ArrayList<>();
 
     public AbstractInteractWidget() {
         _results.setCheckDistance(true);

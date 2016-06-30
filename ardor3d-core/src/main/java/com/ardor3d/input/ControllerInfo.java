@@ -21,8 +21,8 @@ public class ControllerInfo {
 
     public ControllerInfo(final String controllerName, final List<String> axisNames, final List<String> buttonNames) {
         _controllerName = controllerName;
-        _axisNames = new ArrayList<String>(axisNames);
-        _buttonNames = new ArrayList<String>(buttonNames);
+        _axisNames = new ArrayList<>(axisNames);
+        _buttonNames = new ArrayList<>(buttonNames);
     }
 
     public String getControllerName() {

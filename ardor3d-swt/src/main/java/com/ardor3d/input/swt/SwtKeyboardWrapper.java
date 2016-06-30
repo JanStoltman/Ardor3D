@@ -42,7 +42,7 @@ public class SwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
     private Key _lastKeyPressed = null;
 
     public SwtKeyboardWrapper(final Control control) {
-        _upcomingEvents = new LinkedList<KeyEvent>();
+        _upcomingEvents = new LinkedList<>();
         _control = checkNotNull(control, "control");
     }
 

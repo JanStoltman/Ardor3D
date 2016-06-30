@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -12,7 +12,6 @@ package com.ardor3d.example;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +25,7 @@ import com.ardor3d.util.resource.ResourceLocatorTool;
 /**
  * <code>PropertiesGameSettings</code> handles loading and saving a properties file that defines the display settings. A
  * property file is identified during creation of the object. The properties file should have the following format:
- * 
+ *
  * <PRE>
  * &lt;CODE&gt;
  * FREQ=60
@@ -106,7 +105,7 @@ public class PropertiesGameSettings {
 
     /**
      * Constructor creates the <code>PropertiesGameSettings</code> object for use.
-     * 
+     *
      * @param personalFilename
      *            the properties file to use, read from filesystem. Must not be null.
      * @param dfltsFilename
@@ -138,7 +137,7 @@ public class PropertiesGameSettings {
 
     /**
      * <code>get</code> takes an arbitrary string as a key and returns any value associated with it, null if none.
-     * 
+     *
      * @param key
      *            the key to use for data retrieval.
      * @return the string associated with the key, null if none.
@@ -154,7 +153,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -183,7 +182,7 @@ public class PropertiesGameSettings {
     /**
      * <code>getDepth</code> returns the depth as read from the properties file. If the properties file does not contain
      * depth or was not read properly, the default depth is returned.
-     * 
+     *
      * @return the depth determined by the properties file, or the default.
      */
     public int getDepth() {
@@ -197,7 +196,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -218,7 +217,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -230,7 +229,7 @@ public class PropertiesGameSettings {
     /**
      * <code>getFrequency</code> returns the frequency of the monitor as read from the properties file. If the
      * properties file does not contain frequency or was not read properly the default frequency is returned.
-     * 
+     *
      * @return the frequency determined by the properties file, or the default.
      */
     public int getFrequency() {
@@ -244,7 +243,7 @@ public class PropertiesGameSettings {
 
     /**
      * Legacy method.
-     * 
+     *
      * @deprecated Use method isFullscreen instead.
      * @see #isFullscreen()
      */
@@ -256,7 +255,7 @@ public class PropertiesGameSettings {
     /**
      * <code>getHeight</code> returns the height as read from the properties file. If the properties file does not
      * contain height or was not read properly, the default height is returned.
-     * 
+     *
      * @return the height determined by the properties file, or the default.
      */
     public int getHeight() {
@@ -284,9 +283,9 @@ public class PropertiesGameSettings {
     }
 
     /**
-     * 
+     *
      * <code>getRenderer</code> returns the requested rendering API, or the default.
-     * 
+     *
      * @return the rendering API or the default.
      */
     public String getRenderer() {
@@ -300,7 +299,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -311,7 +310,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -323,7 +322,7 @@ public class PropertiesGameSettings {
     /**
      * <code>getWidth</code> returns the width as read from the properties file. If the properties file does not contain
      * width or was not read properly, the default width is returned.
-     * 
+     *
      * @return the width determined by the properties file, or the default.
      */
     public int getWidth() {
@@ -338,7 +337,7 @@ public class PropertiesGameSettings {
     /**
      * <code>isFullscreen</code> returns the fullscreen flag as read from the properties file. If the properties file
      * does not contain the fullscreen flag or was not read properly, the default value is returned.
-     * 
+     *
      * @return the fullscreen flag determined by the properties file, or the default.
      */
     public boolean isFullscreen() {
@@ -352,7 +351,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -367,7 +366,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -378,7 +377,7 @@ public class PropertiesGameSettings {
 
     /**
      * If the properties file does not contain the setting or was not read properly, the default value is returned.
-     * 
+     *
      * @throws InternalError
      *             in all cases
      */
@@ -390,35 +389,26 @@ public class PropertiesGameSettings {
     /**
      * <code>load</code> attempts to load the properties file defined during instantiation and put all properties in the
      * table. If there is a problem loading or reading the file, false is returned. If all goes well, true is returned.
-     * 
+     *
      * @return the success of the load, true indicated success and false indicates failure.
      */
     public boolean load() {
-        FileInputStream fin = null;
-        try {
-            fin = new FileInputStream(filename);
-        } catch (final FileNotFoundException e) {
-            logger.warning("Could not load properties. Creating a new one.");
-            return false;
-        }
-
-        try {
+        try (final FileInputStream fin = new FileInputStream(filename)) {
             prop.load(fin);
-            fin.close();
+
+            // confirm that the properties file has all the data we need.
+            if (null == prop.getProperty("WIDTH") || null == prop.getProperty("HEIGHT")
+                    || null == prop.getProperty("DEPTH") || null == prop.getProperty("FULLSCREEN")) {
+                logger.warning("Properties file not complete.");
+                return false;
+            }
+
+            logger.finer("Read properties");
+            return true;
         } catch (final IOException e) {
             logger.warning("Could not load properties. Creating a new one.");
             return false;
         }
-
-        // confirm that the properties file has all the data we need.
-        if (null == prop.getProperty("WIDTH") || null == prop.getProperty("HEIGHT")
-                || null == prop.getProperty("DEPTH") || null == prop.getProperty("FULLSCREEN")) {
-            logger.warning("Properties file not complete.");
-            return false;
-        }
-
-        logger.finer("Read properties");
-        return true;
     }
 
     /**
@@ -430,21 +420,20 @@ public class PropertiesGameSettings {
 
     /**
      * Persists current property mappings to designated file, overwriting if file already present.
-     * 
+     *
      * @throws IOException
      *             for I/O failures
      */
     public void save() throws IOException {
-        final FileOutputStream fout = new FileOutputStream(filename);
-        prop.store(fout, "Game Settings written by " + getClass().getName() + " at " + new java.util.Date());
-
-        fout.close();
+        try (final FileOutputStream fout = new FileOutputStream(filename)) {
+            prop.store(fout, "Game Settings written by " + getClass().getName() + " at " + new java.util.Date());
+        }
         logger.finer("Saved properties");
     }
 
     /**
      * <code>save(int, int, int, int, boolean, String)</code> overwrites the properties file with the given parameters.
-     * 
+     *
      * @param width
      *            the width of the resolution.
      * @param height
@@ -595,7 +584,7 @@ public class PropertiesGameSettings {
     /**
      * Not implemented. Properties can not store an arbitrary Object in human-readable format. Use set(String, String)
      * instead.
-     * 
+     *
      * @see #set(String, String)
      * @throws InternalError
      *             in all cases
@@ -648,7 +637,7 @@ public class PropertiesGameSettings {
 
     /**
      * save() method which throws only a RuntimeExceptin.
-     * 
+     *
      * @throws RuntimeSetting
      *             for IO failure
      * @see #save()
@@ -675,7 +664,7 @@ public class PropertiesGameSettings {
      * AbstractGameSettings.assignDefaults(propfilename).
      * <P/>
      * Property file paths are relative to CLASSPATH element roots.
-     * 
+     *
      * @param propFileName
      *            Properties file read as CLASSPATH resource. If you give null, no properties file will be loaded.
      */
@@ -745,8 +734,9 @@ public class PropertiesGameSettings {
         try {
             p.load(istream);
         } catch (final IOException ioe) {
-            logger.log(Level.WARNING, "Failed to load customizations from '" + propFileName
-                    + "'.  Continuing without customizations.", ioe);
+            logger.log(Level.WARNING,
+                    "Failed to load customizations from '" + propFileName + "'.  Continuing without customizations.",
+                    ioe);
             return;
         }
         Integer i;

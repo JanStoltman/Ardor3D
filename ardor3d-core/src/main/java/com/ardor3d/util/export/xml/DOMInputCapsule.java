@@ -48,7 +48,7 @@ public class DOMInputCapsule implements InputCapsule {
     private final Document _doc;
     private Element _currentElem;
     private boolean _isAtRoot = true;
-    private final Map<String, Savable> _referencedSavables = new HashMap<String, Savable>();
+    private final Map<String, Savable> _referencedSavables = new HashMap<>();
 
     public DOMInputCapsule(final Document doc) {
         _doc = doc;
@@ -882,7 +882,7 @@ public class DOMInputCapsule implements InputCapsule {
     private Savable[] readRenderStateList(final Element fromElement, final Savable[] defVal) {
         Savable[] ret = defVal;
         try {
-            final List<RenderState> tmp = new ArrayList<RenderState>();
+            final List<RenderState> tmp = new ArrayList<>();
             _currentElem = findFirstChildElement(fromElement);
             while (_currentElem != null) {
                 final Element el = _currentElem;
@@ -1074,7 +1074,7 @@ public class DOMInputCapsule implements InputCapsule {
             }
 
             final int size = Integer.parseInt(tmpEl.getAttribute("size"));
-            final List<FloatBuffer> tmp = new ArrayList<FloatBuffer>(size);
+            final List<FloatBuffer> tmp = new ArrayList<>(size);
             _currentElem = findFirstChildElement(tmpEl);
             for (int i = 0; i < size; i++) {
                 tmp.add(readFloatBuffer(null, null));
@@ -1105,7 +1105,7 @@ public class DOMInputCapsule implements InputCapsule {
         } else {
             tempEl = _currentElem;
         }
-        ret = new HashMap<K, V>();
+        ret = new HashMap<>();
 
         final NodeList nodes = tempEl.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -1135,7 +1135,7 @@ public class DOMInputCapsule implements InputCapsule {
             tempEl = _currentElem;
         }
         if (tempEl != null) {
-            ret = new HashMap<String, V>();
+            ret = new HashMap<>();
 
             final NodeList nodes = tempEl.getChildNodes();
             for (int i = 0; i < nodes.getLength(); i++) {
@@ -1280,7 +1280,7 @@ public class DOMInputCapsule implements InputCapsule {
             }
 
             final int size = Integer.parseInt(tmpEl.getAttribute("size"));
-            final List<ByteBuffer> tmp = new ArrayList<ByteBuffer>(size);
+            final List<ByteBuffer> tmp = new ArrayList<>(size);
             _currentElem = findFirstChildElement(tmpEl);
             for (int i = 0; i < size; i++) {
                 tmp.add(readByteBuffer(null, null));

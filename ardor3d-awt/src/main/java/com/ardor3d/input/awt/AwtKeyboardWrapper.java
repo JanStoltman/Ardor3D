@@ -31,7 +31,7 @@ import com.google.common.collect.PeekingIterator;
  */
 public class AwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
     @GuardedBy("this")
-    protected final LinkedList<KeyEvent> _upcomingEvents = new LinkedList<KeyEvent>();
+    protected final LinkedList<KeyEvent> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
     protected AwtKeyboardIterator _currentIterator = null;

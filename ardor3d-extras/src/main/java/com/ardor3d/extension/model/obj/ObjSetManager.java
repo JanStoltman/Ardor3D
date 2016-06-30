@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjSetManager {
-    private final Map<ObjIndexSet, Integer> _store = new LinkedHashMap<ObjIndexSet, Integer>();
-    private final List<Integer> _indices = new ArrayList<Integer>();
-    private final List<Integer> _lengths = new ArrayList<Integer>();
+    private final Map<ObjIndexSet, Integer> _store = new LinkedHashMap<>();
+    private final List<Integer> _indices = new ArrayList<>();
+    private final List<Integer> _lengths = new ArrayList<>();
 
     public int findSet(final ObjIndexSet set) {
         if (_store.containsKey(set)) {

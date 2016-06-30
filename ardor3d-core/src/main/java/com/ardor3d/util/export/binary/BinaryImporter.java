@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -37,13 +37,13 @@ public class BinaryImporter implements Ardor3dImporter {
     private static final Logger logger = Logger.getLogger(BinaryImporter.class.getName());
 
     // Key - alias, object - bco
-    protected final Map<String, BinaryClassObject> _classes = new HashMap<String, BinaryClassObject>();
+    protected final Map<String, BinaryClassObject> _classes = new HashMap<>();
     // Key - id, object - the savable
-    protected final Map<Integer, Savable> _contentTable = new HashMap<Integer, Savable>();
+    protected final Map<Integer, Savable> _contentTable = new HashMap<>();
     // Key - savable, object - capsule
-    protected final Map<Savable, BinaryInputCapsule> _capsuleTable = new IdentityHashMap<Savable, BinaryInputCapsule>();
+    protected final Map<Savable, BinaryInputCapsule> _capsuleTable = new IdentityHashMap<>();
     // Key - id, opject - location in the file
-    protected final Map<Integer, Integer> _locationTable = new HashMap<Integer, Integer>();
+    protected final Map<Integer, Integer> _locationTable = new HashMap<>();
 
     protected byte[] _dataArray = null;
     protected int _aliasWidth = 0;
@@ -79,8 +79,8 @@ public class BinaryImporter implements Ardor3dImporter {
                 final int fields = ByteUtils.readInt(bis);
                 bytes += (8 + _aliasWidth + classLength);
 
-                bco._nameFields = new HashMap<String, BinaryClassField>(fields);
-                bco._aliasFields = new HashMap<Byte, BinaryClassField>(fields);
+                bco._nameFields = new HashMap<>(fields);
+                bco._aliasFields = new HashMap<>(fields);
                 for (int x = 0; x < fields; x++) {
                     final byte fieldAlias = (byte) bis.read();
                     final byte fieldType = (byte) bis.read();
@@ -162,10 +162,10 @@ public class BinaryImporter implements Ardor3dImporter {
     }
 
     public Savable load(final URL url, final ReadListener listener) throws IOException {
-        final InputStream is = url.openStream();
-        final Savable rVal = load(is, listener);
-        is.close();
-        return rVal;
+        try (final InputStream is = url.openStream()) {
+            final Savable rVal = load(is, listener);
+            return rVal;
+        }
     }
 
     @Override
@@ -174,18 +174,18 @@ public class BinaryImporter implements Ardor3dImporter {
     }
 
     public Savable load(final File file, final ReadListener listener) throws IOException {
-        final FileInputStream fis = new FileInputStream(file);
-        final Savable rVal = load(fis, listener);
-        fis.close();
-        return rVal;
+        try (final FileInputStream fis = new FileInputStream(file)) {
+            final Savable rVal = load(fis, listener);
+            return rVal;
+        }
     }
 
     @Override
     public Savable load(final byte[] data) throws IOException {
-        final ByteArrayInputStream bais = new ByteArrayInputStream(data);
-        final Savable rVal = load(bais);
-        bais.close();
-        return rVal;
+        try (final ByteArrayInputStream bais = new ByteArrayInputStream(data)) {
+            final Savable rVal = load(bais);
+            return rVal;
+        }
     }
 
     protected String readString(final InputStream is, final int length) throws IOException {
@@ -218,8 +218,8 @@ public class BinaryImporter implements Ardor3dImporter {
             final BinaryClassObject bco = _classes.get(alias);
 
             if (bco == null) {
-                logger.logp(Level.SEVERE, this.getClass().toString(), "readObject(int id)", "NULL class object: "
-                        + alias);
+                logger.logp(Level.SEVERE, this.getClass().toString(), "readObject(int id)",
+                        "NULL class object: " + alias);
                 return null;
             }
 
@@ -244,15 +244,12 @@ public class BinaryImporter implements Ardor3dImporter {
             } catch (final InstantiationException e) {
                 logger.logp(Level.SEVERE, this.getClass().toString(), "readObject(int)",
                         "Could not access constructor of class '" + bco._className + "'! \n"
-                                + "Some types may require the annotation SavableFactory.  Please double check.", e);
+                                + "Some types may require the annotation SavableFactory.  Please double check.",
+                        e);
                 throw new Ardor3dException(e);
             } catch (final NoSuchMethodException e) {
-                logger.logp(
-                        Level.SEVERE,
-                        this.getClass().toString(),
-                        "readObject(int)",
-                        e.getMessage()
-                                + " \n"
+                logger.logp(Level.SEVERE, this.getClass().toString(), "readObject(int)",
+                        e.getMessage() + " \n"
                                 + "Method specified in annotation does not appear to exist or has an invalid method signature.",
                         e);
                 throw new Ardor3dException(e);

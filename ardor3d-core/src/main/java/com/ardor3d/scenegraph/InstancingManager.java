@@ -26,7 +26,7 @@ import com.ardor3d.util.geom.BufferUtils;
 public class InstancingManager {
 
     private int _maxBatchSize = 30;
-    private final List<Mesh> _visibleMeshes = new ArrayList<Mesh>(_maxBatchSize);
+    private final List<Mesh> _visibleMeshes = new ArrayList<>(_maxBatchSize);
     private FloatBuffer _transformBuffer;
     private int _primCount;
     private int _meshesToDraw = 0;

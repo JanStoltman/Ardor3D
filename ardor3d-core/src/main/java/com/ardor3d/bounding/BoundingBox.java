@@ -12,6 +12,7 @@ package com.ardor3d.bounding;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 import com.ardor3d.intersection.IntersectionRecord;
 import com.ardor3d.math.MathUtils;
@@ -66,16 +67,8 @@ public class BoundingBox extends BoundingVolume {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        long temp;
-        temp = Double.doubleToLongBits(_xExtent);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(_yExtent);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(_zExtent);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(getXExtent()),
+                Double.valueOf(getYExtent()), Double.valueOf(getZExtent()));
     }
 
     @Override
@@ -259,10 +252,10 @@ public class BoundingBox extends BoundingVolume {
             return;
         }
 
-        final Vector3 min = _compVect1
-                .set(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-        final Vector3 max = _compVect2
-                .set(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+        final Vector3 min = _compVect1.set(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
+        final Vector3 max = _compVect2.set(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.NEGATIVE_INFINITY);
 
         final int vertsPerPrimitive = data.getIndexMode(section).getVertexCount();
         Vector3[] store = new Vector3[vertsPerPrimitive];
@@ -397,8 +390,8 @@ public class BoundingBox extends BoundingVolume {
         switch (volume.getType()) {
             case AABB: {
                 final BoundingBox vBox = (BoundingBox) volume;
-                return merge(vBox._center, vBox.getXExtent(), vBox.getYExtent(), vBox.getZExtent(), new BoundingBox(
-                        new Vector3(0, 0, 0), 0, 0, 0));
+                return merge(vBox._center, vBox.getXExtent(), vBox.getYExtent(), vBox.getZExtent(),
+                        new BoundingBox(new Vector3(0, 0, 0), 0, 0, 0));
             }
 
             case Sphere: {
@@ -768,8 +761,8 @@ public class BoundingBox extends BoundingVolume {
             }
 
             final double[] distances = new double[] { t[0] };
-            final Vector3[] points = new Vector3[] { new Vector3(ray.getDirection()).multiplyLocal(distances[0])
-                    .addLocal(ray.getOrigin()), };
+            final Vector3[] points = new Vector3[] {
+                    new Vector3(ray.getDirection()).multiplyLocal(distances[0]).addLocal(ray.getOrigin()), };
             return new IntersectionRecord(distances, points);
         }
 

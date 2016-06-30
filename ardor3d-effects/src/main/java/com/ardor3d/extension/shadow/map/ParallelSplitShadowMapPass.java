@@ -99,10 +99,10 @@ public class ParallelSplitShadowMapPass extends Pass {
     private Texture2D _shadowMapTexture[];
 
     /** The list of occluding nodes. */
-    private final List<Spatial> _occluderNodes = new ArrayList<Spatial>();
+    private final List<Spatial> _occluderNodes = new ArrayList<>();
 
     /** Extra bounds receivers, when rendering shadows other ways than through overlay */
-    private final List<Spatial> _boundsReceiver = new ArrayList<Spatial>();
+    private final List<Spatial> _boundsReceiver = new ArrayList<>();
 
     // Various optimizations for rendering shadow maps...
     /** Culling front faces when rendering shadow maps. */

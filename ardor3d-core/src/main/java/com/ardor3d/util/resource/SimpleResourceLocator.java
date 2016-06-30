@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -27,7 +27,7 @@ public class SimpleResourceLocator implements ResourceLocator {
 
     /**
      * Construct a new SimpleResourceLocator using the given URI as our context.
-     * 
+     *
      * @param baseDir
      *            our base context. This is meant to be a "directory" wherein we will search for resources. Therefore,
      *            if it does not end in /, a / will be added to ensure we are talking about children of the given
@@ -52,7 +52,7 @@ public class SimpleResourceLocator implements ResourceLocator {
 
     /**
      * Construct a new SimpleResourceLocator using the given URL as our context.
-     * 
+     *
      * @param baseDir
      *            our base context. This is converted to a URI. This is meant to be a "directory" wherein we will search
      *            for resources. Therefore, if it does not end in /, a / will be added to ensure we are talking about
@@ -135,5 +135,10 @@ public class SimpleResourceLocator implements ResourceLocator {
             return _baseDir.equals(((SimpleResourceLocator) obj)._baseDir);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return _baseDir.hashCode();
     }
 }

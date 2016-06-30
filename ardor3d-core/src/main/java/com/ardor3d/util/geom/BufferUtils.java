@@ -45,7 +45,7 @@ import com.ardor3d.util.Constants;
 public final class BufferUtils {
 
     // // -- TRACKER HASH -- ////
-    private static final Map<Buffer, Object> trackingHash = new WeakHashMap<Buffer, Object>();
+    private static final Map<Buffer, Object> trackingHash = new WeakHashMap<>();
     private static final Object ref = new Object();
 
     // // -- COLORRGBA METHODS -- ////
@@ -1782,7 +1782,7 @@ public final class BufferUtils {
     public static void printCurrentDirectMemory(StringBuilder store) {
         long totalHeld = 0;
         // make a new set to hold the keys to prevent concurrency issues.
-        final List<Buffer> bufs = new ArrayList<Buffer>(trackingHash.keySet());
+        final List<Buffer> bufs = new ArrayList<>(trackingHash.keySet());
         int fBufs = 0, bBufs = 0, iBufs = 0, sBufs = 0, dBufs = 0;
         int fBufsM = 0, bBufsM = 0, iBufsM = 0, sBufsM = 0, dBufsM = 0;
         for (final Buffer b : bufs) {

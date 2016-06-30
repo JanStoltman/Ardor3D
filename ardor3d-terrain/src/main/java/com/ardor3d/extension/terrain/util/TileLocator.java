@@ -3,6 +3,7 @@ package com.ardor3d.extension.terrain.util;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Objects;
 
 public class TileLocator implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -37,12 +38,7 @@ public class TileLocator implements Serializable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + clipmapLevel;
-        result = prime * result + sourceId;
-        result = prime * result + (tile == null ? 0 : tile.hashCode());
-        return result;
+        return Objects.hash(Integer.valueOf(getClipmapLevel()), Integer.valueOf(getSourceId()), tile);
     }
 
     @Override

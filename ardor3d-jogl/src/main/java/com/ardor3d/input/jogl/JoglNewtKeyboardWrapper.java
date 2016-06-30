@@ -31,7 +31,7 @@ import com.jogamp.newt.opengl.GLWindow;
 public class JoglNewtKeyboardWrapper extends KeyAdapter implements KeyboardWrapper {
 
     @GuardedBy("this")
-    protected final LinkedList<KeyEvent> _upcomingEvents = new LinkedList<KeyEvent>();
+    protected final LinkedList<KeyEvent> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
     protected JoglNewtKeyboardIterator _currentIterator = null;

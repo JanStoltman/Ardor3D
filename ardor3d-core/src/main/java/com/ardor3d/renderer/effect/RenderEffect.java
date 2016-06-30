@@ -20,7 +20,7 @@ import java.util.List;
 public abstract class RenderEffect {
 
     /** A list of logical steps that comprise our effect. */
-    protected final List<EffectStep> _steps = new ArrayList<EffectStep>();
+    protected final List<EffectStep> _steps = new ArrayList<>();
 
     /** Is this render effect active? */
     protected boolean _enabled = true;

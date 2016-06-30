@@ -241,7 +241,7 @@ public class NvTriangleStripper implements Visitor {
         PrimitiveGroup[] primGroups;
 
         // put data in format that the stripifier likes
-        final List<Integer> tempIndices = new ArrayList<Integer>();
+        final List<Integer> tempIndices = new ArrayList<>();
         int maxIndex = 0;
         for (int i = 0; i < in_indices.length; i++) {
             tempIndices.add(in_indices[i]);
@@ -249,8 +249,8 @@ public class NvTriangleStripper implements Visitor {
                 maxIndex = in_indices[i];
             }
         }
-        final List<NvStripInfo> tempStrips = new ArrayList<NvStripInfo>();
-        final List<NvFaceInfo> tempFaces = new ArrayList<NvFaceInfo>();
+        final List<NvStripInfo> tempStrips = new ArrayList<>();
+        final List<NvFaceInfo> tempFaces = new ArrayList<>();
 
         final NvStripifier stripifier = new NvStripifier();
 
@@ -258,7 +258,7 @@ public class NvTriangleStripper implements Visitor {
         stripifier.stripify(tempIndices, _cacheSize, _minStripSize, maxIndex, tempStrips, tempFaces);
 
         // stitch strips together
-        final List<Integer> stripIndices = new ArrayList<Integer>();
+        final List<Integer> stripIndices = new ArrayList<>();
         int numSeparateStrips = 0;
 
         if (_listsOnly) {
@@ -374,7 +374,7 @@ public class NvTriangleStripper implements Visitor {
 
             final List<NvFaceInfo> in_bins[] = new List[NUMBINS];
             for (int i = 0; i < NUMBINS; i++) {
-                in_bins[i] = new ArrayList<NvFaceInfo>();
+                in_bins[i] = new ArrayList<>();
             }
 
             // hash input indices on first index
@@ -525,7 +525,7 @@ public class NvTriangleStripper implements Visitor {
             PrimitiveGroup[] strips = generateStrips(indices, false);
 
             if (_reorderVertices) {
-                final AtomicReference<int[]> newOrder = new AtomicReference<int[]>();
+                final AtomicReference<int[]> newOrder = new AtomicReference<>();
                 strips = remapIndices(strips, newOrder, md.getVertexCount());
 
                 // ask mesh to apply new vertex order

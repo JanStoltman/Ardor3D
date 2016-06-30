@@ -83,11 +83,11 @@ public enum TextFactory {
         rVal.setStyled(styled);
 
         // note: spans must be in order by start index
-        final LinkedList<StyleSpan> spans = new LinkedList<StyleSpan>();
+        final LinkedList<StyleSpan> spans = new LinkedList<>();
         final String plainText;
         if (styled && _styleParser != null) {
             // parse text for style spans
-            final List<StyleSpan> styleStore = new ArrayList<StyleSpan>();
+            final List<StyleSpan> styleStore = new ArrayList<>();
             plainText = _styleParser.parseStyleSpans(text, styleStore);
             Collections.sort(styleStore);
             if (!styleStore.isEmpty()) {
@@ -110,7 +110,7 @@ public enum TextFactory {
         textData.reset();
 
         char prevChar = 0, c = 0;
-        final List<StyleSpan> currentStyles = new LinkedList<StyleSpan>();
+        final List<StyleSpan> currentStyles = new LinkedList<>();
         // indexed by character offset
         final List<CharacterDescriptor> descs = textData._characters;
         final List<Integer> descXStarts = textData._xStarts;
@@ -123,7 +123,7 @@ public enum TextFactory {
         int maxLineHeight = 0, xOffset = 0, maxSizeHeight = 0;
         UIFont prevFont = null;
         double scale = 1, prevScale = 0;
-        final Map<String, Object> stylesMap = new HashMap<String, Object>();
+        final Map<String, Object> stylesMap = new HashMap<>();
 
         final char[] chars = plainText.toCharArray();
         for (int i = 0; i < chars.length; i++) {
@@ -156,7 +156,7 @@ public enum TextFactory {
             }
 
             // find the UIFont related to the given font family & size & styles
-            final AtomicReference<Double> scaleRef = new AtomicReference<Double>();
+            final AtomicReference<Double> scaleRef = new AtomicReference<>();
             final UIFont font = _fontProvider.getClosestMatchingFont(stylesMap, scaleRef);
             if (font == null) {
                 return rVal;

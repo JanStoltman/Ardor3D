@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -20,7 +20,7 @@ import java.io.InputStream;
  * LittleEndianDataInput is a class to read little-endian stored data via a InputStream. All functions work as defined
  * in DataInput, but assume they come from a LittleEndian input stream.
  */
-public class LittleEndianDataInput implements DataInput {
+public class LittleEndianDataInput implements DataInput, AutoCloseable {
 
     private final BufferedInputStream _stream;
 
@@ -33,7 +33,7 @@ public class LittleEndianDataInput implements DataInput {
     /**
      * Creates a new LittleEndian reader from the given input stream. The stream is wrapped in a BufferedInputStream
      * automatically.
-     * 
+     *
      * @param in
      *            The input stream to read from.
      */
@@ -50,8 +50,8 @@ public class LittleEndianDataInput implements DataInput {
      * read an unsigned int as a long
      */
     public final long readUnsignedInt() throws IOException {
-        return ((_stream.read() & 0xff) | ((_stream.read() & 0xff) << 8) | ((_stream.read() & 0xff) << 16) | (((long) (_stream
-                .read() & 0xff)) << 24));
+        return ((_stream.read() & 0xff) | ((_stream.read() & 0xff) << 8) | ((_stream.read() & 0xff) << 16)
+                | (((long) (_stream.read() & 0xff)) << 24));
     }
 
     @Override
@@ -81,16 +81,16 @@ public class LittleEndianDataInput implements DataInput {
 
     @Override
     public final int readInt() throws IOException {
-        return ((_stream.read() & 0xff) | ((_stream.read() & 0xff) << 8) | ((_stream.read() & 0xff) << 16) | ((_stream
-                .read() & 0xff) << 24));
+        return ((_stream.read() & 0xff) | ((_stream.read() & 0xff) << 8) | ((_stream.read() & 0xff) << 16)
+                | ((_stream.read() & 0xff) << 24));
     }
 
     @Override
     public final long readLong() throws IOException {
-        return ((_stream.read() & 0xff) | ((long) (_stream.read() & 0xff) << 8)
-                | ((long) (_stream.read() & 0xff) << 16) | ((long) (_stream.read() & 0xff) << 24)
-                | ((long) (_stream.read() & 0xff) << 32) | ((long) (_stream.read() & 0xff) << 40)
-                | ((long) (_stream.read() & 0xff) << 48) | ((long) (_stream.read() & 0xff) << 56));
+        return ((_stream.read() & 0xff) | ((long) (_stream.read() & 0xff) << 8) | ((long) (_stream.read() & 0xff) << 16)
+                | ((long) (_stream.read() & 0xff) << 24) | ((long) (_stream.read() & 0xff) << 32)
+                | ((long) (_stream.read() & 0xff) << 40) | ((long) (_stream.read() & 0xff) << 48)
+                | ((long) (_stream.read() & 0xff) << 56));
     }
 
     @Override
@@ -141,6 +141,7 @@ public class LittleEndianDataInput implements DataInput {
         throw new IOException("Unsupported operation");
     }
 
+    @Override
     public final void close() throws IOException {
         _stream.close();
     }

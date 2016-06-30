@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class MultiStatSample {
-    private final HashMap<StatType, StatValue> _values = new HashMap<StatType, StatValue>();
+    private final HashMap<StatType, StatValue> _values = new HashMap<>();
     private double _elapsedTime = 0.0;
 
     public static MultiStatSample createNew(final HashMap<StatType, StatValue> current) {

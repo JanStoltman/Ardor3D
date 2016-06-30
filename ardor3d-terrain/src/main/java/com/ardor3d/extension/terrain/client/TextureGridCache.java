@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,6 +13,7 @@ package com.ardor3d.extension.terrain.client;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -51,9 +52,9 @@ public class TextureGridCache implements TextureCache, Runnable {
     private final int clipmapLevel;
     private final int requestedLevel;
 
-    private final Set<TileLoadingData> currentTiles = new HashSet<TileLoadingData>();
-    private Set<TileLoadingData> newThreadTiles = new HashSet<TileLoadingData>();
-    private Set<TileLoadingData> backThreadTiles = new HashSet<TileLoadingData>();
+    private final Set<TileLoadingData> currentTiles = new HashSet<>();
+    private Set<TileLoadingData> newThreadTiles = new HashSet<>();
+    private Set<TileLoadingData> backThreadTiles = new HashSet<>();
     private final Object SWAP_LOCK = new Object();
     private int backCurrentTileX = Integer.MAX_VALUE;
     private int backCurrentTileY = Integer.MAX_VALUE;
@@ -69,12 +70,12 @@ public class TextureGridCache implements TextureCache, Runnable {
 
     // Debug
     private final boolean enableDebug = true;
-    private final Set<TileLoadingData> debugTiles = new HashSet<TileLoadingData>();
+    private final Set<TileLoadingData> debugTiles = new HashSet<>();
 
     public Set<TileLoadingData> getDebugTiles() {
         Set<TileLoadingData> copyTiles = null;
         synchronized (debugTiles) {
-            copyTiles = new HashSet<TileLoadingData>(debugTiles);
+            copyTiles = new HashSet<>(debugTiles);
         }
         return copyTiles;
     }
@@ -129,8 +130,8 @@ public class TextureGridCache implements TextureCache, Runnable {
     public Set<Tile> handleUpdateRequests() {
         Set<Tile> updateTiles;
         try {
-            updateTiles = source.getInvalidTiles(requestedLevel, backCurrentTileX - cacheSize / 2, backCurrentTileY
-                    - cacheSize / 2, cacheSize, cacheSize);
+            updateTiles = source.getInvalidTiles(requestedLevel, backCurrentTileX - cacheSize / 2,
+                    backCurrentTileY - cacheSize / 2, cacheSize, cacheSize);
             if (updateTiles == null || updateTiles.isEmpty()) {
                 return null;
             }
@@ -158,8 +159,8 @@ public class TextureGridCache implements TextureCache, Runnable {
             final int destX = MathUtils.moduloPositive(tile.getX(), cacheSize);
             final int destY = MathUtils.moduloPositive(tile.getY(), cacheSize);
 
-            final TextureStoreFormat format = textureConfiguration.getTextureDataType(source.getContributorId(
-                    requestedLevel, tile));
+            final TextureStoreFormat format = textureConfiguration
+                    .getTextureDataType(source.getContributorId(requestedLevel, tile));
             CacheFunctionUtil.applyFunction(useAlpha, function, sourceData, data, destX, destY, format, tileSize,
                     dataSize);
         }
@@ -183,7 +184,7 @@ public class TextureGridCache implements TextureCache, Runnable {
             backCurrentTileX = tileX;
             backCurrentTileY = tileY;
 
-            final Set<TileLoadingData> newTiles = new HashSet<TileLoadingData>();
+            final Set<TileLoadingData> newTiles = new HashSet<>();
             for (int i = 0; i < cacheSize; i++) {
                 for (int j = 0; j < cacheSize; j++) {
                     final int sourceX = tileX + j - cacheSize / 2;
@@ -273,8 +274,8 @@ public class TextureGridCache implements TextureCache, Runnable {
                         || tileY <= locatorTile.getY() - locatorSize / 2 + 1
                         || tileY >= locatorTile.getY() + locatorSize / 2 - 2) {
                     try {
-                        validTiles = source.getValidTiles(requestedLevel, tileX - locatorSize / 2, tileY - locatorSize
-                                / 2, locatorSize, locatorSize);
+                        validTiles = source.getValidTiles(requestedLevel, tileX - locatorSize / 2,
+                                tileY - locatorSize / 2, locatorSize, locatorSize);
                     } catch (final Exception e) {
                         logger.log(Level.WARNING, "Exception getting source info", e);
                     }
@@ -410,8 +411,8 @@ public class TextureGridCache implements TextureCache, Runnable {
                 destinationData.put(rgbArray, 0, (destinationSize - dataX) * colorBits);
 
                 destinationData.position(destIndex);
-                destinationData.put(rgbArray, (destinationSize - dataX) * colorBits, (dataX + width - destinationSize)
-                        * colorBits);
+                destinationData.put(rgbArray, (destinationSize - dataX) * colorBits,
+                        (dataX + width - destinationSize) * colorBits);
             } else {
                 final int destIndex = (dataY * destinationSize + dataX) * colorBits;
                 destinationData.position(destIndex);
@@ -450,9 +451,8 @@ public class TextureGridCache implements TextureCache, Runnable {
 
         public TileLoadingData(final DoubleBufferedList<Region> mailBox, final Tile sourceTile, final Tile destTile,
                 final TextureSource source, final CacheData[][] cache, final byte[] data, final int tileSize,
-                final int dataSize, final SourceCacheFunction function,
-                final TextureConfiguration textureConfiguration, final boolean useAlpha, final int clipmapLevel,
-                final int requestedLevel) {
+                final int dataSize, final SourceCacheFunction function, final TextureConfiguration textureConfiguration,
+                final boolean useAlpha, final int clipmapLevel, final int requestedLevel) {
             this.mailBox = mailBox;
 
             this.sourceTile = sourceTile;
@@ -494,8 +494,8 @@ public class TextureGridCache implements TextureCache, Runnable {
                 return false;
             }
 
-            final TextureStoreFormat format = textureConfiguration.getTextureDataType(source.getContributorId(
-                    requestedLevel, sourceTile));
+            final TextureStoreFormat format = textureConfiguration
+                    .getTextureDataType(source.getContributorId(requestedLevel, sourceTile));
             CacheFunctionUtil.applyFunction(useAlpha, function, sourceData, data, destTile.getX(), destTile.getY(),
                     format, tileSize, dataSize);
 
@@ -528,11 +528,7 @@ public class TextureGridCache implements TextureCache, Runnable {
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + (destTile == null ? 0 : destTile.hashCode());
-            result = prime * result + (sourceTile == null ? 0 : sourceTile.hashCode());
-            return result;
+            return Objects.hash(destTile, sourceTile);
         }
 
         @Override

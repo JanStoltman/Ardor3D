@@ -44,7 +44,7 @@ public class ProceduralNormalMapSource implements TextureSource {
 
     @Override
     public TextureConfiguration getConfiguration() throws Exception {
-        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<Integer, TextureStoreFormat>();
+        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<>();
         textureStoreFormat.put(0, TextureStoreFormat.RGB8);
 
         return new TextureConfiguration(availableClipmapLevels, textureStoreFormat, tileSize, 1f, false, false);

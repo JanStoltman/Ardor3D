@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class DefaultComboBoxModel implements ComboBoxModel {
 
-    protected List<ModelElement> _elements = new ArrayList<ModelElement>();
+    protected List<ModelElement> _elements = new ArrayList<>();
 
     public DefaultComboBoxModel() {}
 

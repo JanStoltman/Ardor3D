@@ -266,9 +266,9 @@ public final class PropertiesDialog extends JDialog {
         displayResCombo.addKeyListener(aListener);
         samplesCombo = setUpSamplesChooser();
         samplesCombo.addKeyListener(aListener);
-        colorDepthCombo = new JComboBox<String>();
+        colorDepthCombo = new JComboBox<>();
         colorDepthCombo.addKeyListener(aListener);
-        displayFreqCombo = new JComboBox<String>();
+        displayFreqCombo = new JComboBox<>();
         displayFreqCombo.addKeyListener(aListener);
         fullscreenBox = new JCheckBox("Fullscreen?");
         fullscreenBox.setSelected(source.isFullscreen());
@@ -413,7 +413,7 @@ public final class PropertiesDialog extends JDialog {
      */
     private JComboBox<String> setUpResolutionChooser() {
         final String[] res = getResolutions(modes);
-        final JComboBox<String> resolutionBox = new JComboBox<String>(res);
+        final JComboBox<String> resolutionBox = new JComboBox<>(res);
 
         resolutionBox.setSelectedItem(source.getWidth() + " x " + source.getHeight());
         resolutionBox.addActionListener(new ActionListener() {
@@ -433,7 +433,7 @@ public final class PropertiesDialog extends JDialog {
      * @return the list of renderers.
      */
     private JComboBox<String> setUpRendererChooser() {
-        final JComboBox<String> nameBox = new JComboBox<String>(new String[] { "JOGL 2" });
+        final JComboBox<String> nameBox = new JComboBox<>(new String[] { "JOGL 2" });
         // final String old = source.getRenderer();
         /*
          * if (old != null) { if (old.startsWith("JOGL")) {
@@ -446,7 +446,7 @@ public final class PropertiesDialog extends JDialog {
     }
 
     private JComboBox<String> setUpSamplesChooser() {
-        final JComboBox<String> nameBox = new JComboBox<String>(samples);
+        final JComboBox<String> nameBox = new JComboBox<>(samples);
         nameBox.setSelectedItem(source.getRenderer());
         return nameBox;
     }
@@ -472,11 +472,11 @@ public final class PropertiesDialog extends JDialog {
 
         // grab available depths
         final String[] depths = getDepths(resolution, modes);
-        colorDepthCombo.setModel(new DefaultComboBoxModel<String>(depths));
+        colorDepthCombo.setModel(new DefaultComboBoxModel<>(depths));
         colorDepthCombo.setSelectedItem(colorDepth);
         // grab available frequencies
         final String[] freqs = getFrequencies(resolution, modes);
-        displayFreqCombo.setModel(new DefaultComboBoxModel<String>(freqs));
+        displayFreqCombo.setModel(new DefaultComboBoxModel<>(freqs));
         // Try to reset freq
         displayFreqCombo.setSelectedItem(displayFreq);
     }
@@ -488,12 +488,12 @@ public final class PropertiesDialog extends JDialog {
      */
     private void updateResolutionChoices() {
         if (!fullscreenBox.isSelected()) {
-            displayResCombo.setModel(new DefaultComboBoxModel<String>(windowedResolutions));
-            colorDepthCombo.setModel(new DefaultComboBoxModel<String>(new String[] { "24 bpp", "16 bpp" }));
-            displayFreqCombo.setModel(new DefaultComboBoxModel<String>(new String[] { "n/a" }));
+            displayResCombo.setModel(new DefaultComboBoxModel<>(windowedResolutions));
+            colorDepthCombo.setModel(new DefaultComboBoxModel<>(new String[] { "24 bpp", "16 bpp" }));
+            displayFreqCombo.setModel(new DefaultComboBoxModel<>(new String[] { "n/a" }));
             displayFreqCombo.setEnabled(false);
         } else {
-            displayResCombo.setModel(new DefaultComboBoxModel<String>(getResolutions(modes)));
+            displayResCombo.setModel(new DefaultComboBoxModel<>(getResolutions(modes)));
             displayFreqCombo.setEnabled(true);
             updateDisplayChoices();
         }
@@ -526,7 +526,7 @@ public final class PropertiesDialog extends JDialog {
      * Returns every unique resolution from an array of <code>DisplayMode</code>s.
      */
     private static String[] getResolutions(final DisplayMode[] modes) {
-        final List<String> resolutions = new ArrayList<String>(modes.length);
+        final List<String> resolutions = new ArrayList<>(modes.length);
         for (int i = 0; i < modes.length; i++) {
             final String res = modes[i].getWidth() + " x " + modes[i].getHeight();
             if (!resolutions.contains(res)) {
@@ -543,7 +543,7 @@ public final class PropertiesDialog extends JDialog {
      * Returns every possible bit depth for the given resolution.
      */
     private static String[] getDepths(final String resolution, final DisplayMode[] modes) {
-        final Set<String> depths = new TreeSet<String>(new Comparator<String>() {
+        final Set<String> depths = new TreeSet<>(new Comparator<String>() {
             @Override
             public int compare(final String o1, final String o2) {
                 // reverse order
@@ -573,7 +573,7 @@ public final class PropertiesDialog extends JDialog {
      * Returns every possible refresh rate for the given resolution.
      */
     private static String[] getFrequencies(final String resolution, final DisplayMode[] modes) {
-        final List<String> freqs = new ArrayList<String>(4);
+        final List<String> freqs = new ArrayList<>(4);
         for (int i = 0; i < modes.length; i++) {
             final String res = modes[i].getWidth() + " x " + modes[i].getHeight();
             final String freq = modes[i].getRefreshRate() + " Hz";

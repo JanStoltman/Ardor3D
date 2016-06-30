@@ -107,7 +107,7 @@ public class LineExample extends ExampleBase {
     private Line makeLine(final Grapher grapher, final double min, final double max, final double step) {
         // This is just one way to make a line... You can also generate the FloatBuffer directly.
         // Make an array to hold the Vector3 points that will make up our Line.
-        final ArrayList<Vector3> vertexList = new ArrayList<Vector3>();
+        final ArrayList<Vector3> vertexList = new ArrayList<>();
 
         // Step through our range [min, max] by our step amount.
         for (double x = min; x <= max; x += step) {

@@ -53,7 +53,7 @@ public class TimedAreaGrapher extends AbstractStatGrapher implements TableLinkab
     private static final int majorHBar = 20;
     private static final int majorVBar = 10;
 
-    private final HashMap<StatType, AreaEntry> _entries = new HashMap<StatType, AreaEntry>();
+    private final HashMap<StatType, AreaEntry> _entries = new HashMap<>();
 
     private BlendState _defBlendState = null;
 
@@ -263,7 +263,7 @@ public class TimedAreaGrapher extends AbstractStatGrapher implements TableLinkab
     }
 
     class AreaEntry {
-        public List<Vector3> verts = new ArrayList<Vector3>();
+        public List<Vector3> verts = new ArrayList<>();
         public int maxSamples;
         public boolean visited;
         public Mesh area;

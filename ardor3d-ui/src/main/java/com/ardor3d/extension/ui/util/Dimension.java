@@ -3,12 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.ui.util;
+
+import java.util.Objects;
 
 /**
  * This class is patterned after awt's {@link java.awt.Dimension Dimension} class. It describes the width and height of
@@ -28,7 +30,7 @@ public class Dimension {
 
     /**
      * Construct a new dimension object using the given values.
-     * 
+     *
      * @param width
      * @param height
      */
@@ -39,7 +41,7 @@ public class Dimension {
 
     /**
      * Construct a new dimension object using the values of the given source.
-     * 
+     *
      * @param source
      */
     public Dimension(final Dimension source) {
@@ -90,10 +92,7 @@ public class Dimension {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result += 31 * result + getWidth();
-        result += 31 * result + getHeight();
-        return result;
+        return Objects.hash(Integer.valueOf(getWidth()), Integer.valueOf(getHeight()));
     }
 
     @Override

@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableList;
 public class InclusiveClipSource extends ClipSource {
 
     /** Our List of channels to include by name. */
-    private final List<String> _enabledChannels = new ArrayList<String>();
+    private final List<String> _enabledChannels = new ArrayList<>();
 
     /**
      * Construct a new source. Clip and Manager must be set separately before use.
@@ -92,7 +92,7 @@ public class InclusiveClipSource extends ClipSource {
         final Map<String, ? extends Object> orig = super.getSourceData(manager);
 
         // make a copy, only bringing across specific channels
-        final Map<String, Object> data = new HashMap<String, Object>();
+        final Map<String, Object> data = new HashMap<>();
         if (_enabledChannels != null) {
             for (final String key : _enabledChannels) {
                 if (orig.containsKey(key)) {

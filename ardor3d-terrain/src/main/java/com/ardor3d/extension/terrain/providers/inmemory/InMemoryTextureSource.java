@@ -37,7 +37,7 @@ public class InMemoryTextureSource implements TextureSource {
 
     @Override
     public TextureConfiguration getConfiguration() throws Exception {
-        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<Integer, TextureStoreFormat>();
+        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<>();
         textureStoreFormat.put(0, TextureStoreFormat.RGBA8);
 
         return new TextureConfiguration(availableClipmapLevels, textureStoreFormat, tileSize, 1f, true, true);
@@ -48,7 +48,7 @@ public class InMemoryTextureSource implements TextureSource {
             final int numTilesY) throws Exception {
         final int baseClipmapLevel = availableClipmapLevels - clipmapLevel - 1;
 
-        final Set<Tile> validTiles = new HashSet<Tile>();
+        final Set<Tile> validTiles = new HashSet<>();
 
         final int levelSize = 1 << baseClipmapLevel;
         final int size = inMemoryTerrainData.getSide();
@@ -77,7 +77,7 @@ public class InMemoryTextureSource implements TextureSource {
 
         final int baseClipmapLevel = availableClipmapLevels - clipmapLevel - 1;
 
-        final Set<Tile> tiles = new HashSet<Tile>();
+        final Set<Tile> tiles = new HashSet<>();
 
         synchronized (updatedTiles[baseClipmapLevel]) {
             if (updatedTiles[baseClipmapLevel].isEmpty()) {

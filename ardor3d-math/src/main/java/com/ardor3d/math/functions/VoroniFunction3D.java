@@ -31,7 +31,7 @@ public class VoroniFunction3D implements Function3D {
     private int _seed = 0;
 
     // A cache for cube values
-    private final Map<Key, Vector3> _points = new HashMap<Key, Vector3>();
+    private final Map<Key, Vector3> _points = new HashMap<>();
 
     /**
      * Construct with default values.

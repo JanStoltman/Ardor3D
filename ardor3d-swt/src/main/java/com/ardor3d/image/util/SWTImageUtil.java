@@ -65,7 +65,7 @@ public abstract class SWTImageUtil {
         final int width = input.getWidth(), height = input.getHeight();
 
         // create our return list
-        final List<ImageData> rVal = new ArrayList<ImageData>();
+        final List<ImageData> rVal = new ArrayList<>();
 
         // Calculate our modulation or "tint" values per channel
         final double tRed = tint != null ? tint.getRed() / 255. : 1.0;

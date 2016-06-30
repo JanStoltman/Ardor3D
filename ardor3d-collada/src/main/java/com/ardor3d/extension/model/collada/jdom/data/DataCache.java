@@ -70,35 +70,35 @@ public class DataCache {
     private final Multimap<Joint, AttachmentPoint> _attachmentPoints = ArrayListMultimap.create();
 
     public DataCache() {
-        _boundMaterials = new HashMap<String, Element>();
-        _textures = new HashMap<String, Texture>();
-        _idCache = new HashMap<String, Element>();
-        _sidCache = new HashMap<String, Element>();
-        _xPathExpressions = new HashMap<String, XPathExpression<?>>();
+        _boundMaterials = new HashMap<>();
+        _textures = new HashMap<>();
+        _idCache = new HashMap<>();
+        _sidCache = new HashMap<>();
+        _xPathExpressions = new HashMap<>();
         _pattern = Pattern.compile("\\s");
 
         _transformTypes = Collections.unmodifiableList(Arrays.asList(new String[] { "lookat", "matrix", "rotate",
                 "scale", "scew", "translate" }));
 
-        _floatArrays = new HashMap<Element, float[]>();
-        _doubleArrays = new HashMap<Element, double[]>();
-        _booleanArrays = new HashMap<Element, boolean[]>();
-        _intArrays = new HashMap<Element, int[]>();
-        _stringArrays = new HashMap<Element, String[]>();
+        _floatArrays = new HashMap<>();
+        _doubleArrays = new HashMap<>();
+        _booleanArrays = new HashMap<>();
+        _intArrays = new HashMap<>();
+        _stringArrays = new HashMap<>();
         _vertMappings = ArrayListMultimap.create();
-        _meshVertMap = new IdentityHashMap<Mesh, VertMap>();
+        _meshVertMap = new IdentityHashMap<>();
         _parsedVertexColors = ArrayListMultimap.create();
-        _materialInfoMap = new HashMap<String, MaterialInfo>();
-        _meshMaterialMap = new IdentityHashMap<Mesh, String>();
+        _materialInfoMap = new HashMap<>();
+        _meshMaterialMap = new IdentityHashMap<>();
 
-        _elementSpatialMapping = new HashMap<Element, Spatial>();
+        _elementSpatialMapping = new HashMap<>();
 
-        _elementJointMapping = new HashMap<Element, Joint>();
-        _externalJointMapping = new HashMap<String, Joint>();
-        _skeletons = new ArrayList<Skeleton>();
-        _jointSkeletonMapping = new HashMap<Joint, Skeleton>();
-        _skeletonPoseMapping = new HashMap<Skeleton, SkeletonPose>();
-        _controllers = new ArrayList<ControllerStore>();
+        _elementJointMapping = new HashMap<>();
+        _externalJointMapping = new HashMap<>();
+        _skeletons = new ArrayList<>();
+        _jointSkeletonMapping = new HashMap<>();
+        _skeletonPoseMapping = new HashMap<>();
+        _controllers = new ArrayList<>();
     }
 
     public void bindMaterial(final String ref, final Element material) {

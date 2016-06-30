@@ -42,7 +42,7 @@ public class ExtrusionExample extends ExampleBase {
         _canvas.getCanvasRenderer().getCamera().setLocation(new Vector3(0, 0, 80));
         _canvas.getCanvasRenderer().getCamera().lookAt(new Vector3(), Vector3.UNIT_Y);
 
-        final List<ReadOnlyVector3> path = new ArrayList<ReadOnlyVector3>();
+        final List<ReadOnlyVector3> path = new ArrayList<>();
         path.add(new Vector3(0, 0, 0));
         path.add(new Vector3(0, 0, 4));
         path.add(new Vector3(1, 0, 8));

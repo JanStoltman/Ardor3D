@@ -3,12 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.model.obj;
+
+import java.util.Objects;
 
 public class ObjIndexSet {
     private final int _vIndex, _vtIndex;
@@ -64,12 +66,8 @@ public class ObjIndexSet {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result += 31 * result + _vIndex;
-        result += 31 * result + _vtIndex;
-        result += 31 * result + _vnIndex;
-        result += 31 * result + _sGroup;
-        return result;
+        return Objects.hash(Integer.valueOf(getVIndex()), Integer.valueOf(getVtIndex()), Integer.valueOf(getVnIndex()),
+                Long.valueOf(getSmoothGroup()));
     }
 
     @Override

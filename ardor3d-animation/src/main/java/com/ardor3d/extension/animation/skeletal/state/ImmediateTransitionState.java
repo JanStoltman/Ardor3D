@@ -49,7 +49,7 @@ public class ImmediateTransitionState extends AbstractTransitionState {
      */
     @Override
     public Map<String, ? extends Object> getCurrentSourceData(final AnimationManager manager) {
-        return new HashMap<String, Object>();
+        return new HashMap<>();
     }
 
     /**

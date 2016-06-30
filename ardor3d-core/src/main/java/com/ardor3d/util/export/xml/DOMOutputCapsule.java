@@ -37,7 +37,7 @@ public class DOMOutputCapsule implements OutputCapsule {
     private static final String _dataAttributeName = "data";
     private final Document _doc;
     private Element _currentElement;
-    private final Map<Savable, Element> _writtenSavables = new IdentityHashMap<Savable, Element>();
+    private final Map<Savable, Element> _writtenSavables = new IdentityHashMap<>();
 
     public DOMOutputCapsule(final Document doc) {
         _doc = doc;

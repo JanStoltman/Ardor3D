@@ -42,7 +42,7 @@ public class Image implements Serializable, Savable {
      * Constructor instantiates a new <code>Image</code> object. All values are undefined.
      */
     public Image() {
-        _data = new ArrayList<ByteBuffer>(1);
+        _data = new ArrayList<>(1);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Image implements Serializable, Savable {
      */
     public Image(final ImageDataFormat format, final PixelDataType type, final int width, final int height,
             final ByteBuffer data, final int[] mipMapSizes) {
-        this(format, type, width, height, new ArrayList<ByteBuffer>(Arrays.asList(data)), mipMapSizes);
+        this(format, type, width, height, new ArrayList<>(Arrays.asList(data)), mipMapSizes);
     }
 
     /**
@@ -122,7 +122,7 @@ public class Image implements Serializable, Savable {
      *            the data that contains the image information.
      */
     public void setData(final ByteBuffer data) {
-        _data = new ArrayList<ByteBuffer>(Arrays.asList(data));
+        _data = new ArrayList<>(Arrays.asList(data));
     }
 
     /**
@@ -133,7 +133,7 @@ public class Image implements Serializable, Savable {
      */
     public void addData(final ByteBuffer data) {
         if (_data == null) {
-            _data = new ArrayList<ByteBuffer>(1);
+            _data = new ArrayList<>(1);
         }
         _data.add(data);
     }

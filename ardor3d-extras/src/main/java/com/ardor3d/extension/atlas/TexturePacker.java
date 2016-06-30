@@ -69,15 +69,15 @@ public class TexturePacker {
     private final List<AtlasPacker> packers;
     private final List<ByteBuffer> dataBuffers;
 
-    private final List<Texture> textures = new ArrayList<Texture>();
+    private final List<Texture> textures = new ArrayList<>();
 
     public TexturePacker(final int atlasWidth, final int atlasHeight) {
         this.atlasWidth = atlasWidth;
         this.atlasHeight = atlasHeight;
 
-        cachedAtlases = new HashMap<TextureParameter, List<TextureParameter>>();
-        packers = new ArrayList<AtlasPacker>();
-        dataBuffers = new ArrayList<ByteBuffer>();
+        cachedAtlases = new HashMap<>();
+        packers = new ArrayList<>();
+        dataBuffers = new ArrayList<>();
 
         addPacker();
     }
@@ -168,7 +168,7 @@ public class TexturePacker {
             return;
         }
 
-        list = new ArrayList<TextureParameter>();
+        list = new ArrayList<>();
         cachedAtlases.put(parameterObject, list);
         list.add(parameterObject);
 

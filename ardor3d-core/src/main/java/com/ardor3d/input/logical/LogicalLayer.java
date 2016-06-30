@@ -27,8 +27,8 @@ import com.ardor3d.input.PhysicalLayer;
  */
 @ThreadSafe
 public final class LogicalLayer {
-    private final Set<InputSource> _inputs = new CopyOnWriteArraySet<InputSource>();
-    private final Set<InputTrigger> _triggers = new CopyOnWriteArraySet<InputTrigger>();
+    private final Set<InputSource> _inputs = new CopyOnWriteArraySet<>();
+    private final Set<InputTrigger> _triggers = new CopyOnWriteArraySet<>();
     private LogicalTriggersApplier _applier = new BasicTriggersApplier();
 
     public LogicalLayer() {}

@@ -95,7 +95,7 @@ public abstract class RenderState implements Savable {
 
     static public class StateStack implements Poolable {
 
-        private final EnumMap<RenderState.StateType, Stack<RenderState>> stacks = new EnumMap<StateType, Stack<RenderState>>(
+        private final EnumMap<RenderState.StateType, Stack<RenderState>> stacks = new EnumMap<>(
                 RenderState.StateType.class);
 
         public StateStack() {}
@@ -122,7 +122,7 @@ public abstract class RenderState implements Savable {
         public void push(final RenderState state) {
             Stack<RenderState> stack = stacks.get(state.getType());
             if (stack == null) {
-                stack = new Stack<RenderState>();
+                stack = new Stack<>();
                 stacks.put(state.getType(), stack);
             }
             stack.push(state);

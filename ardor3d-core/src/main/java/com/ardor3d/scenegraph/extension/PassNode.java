@@ -24,7 +24,7 @@ import com.ardor3d.util.export.OutputCapsule;
 
 public class PassNode extends Node {
 
-    private List<PassNodeState> _passNodeStates = new ArrayList<PassNodeState>();
+    private List<PassNodeState> _passNodeStates = new ArrayList<>();
 
     public PassNode(final String name) {
         super(name);

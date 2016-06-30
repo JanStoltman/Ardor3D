@@ -12,6 +12,7 @@ package com.ardor3d.bounding;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,12 +69,7 @@ public class BoundingSphere extends BoundingVolume {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        long temp;
-        temp = Double.doubleToLongBits(_radius);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(getRadius()));
     }
 
     @Override
@@ -294,8 +290,9 @@ public class BoundingSphere extends BoundingVolume {
         final Vector3 b = B.subtract(O, null);
         final Vector3 c = C.subtract(O, null);
 
-        final double Denominator = 2.0 * (a.getX() * (b.getY() * c.getZ() - c.getY() * b.getZ()) - b.getX()
-                * (a.getY() * c.getZ() - c.getY() * a.getZ()) + c.getX() * (a.getY() * b.getZ() - b.getY() * a.getZ()));
+        final double Denominator = 2.0 * (a.getX() * (b.getY() * c.getZ() - c.getY() * b.getZ())
+                - b.getX() * (a.getY() * c.getZ() - c.getY() * a.getZ())
+                + c.getX() * (a.getY() * b.getZ() - b.getY() * a.getZ()));
         if (Denominator == 0) {
             _center.set(0, 0, 0);
             setRadius(0);
@@ -349,9 +346,9 @@ public class BoundingSphere extends BoundingVolume {
      * @see #calcWelzl(java.nio.FloatBuffer)
      */
     private void setSphere(final Vector3 O, final Vector3 A) {
-        setRadius(Math.sqrt(((A.getX() - O.getX()) * (A.getX() - O.getX()) + (A.getY() - O.getY())
-                * (A.getY() - O.getY()) + (A.getZ() - O.getZ()) * (A.getZ() - O.getZ())) / 4f)
-                + radiusEpsilon - 1);
+        setRadius(
+                Math.sqrt(((A.getX() - O.getX()) * (A.getX() - O.getX()) + (A.getY() - O.getY()) * (A.getY() - O.getY())
+                        + (A.getZ() - O.getZ()) * (A.getZ() - O.getZ())) / 4f) + radiusEpsilon - 1);
         Vector3.lerp(O, A, .5, _center);
     }
 
@@ -542,7 +539,8 @@ public class BoundingSphere extends BoundingVolume {
         return this;
     }
 
-    private BoundingVolume merge(final double otherRadius, final ReadOnlyVector3 otherCenter, final BoundingSphere store) {
+    private BoundingVolume merge(final double otherRadius, final ReadOnlyVector3 otherCenter,
+            final BoundingSphere store) {
         // check for infinite bounds... is so, return infinite bounds with center at origin
         if (Double.isInfinite(otherRadius) || Double.isInfinite(getRadius())) {
             store.setCenter(Vector3.ZERO);
@@ -720,8 +718,8 @@ public class BoundingSphere extends BoundingVolume {
             discr = (a1 * a1) - a;
             root = Math.sqrt(discr);
             final double[] distances = new double[] { root - a1 };
-            final Vector3[] points = new Vector3[] { ray.getDirection().multiply(distances[0], new Vector3())
-                    .addLocal(ray.getOrigin()) };
+            final Vector3[] points = new Vector3[] {
+                    ray.getDirection().multiply(distances[0], new Vector3()).addLocal(ray.getOrigin()) };
             return new IntersectionRecord(distances, points);
         }
 
@@ -745,8 +743,8 @@ public class BoundingSphere extends BoundingVolume {
         }
 
         final double[] distances = new double[] { -a1 };
-        final Vector3[] points = new Vector3[] { ray.getDirection().multiply(distances[0], new Vector3())
-                .addLocal(ray.getOrigin()) };
+        final Vector3[] points = new Vector3[] {
+                ray.getDirection().multiply(distances[0], new Vector3()).addLocal(ray.getOrigin()) };
         return new IntersectionRecord(distances, points);
     }
 

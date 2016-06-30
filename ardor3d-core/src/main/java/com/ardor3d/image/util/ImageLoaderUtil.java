@@ -47,21 +47,12 @@ public abstract class ImageLoaderUtil {
             return TextureState.getDefaultTextureImage();
         }
 
-        InputStream is = null;
-        try {
-            is = src.openStream();
+        try (final InputStream is = src.openStream()) {
             logger.log(Level.FINER, "loadImage(ResourceSource, boolean) opened stream: {0}", src);
             return loadImage(type, is, flipped);
         } catch (final IOException e) {
             logger.log(Level.WARNING, "loadImage(ResourceSource, boolean): defaultTexture used", e);
             return TextureState.getDefaultTextureImage();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (final IOException ioe) {
-                } // ignore
-            }
         }
     }
 

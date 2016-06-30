@@ -23,7 +23,7 @@ import com.google.common.base.Predicate;
  */
 @Immutable
 public final class MouseButtonCondition implements Predicate<TwoInputStates> {
-    private final EnumMap<MouseButton, ButtonState> _states = new EnumMap<MouseButton, ButtonState>(MouseButton.class);
+    private final EnumMap<MouseButton, ButtonState> _states = new EnumMap<>(MouseButton.class);
 
     public MouseButtonCondition(final EnumMap<MouseButton, ButtonState> states) {
         _states.putAll(states);

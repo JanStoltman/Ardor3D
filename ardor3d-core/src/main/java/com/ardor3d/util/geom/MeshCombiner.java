@@ -63,7 +63,7 @@ public class MeshCombiner {
     }
 
     public final static Mesh combine(final Spatial source, final MeshCombineLogic logic) {
-        final List<Mesh> sources = new ArrayList<Mesh>();
+        final List<Mesh> sources = new ArrayList<>();
         source.acceptVisitor(new Visitor() {
             @Override
             public void visit(final Spatial spatial) {
@@ -86,7 +86,7 @@ public class MeshCombiner {
      * @return the combined Mesh.
      */
     public final static Mesh combine(final Mesh... sources) {
-        return combine(new ArrayList<Mesh>(Arrays.asList(sources)));
+        return combine(new ArrayList<>(Arrays.asList(sources)));
     }
 
     /**
@@ -129,7 +129,7 @@ public class MeshCombiner {
         protected EnumMap<StateType, RenderState> states = null;
         protected MeshData data = new MeshData();
         protected BoundingVolume volumeType = null;
-        protected List<Mesh> sources = new ArrayList<Mesh>();
+        protected List<Mesh> sources = new ArrayList<>();
         private FloatBufferData vertices;
         private FloatBufferData colors;
         private FloatBufferData normals;
@@ -237,7 +237,7 @@ public class MeshCombiner {
             normals = useNormals ? new FloatBufferData(totalVertices * 3, 3) : null;
             data.setNormalCoords(normals);
 
-            texCoordsList = new ArrayList<FloatBufferData>(maxTextures);
+            texCoordsList = new ArrayList<>(maxTextures);
             for (int i = 0; i < maxTextures; i++) {
                 texCoordsList.add(new FloatBufferData(totalVertices * texCoords, texCoords));
             }
@@ -359,8 +359,8 @@ class IndexCombiner {
     }
 
     public void saveTo(final MeshData data) {
-        final List<IntBuffer> sections = new ArrayList<IntBuffer>();
-        final List<IndexMode> modes = new ArrayList<IndexMode>();
+        final List<IntBuffer> sections = new ArrayList<>();
+        final List<IndexMode> modes = new ArrayList<>();
         int max = 0;
         // walk through index modes and combine those we can.
         for (final IndexMode mode : sectionMap.keySet()) {

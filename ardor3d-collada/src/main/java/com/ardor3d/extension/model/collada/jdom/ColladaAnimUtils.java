@@ -195,7 +195,7 @@ public class ColladaAnimUtils {
         final Node meshNode = _colladaMeshUtils.buildMesh(geometry);
         if (meshNode != null) {
             // Look for skeleton entries in the original <instance_controller> element
-            final List<Element> skeletonRoots = new ArrayList<Element>();
+            final List<Element> skeletonRoots = new ArrayList<>();
             for (final Element sk : instanceController.getChildren("skeleton")) {
                 final Element skroot = _colladaDOMUtil.findTargetWithId(sk.getText());
                 if (skroot != null) {
@@ -214,9 +214,9 @@ public class ColladaAnimUtils {
             }
 
             // Pull out our joint names and bind matrices
-            final List<String> jointNames = new ArrayList<String>();
-            final List<Transform> bindMatrices = new ArrayList<Transform>();
-            final List<ColladaInputPipe.ParamType> paramTypes = new ArrayList<ColladaInputPipe.ParamType>();
+            final List<String> jointNames = new ArrayList<>();
+            final List<Transform> bindMatrices = new ArrayList<>();
+            final List<ColladaInputPipe.ParamType> paramTypes = new ArrayList<>();
 
             for (final Element inputEL : jointsEL.getChildren("input")) {
                 final ColladaInputPipe pipe = new ColladaInputPipe(_colladaDOMUtil, inputEL);
@@ -323,8 +323,8 @@ public class ColladaAnimUtils {
             }
 
             // Pull out our per vertex joint indices and weights
-            final List<Short> jointIndices = new ArrayList<Short>();
-            final List<Float> jointWeights = new ArrayList<Float>();
+            final List<Short> jointIndices = new ArrayList<>();
+            final List<Float> jointWeights = new ArrayList<>();
             int indOff = 0, weightOff = 0;
 
             int maxOffset = 0;
@@ -646,7 +646,7 @@ public class ColladaAnimUtils {
      */
     private void buildAnimations(final Element parentElement, final Collection<TargetChannel> targetList) {
 
-        final List<Element> elementTransforms = new ArrayList<Element>();
+        final List<Element> elementTransforms = new ArrayList<>();
         for (final Element child : parentElement.getChildren()) {
             if (_dataCache.getTransformTypes().contains(child.getName())) {
                 elementTransforms.add(child);
@@ -669,7 +669,7 @@ public class ColladaAnimUtils {
                         + targetNode.getName() + "(" + targetIndex + ")");
             }
 
-            final EnumMap<Type, ColladaInputPipe> pipes = new EnumMap<Type, ColladaInputPipe>(Type.class);
+            final EnumMap<Type, ColladaInputPipe> pipes = new EnumMap<>(Type.class);
 
             final Element samplerElement = _colladaDOMUtil.findTargetWithId(source);
             for (final Element inputElement : samplerElement.getChildren("input")) {
@@ -708,9 +708,9 @@ public class ColladaAnimUtils {
             targetChannel.currentPos = 0;
         }
 
-        final List<Float> finalTimeList = new ArrayList<Float>();
-        final List<Transform> finalTransformList = new ArrayList<Transform>();
-        final List<TargetChannel> workingChannels = new ArrayList<TargetChannel>();
+        final List<Float> finalTimeList = new ArrayList<>();
+        final List<Transform> finalTransformList = new ArrayList<>();
+        final List<TargetChannel> workingChannels = new ArrayList<>();
         for (;;) {
             float lowestTime = Float.MAX_VALUE;
             boolean found = false;
@@ -925,7 +925,7 @@ public class ColladaAnimUtils {
         return currentElement;
     }
 
-    private static final Map<String, Integer> symbolMap = new HashMap<String, Integer>();
+    private static final Map<String, Integer> symbolMap = new HashMap<>();
     static {
         symbolMap.put("ANGLE", 3);
         symbolMap.put("TIME", 0);
@@ -1023,7 +1023,7 @@ public class ColladaAnimUtils {
      * @return
      */
     private List<TransformElement> getNodeTransformList(final List<Element> transforms) {
-        final List<TransformElement> transformList = new ArrayList<TransformElement>();
+        final List<TransformElement> transformList = new ArrayList<>();
 
         for (final Element transform : transforms) {
             final double[] array = _colladaDOMUtil.parseDoubleArray(transform);
@@ -1172,7 +1172,7 @@ public class ColladaAnimUtils {
 
     private static class Target {
         public String id;
-        public List<String> sids = new ArrayList<String>();
+        public List<String> sids = new ArrayList<>();
         public AccessorType accessorType = AccessorType.None;
         public int accessorIndexX = -1, accessorIndexY = -1;
 

@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,8 @@
 package com.ardor3d.input.logical;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Objects;
 
 import com.ardor3d.annotation.Immutable;
 import com.ardor3d.input.InputState;
@@ -27,12 +29,12 @@ public final class TwoInputStates {
     /**
      * Instantiates a new TwoInputStates. It is safe for both parameters to point to the same instance, but they cannot
      * be null.
-     * 
+     *
      * @param previous
      *            the previous input state
      * @param current
      *            the current input state
-     * 
+     *
      * @throws NullPointerException
      *             if either parameter is null
      */
@@ -51,9 +53,7 @@ public final class TwoInputStates {
 
     @Override
     public int hashCode() {
-        // we don't expect this to be used in a map.
-        assert false : "hashCode not designed";
-        return 42;
+        return Objects.hash(getPrevious(), getCurrent());
     }
 
     @Override
@@ -65,6 +65,6 @@ public final class TwoInputStates {
             return false;
         }
         final TwoInputStates comp = (TwoInputStates) o;
-        return _previous == comp._previous && _current == comp._current;
+        return Objects.equals(_previous, comp._previous) && Objects.equals(_current, comp._current);
     }
 }

@@ -41,7 +41,7 @@ public class InMemoryTerrainSource implements TerrainSource {
             final int numTilesY) throws Exception {
         final int baseClipmapLevel = availableClipmapLevels - clipmapLevel - 1;
 
-        final Set<Tile> validTiles = new HashSet<Tile>();
+        final Set<Tile> validTiles = new HashSet<>();
 
         final int levelSize = 1 << baseClipmapLevel;
         final int size = inMemoryTerrainData.getSide();
@@ -70,7 +70,7 @@ public class InMemoryTerrainSource implements TerrainSource {
 
         final int baseClipmapLevel = availableClipmapLevels - clipmapLevel - 1;
 
-        final Set<Tile> tiles = new HashSet<Tile>();
+        final Set<Tile> tiles = new HashSet<>();
 
         synchronized (updatedTiles[baseClipmapLevel]) {
             if (updatedTiles[baseClipmapLevel].isEmpty()) {

@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 public class ManagedTransformSource implements BlendTreeSource {
 
     /** Our local source data. */
-    private final Map<String, JointData> data = new HashMap<String, JointData>();
+    private final Map<String, JointData> data = new HashMap<>();
 
     /** optional: name of source we were initialized from, if given. */
     private String sourceName;

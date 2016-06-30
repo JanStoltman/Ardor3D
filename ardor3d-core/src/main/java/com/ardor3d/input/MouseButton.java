@@ -51,7 +51,7 @@ public enum MouseButton {
         if (nine == null) {
             throw new NullPointerException("nine");
         }
-        final EnumMap<MouseButton, ButtonState> map = new EnumMap<MouseButton, ButtonState>(MouseButton.class);
+        final EnumMap<MouseButton, ButtonState> map = new EnumMap<>(MouseButton.class);
         map.put(LEFT, left);
         map.put(RIGHT, right);
         map.put(MIDDLE, middle);

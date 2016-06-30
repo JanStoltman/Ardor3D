@@ -93,9 +93,9 @@ public abstract class UIComponent extends Node implements UIKeyHandler {
     private static int _defaultFontSize = 18;
 
     /** The default font styles to use. */
-    private static Map<String, Object> _defaultFontStyles = new HashMap<String, Object>();
+    private static Map<String, Object> _defaultFontStyles = new HashMap<>();
     /** The font styles to use for text on this component, if needed. */
-    private Map<String, Object> _fontStyles = new HashMap<String, Object>();
+    private Map<String, Object> _fontStyles = new HashMap<>();
 
     /** Optional information used by a parent container's layout. */
     private UILayoutData _layoutData = null;
@@ -232,7 +232,7 @@ public abstract class UIComponent extends Node implements UIKeyHandler {
         if (getParent() != null && getParent() instanceof UIComponent) {
             styles = ((UIComponent) getParent()).getFontStyles();
         } else {
-            styles = new HashMap<String, Object>(UIComponent._defaultFontStyles);
+            styles = new HashMap<>(UIComponent._defaultFontStyles);
             styles.put(StyleConstants.KEY_COLOR, UIComponent.DEFAULT_FOREGROUND_COLOR);
         }
         styles.putAll(_fontStyles);
@@ -1166,9 +1166,9 @@ public abstract class UIComponent extends Node implements UIKeyHandler {
      */
     public static void setDefaultFontStyles(final Map<String, Object> defaultStyles) {
         if (defaultStyles == null) {
-            UIComponent._defaultFontStyles = new HashMap<String, Object>();
+            UIComponent._defaultFontStyles = new HashMap<>();
         } else {
-            UIComponent._defaultFontStyles = new HashMap<String, Object>(defaultStyles);
+            UIComponent._defaultFontStyles = new HashMap<>(defaultStyles);
         }
     }
 
@@ -1387,7 +1387,7 @@ public abstract class UIComponent extends Node implements UIKeyHandler {
             };
             cancelTooltipTimer();
             resetToolTipTime();
-            _showTask = new FutureTask<Void>(show);
+            _showTask = new FutureTask<>(show);
             final Thread t = new Thread() {
                 @Override
                 public void run() {

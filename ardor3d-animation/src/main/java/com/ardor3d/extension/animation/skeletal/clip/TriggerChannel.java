@@ -94,8 +94,8 @@ public class TriggerChannel extends AbstractAnimationChannel {
         if (startTime > endTime) {
             throw new IllegalArgumentException("startTime > endTime");
         }
-        final List<Float> times = new ArrayList<Float>();
-        final List<String> keys = new ArrayList<String>();
+        final List<Float> times = new ArrayList<>();
+        final List<String> keys = new ArrayList<>();
 
         final TriggerData tData = new TriggerData();
 

@@ -94,8 +94,8 @@ public class RowLayout extends UILayout {
         final Rectangle2 storeB = Rectangle2.fetchTempInstance();
 
         // Grab a list of components, squeezing them down to their min size on the flow axis
-        List<UIComponent> comps = new ArrayList<UIComponent>();
-        List<UIComponent> compsBack = new ArrayList<UIComponent>();
+        List<UIComponent> comps = new ArrayList<>();
+        List<UIComponent> compsBack = new ArrayList<>();
         for (int i = 0; i < content.size(); i++) {
             final Spatial spat = content.get(i);
             if (spat instanceof UIComponent) {

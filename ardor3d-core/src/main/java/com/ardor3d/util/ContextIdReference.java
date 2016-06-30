@@ -23,7 +23,7 @@ public class ContextIdReference<T> extends PhantomReference<T> {
     /**
      * Keep a strong reference to these objects until their reference is cleared.
      */
-    private static final List<ContextIdReference<?>> REFS = new LinkedList<ContextIdReference<?>>();
+    private static final List<ContextIdReference<?>> REFS = new LinkedList<>();
 
     private final Map<Object, Integer> _idCache;
     private Integer _singleContextId;
@@ -31,7 +31,7 @@ public class ContextIdReference<T> extends PhantomReference<T> {
     public ContextIdReference(final T reference, final ReferenceQueue<? super T> queue) {
         super(reference, queue);
         if (Constants.useMultipleContexts) {
-            _idCache = new WeakHashMap<Object, Integer>(2);
+            _idCache = new WeakHashMap<>(2);
         } else {
             _idCache = null;
         }

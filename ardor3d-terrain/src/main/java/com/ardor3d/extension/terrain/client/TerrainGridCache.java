@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,6 +13,7 @@ package com.ardor3d.extension.terrain.client;
 import java.nio.FloatBuffer;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -48,9 +49,9 @@ public class TerrainGridCache implements TerrainCache, Runnable {
     private final int clipmapLevel;
     private final int requestedLevel;
 
-    private final Set<TileLoadingData> currentTiles = new HashSet<TileLoadingData>();
-    private Set<TileLoadingData> newThreadTiles = new HashSet<TileLoadingData>();
-    private Set<TileLoadingData> backThreadTiles = new HashSet<TileLoadingData>();
+    private final Set<TileLoadingData> currentTiles = new HashSet<>();
+    private Set<TileLoadingData> newThreadTiles = new HashSet<>();
+    private Set<TileLoadingData> backThreadTiles = new HashSet<>();
     private final Object SWAP_LOCK = new Object();
     private int backCurrentTileX = Integer.MAX_VALUE;
     private int backCurrentTileY = Integer.MAX_VALUE;
@@ -66,12 +67,12 @@ public class TerrainGridCache implements TerrainCache, Runnable {
     private boolean exit = false;
 
     private final boolean enableDebug = true;
-    private final Set<TileLoadingData> debugTiles = new HashSet<TileLoadingData>();
+    private final Set<TileLoadingData> debugTiles = new HashSet<>();
 
     public Set<TileLoadingData> getDebugTiles() {
         Set<TileLoadingData> copyTiles = null;
         synchronized (debugTiles) {
-            copyTiles = new HashSet<TileLoadingData>(debugTiles);
+            copyTiles = new HashSet<>(debugTiles);
         }
         return copyTiles;
     }
@@ -122,8 +123,8 @@ public class TerrainGridCache implements TerrainCache, Runnable {
     public Set<Tile> handleUpdateRequests() {
         Set<Tile> updateTiles;
         try {
-            updateTiles = source.getInvalidTiles(requestedLevel, backCurrentTileX - cacheSize / 2, backCurrentTileY
-                    - cacheSize / 2, cacheSize, cacheSize);
+            updateTiles = source.getInvalidTiles(requestedLevel, backCurrentTileX - cacheSize / 2,
+                    backCurrentTileY - cacheSize / 2, cacheSize, cacheSize);
             if (updateTiles == null || updateTiles.isEmpty()) {
                 return null;
             }
@@ -176,7 +177,7 @@ public class TerrainGridCache implements TerrainCache, Runnable {
             backCurrentTileX = tileX;
             backCurrentTileY = tileY;
 
-            final Set<TileLoadingData> newTiles = new HashSet<TileLoadingData>();
+            final Set<TileLoadingData> newTiles = new HashSet<>();
             for (int i = 0; i < cacheSize; i++) {
                 for (int j = 0; j < cacheSize; j++) {
                     final int sourceX = tileX + j - cacheSize / 2;
@@ -265,8 +266,8 @@ public class TerrainGridCache implements TerrainCache, Runnable {
                         || tileY <= locatorTile.getY() - locatorSize / 2 + 1
                         || tileY >= locatorTile.getY() + locatorSize / 2 - 2) {
                     try {
-                        validTiles = source.getValidTiles(requestedLevel, tileX - locatorSize / 2, tileY - locatorSize
-                                / 2, locatorSize, locatorSize);
+                        validTiles = source.getValidTiles(requestedLevel, tileX - locatorSize / 2,
+                                tileY - locatorSize / 2, locatorSize, locatorSize);
                     } catch (final Exception e) {
                         logger.log(Level.WARNING, "Exception getting source info", e);
                     }
@@ -553,7 +554,8 @@ public class TerrainGridCache implements TerrainCache, Runnable {
 
             final int vertexDistance = MathUtils.pow2(clipmapLevel);
             final Region region = new Region(clipmapLevel, sourceTile.getX() * tileSize * vertexDistance,
-                    sourceTile.getY() * tileSize * vertexDistance, tileSize * vertexDistance, tileSize * vertexDistance);
+                    sourceTile.getY() * tileSize * vertexDistance, tileSize * vertexDistance,
+                    tileSize * vertexDistance);
             if (mailBox != null) {
                 mailBox.add(region);
             }
@@ -574,11 +576,7 @@ public class TerrainGridCache implements TerrainCache, Runnable {
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + (destTile == null ? 0 : destTile.hashCode());
-            result = prime * result + (sourceTile == null ? 0 : sourceTile.hashCode());
-            return result;
+            return Objects.hash(destTile, sourceTile);
         }
 
         @Override

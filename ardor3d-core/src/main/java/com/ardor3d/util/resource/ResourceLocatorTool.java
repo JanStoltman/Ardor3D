@@ -37,7 +37,7 @@ public class ResourceLocatorTool {
     public static final String TYPE_AUDIO = "audio";
     public static final String TYPE_SHADER = "shader";
 
-    private static final Map<String, List<ResourceLocator>> _locatorMap = new HashMap<String, List<ResourceLocator>>();
+    private static final Map<String, List<ResourceLocator>> _locatorMap = new HashMap<>();
 
     public static ResourceSource locateResource(final String resourceType, String resourceName) {
         if (resourceName == null) {
@@ -84,7 +84,7 @@ public class ResourceLocatorTool {
         synchronized (_locatorMap) {
             List<ResourceLocator> bases = _locatorMap.get(resourceType);
             if (bases == null) {
-                bases = new ArrayList<ResourceLocator>();
+                bases = new ArrayList<>();
                 _locatorMap.put(resourceType, bases);
             }
 
@@ -162,7 +162,7 @@ public class ResourceLocatorTool {
      * @return a set containing the located URLs of the named resource.
      */
     public static Set<URL> getClassPathResources(final Class<?> clazz, final String name) {
-        final Set<URL> results = new HashSet<URL>();
+        final Set<URL> results = new HashSet<>();
         Enumeration<URL> urls = null;
         try {
             urls = Thread.currentThread().getContextClassLoader().getResources(name);

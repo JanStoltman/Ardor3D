@@ -142,7 +142,7 @@ public class ColladaDOMUtil {
 
         final String content = node.getText();
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final StringTokenizer tokenizer = new StringTokenizer(content, " ");
         while (tokenizer.hasMoreTokens()) {
             list.add(tokenizer.nextToken());
@@ -172,7 +172,7 @@ public class ColladaDOMUtil {
 
         final String content = node.getText();
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final StringTokenizer tokenizer = new StringTokenizer(content, " ");
         while (tokenizer.hasMoreTokens()) {
             list.add(tokenizer.nextToken());
@@ -202,7 +202,7 @@ public class ColladaDOMUtil {
 
         final String content = node.getText();
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final StringTokenizer tokenizer = new StringTokenizer(content, " ");
         while (tokenizer.hasMoreTokens()) {
             list.add(tokenizer.nextToken());
@@ -232,7 +232,7 @@ public class ColladaDOMUtil {
 
         final String content = node.getText();
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final StringTokenizer tokenizer = new StringTokenizer(content, " ");
         while (tokenizer.hasMoreTokens()) {
             list.add(tokenizer.nextToken());
@@ -262,7 +262,7 @@ public class ColladaDOMUtil {
 
         final String content = node.getText();
 
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final StringTokenizer tokenizer = new StringTokenizer(content, " ");
         while (tokenizer.hasMoreTokens()) {
             list.add(tokenizer.nextToken());

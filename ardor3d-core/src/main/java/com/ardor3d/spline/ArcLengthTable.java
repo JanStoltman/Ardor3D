@@ -172,7 +172,7 @@ public class ArcLengthTable {
             throw new IllegalArgumentException("step must be > 0! step=" + step);
         }
 
-        _lookupTable = new HashMap<Integer, List<ArcLengthEntry>>();
+        _lookupTable = new HashMap<>();
 
         final Vector3 target = Vector3.fetchTempInstance();
         final Vector3 previous = Vector3.fetchTempInstance();
@@ -187,7 +187,7 @@ public class ArcLengthTable {
 
             previous.set(_curve.getControlPoints().get(i));
 
-            final ArrayList<ArcLengthEntry> entries = new ArrayList<ArcLengthEntry>();
+            final ArrayList<ArcLengthEntry> entries = new ArrayList<>();
             entries.add(new ArcLengthEntry(0f, 0));
 
             final int endIndex = reverse ? startIndex - 1 : startIndex + 1;

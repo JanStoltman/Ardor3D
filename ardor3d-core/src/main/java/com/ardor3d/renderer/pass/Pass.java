@@ -38,7 +38,7 @@ public abstract class Pass implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** list of Spatial objects registered with this pass. */
-    protected List<Spatial> _spatials = new ArrayList<Spatial>();
+    protected List<Spatial> _spatials = new ArrayList<>();
 
     /** if false, pass will not be updated or rendered. */
     protected boolean _enabled = true;
@@ -47,7 +47,7 @@ public abstract class Pass implements Serializable {
      * RenderStates registered with this pass - if a given state is not null it overrides the corresponding state set
      * during rendering.
      */
-    protected final EnumMap<RenderState.StateType, RenderState> _passStates = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> _passStates = new EnumMap<>(
             RenderState.StateType.class);
 
     protected RenderContext _context = null;

@@ -73,7 +73,7 @@ public class JoglNewtSwtExample {
     static MouseCursor _cursor1;
     static MouseCursor _cursor2;
 
-    static Map<Canvas, Boolean> _showCursor1 = new HashMap<Canvas, Boolean>();
+    static Map<Canvas, Boolean> _showCursor1 = new HashMap<>();
 
     private static final Logger logger = Logger.getLogger(JoglNewtSwtExample.class.toString());
     private static int i = 0;

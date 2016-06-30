@@ -33,7 +33,7 @@ public class JInputControllerWrapper implements ControllerWrapper {
     protected final Event _event = new Event();
     protected final List<ControllerEvent> _events = Collections.synchronizedList(new ArrayList<ControllerEvent>());
     protected JInputControllerEventIterator _eventsIt = new JInputControllerEventIterator();
-    protected final List<ControllerInfo> _controllers = new ArrayList<ControllerInfo>();
+    protected final List<ControllerInfo> _controllers = new ArrayList<>();
     protected static boolean _inited = false;
 
     @Override
@@ -91,8 +91,8 @@ public class JInputControllerWrapper implements ControllerWrapper {
     }
 
     protected ControllerInfo getControllerInfo(final Controller controller) {
-        final List<String> axisNames = new ArrayList<String>();
-        final List<String> buttonNames = new ArrayList<String>();
+        final List<String> axisNames = new ArrayList<>();
+        final List<String> buttonNames = new ArrayList<>();
 
         for (final Component comp : controller.getComponents()) {
             if (comp.getIdentifier() instanceof Identifier.Axis) {

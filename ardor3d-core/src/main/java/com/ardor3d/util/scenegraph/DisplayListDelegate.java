@@ -27,10 +27,10 @@ import com.google.common.collect.Multimap;
 
 public class DisplayListDelegate implements RenderDelegate {
 
-    private static Map<DisplayListDelegate, Object> _identityCache = new WeakHashMap<DisplayListDelegate, Object>();
+    private static Map<DisplayListDelegate, Object> _identityCache = new WeakHashMap<>();
     private static final Object STATIC_REF = new Object();
 
-    private static ReferenceQueue<DisplayListDelegate> _refQueue = new ReferenceQueue<DisplayListDelegate>();
+    private static ReferenceQueue<DisplayListDelegate> _refQueue = new ReferenceQueue<>();
 
     static {
         ContextManager.addContextCleanListener(new ContextCleanListener() {
@@ -44,7 +44,7 @@ public class DisplayListDelegate implements RenderDelegate {
     private final SimpleContextIdReference<DisplayListDelegate> _id;
 
     public DisplayListDelegate(final int id, final Object glContext) {
-        _id = new SimpleContextIdReference<DisplayListDelegate>(this, _refQueue, id, glContext);
+        _id = new SimpleContextIdReference<>(this, _refQueue, id, glContext);
         _identityCache.put(this, STATIC_REF);
     }
 

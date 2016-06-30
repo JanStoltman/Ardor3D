@@ -32,7 +32,7 @@ public class SimpleAnimationApplier implements AnimationApplier {
 
     private final Multimap<String, TriggerCallback> _triggerCallbacks = ArrayListMultimap.create(0, 0);
 
-    private final Map<String, Spatial> _spatialCache = new WeakHashMap<String, Spatial>();
+    private final Map<String, Spatial> _spatialCache = new WeakHashMap<>();
 
     @Override
     public void apply(final Spatial root, final AnimationManager manager) {

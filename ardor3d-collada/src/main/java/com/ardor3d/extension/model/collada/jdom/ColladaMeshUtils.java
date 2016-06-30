@@ -241,7 +241,7 @@ public class ColladaMeshUtils {
         // Build and set RenderStates for our material
         _colladaMaterialUtils.applyMaterial(polys.getAttributeValue("material"), polyMesh);
 
-        final LinkedList<ColladaInputPipe> pipes = new LinkedList<ColladaInputPipe>();
+        final LinkedList<ColladaInputPipe> pipes = new LinkedList<>();
         final int maxOffset = extractPipes(polys, pipes);
         final int interval = maxOffset + 1;
 
@@ -336,7 +336,7 @@ public class ColladaMeshUtils {
         // Build and set RenderStates for our material
         _colladaMaterialUtils.applyMaterial(polys.getAttributeValue("material"), polyMesh);
 
-        final LinkedList<ColladaInputPipe> pipes = new LinkedList<ColladaInputPipe>();
+        final LinkedList<ColladaInputPipe> pipes = new LinkedList<>();
         final int maxOffset = extractPipes(polys, pipes);
         final int interval = maxOffset + 1;
 
@@ -428,7 +428,7 @@ public class ColladaMeshUtils {
         // Build and set RenderStates for our material
         _colladaMaterialUtils.applyMaterial(tris.getAttributeValue("material"), triMesh);
 
-        final LinkedList<ColladaInputPipe> pipes = new LinkedList<ColladaInputPipe>();
+        final LinkedList<ColladaInputPipe> pipes = new LinkedList<>();
         final int maxOffset = extractPipes(tris, pipes);
         final int interval = maxOffset + 1;
 
@@ -479,7 +479,7 @@ public class ColladaMeshUtils {
         // Build and set RenderStates for our material
         _colladaMaterialUtils.applyMaterial(lines.getAttributeValue("material"), lineMesh);
 
-        final LinkedList<ColladaInputPipe> pipes = new LinkedList<ColladaInputPipe>();
+        final LinkedList<ColladaInputPipe> pipes = new LinkedList<>();
         final int maxOffset = extractPipes(lines, pipes);
         final int interval = maxOffset + 1;
 

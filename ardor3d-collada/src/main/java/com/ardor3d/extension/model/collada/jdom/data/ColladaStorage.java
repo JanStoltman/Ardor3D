@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -34,10 +34,10 @@ import com.google.common.collect.Multimap;
 public class ColladaStorage implements Savable {
 
     private Node _scene;
-    private final List<SkinData> _skins = new ArrayList<SkinData>();
+    private final List<SkinData> _skins = new ArrayList<>();
     private AssetData _assetData;
 
-    private final List<AbstractAnimationChannel> _transformChannels = new ArrayList<AbstractAnimationChannel>();
+    private final List<AbstractAnimationChannel> _transformChannels = new ArrayList<>();
     private AnimationItem _animationItemRoot;
 
     // List of parsed color buffers, useful if collada includes multiple color channels per meshdata object
@@ -92,7 +92,7 @@ public class ColladaStorage implements Savable {
 
     /**
      * Extract all animation channels in the Collada file as a single, unified AnimationClip.
-     * 
+     *
      * @param name
      *            the name to give our new clip.
      * @return the new AnimationClip.

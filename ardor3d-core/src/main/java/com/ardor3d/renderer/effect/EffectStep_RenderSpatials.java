@@ -20,8 +20,8 @@ import com.ardor3d.renderer.state.RenderState.StateType;
 import com.ardor3d.scenegraph.Spatial;
 
 public class EffectStep_RenderSpatials implements EffectStep {
-    private final EnumMap<StateType, RenderState> _states = new EnumMap<StateType, RenderState>(StateType.class);
-    private final List<Spatial> _spatials = new ArrayList<Spatial>();
+    private final EnumMap<StateType, RenderState> _states = new EnumMap<>(StateType.class);
+    private final List<Spatial> _spatials = new ArrayList<>();
     private final Camera _trackedCamera;
 
     public EffectStep_RenderSpatials(final Camera trackedCamera) {

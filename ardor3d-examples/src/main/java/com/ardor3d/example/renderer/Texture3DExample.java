@@ -78,7 +78,7 @@ public class Texture3DExample extends ExampleBase {
         img.setHeight(32);
         img.setDepth(32);
 
-        final List<ByteBuffer> data = new ArrayList<ByteBuffer>();
+        final List<ByteBuffer> data = new ArrayList<>();
         for (int i = 0; i < 32; i++) {
             final Image colorImage = GeneratedImageFactory
                     .createSolidColorImage(ColorRGBA.randomColor(null), false, 32);

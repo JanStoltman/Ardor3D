@@ -39,7 +39,7 @@ import com.google.common.collect.PeekingIterator;
 @ThreadSafe
 public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveListener, MouseWheelListener {
     @GuardedBy("this")
-    private final LinkedList<MouseState> _upcomingEvents = new LinkedList<MouseState>();
+    private final LinkedList<MouseState> _upcomingEvents = new LinkedList<>();
 
     private final Control _control;
 
@@ -50,7 +50,7 @@ public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveLi
     private MouseState _lastState = null;
 
     private final Multiset<MouseButton> _clicks = EnumMultiset.create(MouseButton.class);
-    private final EnumMap<MouseButton, Long> _lastClickTime = new EnumMap<MouseButton, Long>(MouseButton.class);
+    private final EnumMap<MouseButton, Long> _lastClickTime = new EnumMap<>(MouseButton.class);
     private final EnumSet<MouseButton> _clickArmed = EnumSet.noneOf(MouseButton.class);
 
     public SwtMouseWrapper(final Control control) {

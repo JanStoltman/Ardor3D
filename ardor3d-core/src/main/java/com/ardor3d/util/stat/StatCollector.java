@@ -38,7 +38,7 @@ public abstract class StatCollector {
      * Our map of current stat values. Current means values that have been collected within the current time sample. For
      * example, if sampleRate = 1.0, then current will hold values collected since the last 1 second ping.
      */
-    protected static HashMap<StatType, StatValue> current = new HashMap<StatType, StatValue>();
+    protected static HashMap<StatType, StatValue> current = new HashMap<>();
 
     protected static List<MultiStatSample> historical = Collections.synchronizedList(new LinkedList<MultiStatSample>());
 
@@ -51,14 +51,14 @@ public abstract class StatCollector {
 
     protected static double lastTimeCheckMS = 0;
 
-    protected static List<StatListener> listeners = new ArrayList<StatListener>();
+    protected static List<StatListener> listeners = new ArrayList<>();
 
     protected static double startOffset = 0;
 
     protected static boolean ignoreStats = false;
 
-    protected static Stack<StatType> timeStatStack = new Stack<StatType>();
-    protected static HashSet<StatType> timedStats = new HashSet<StatType>();
+    protected static Stack<StatType> timeStatStack = new Stack<>();
+    protected static HashSet<StatType> timedStats = new HashSet<>();
 
     protected static Timer timer = new Timer();
 

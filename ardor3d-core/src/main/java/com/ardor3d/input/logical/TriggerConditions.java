@@ -49,7 +49,7 @@ public final class TriggerConditions {
     };
 
     private static MouseButtonCondition makeCondition(final MouseButton button, final ButtonState state) {
-        final EnumMap<MouseButton, ButtonState> map = new EnumMap<MouseButton, ButtonState>(MouseButton.class);
+        final EnumMap<MouseButton, ButtonState> map = new EnumMap<>(MouseButton.class);
         for (final MouseButton b : MouseButton.values()) {
             map.put(b, button != b ? ButtonState.UNDEFINED : state);
         }

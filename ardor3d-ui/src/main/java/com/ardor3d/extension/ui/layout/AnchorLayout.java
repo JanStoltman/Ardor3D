@@ -51,7 +51,7 @@ import com.ardor3d.scenegraph.Spatial;
 public class AnchorLayout extends UILayout {
 
     /** map used to track anchor relationship during layout. */
-    private final Map<UIComponent, AnchorRecord> _records = new HashMap<UIComponent, AnchorRecord>();
+    private final Map<UIComponent, AnchorRecord> _records = new HashMap<>();
 
     // Various min/max values set and used during a layout operation.
     private int _maxX = 0;
@@ -219,6 +219,6 @@ public class AnchorLayout extends UILayout {
 
     private class AnchorRecord {
         private transient boolean visited = false;
-        private transient final ArrayList<UIComponent> dependants = new ArrayList<UIComponent>();
+        private transient final ArrayList<UIComponent> dependants = new ArrayList<>();
     }
 }

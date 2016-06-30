@@ -40,7 +40,7 @@ import com.google.common.collect.PeekingIterator;
  */
 public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelListener, MouseMotionListener {
     @GuardedBy("this")
-    protected final LinkedList<MouseState> _upcomingEvents = new LinkedList<MouseState>();
+    protected final LinkedList<MouseState> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
     protected AwtMouseIterator _currentIterator = null;
@@ -55,7 +55,7 @@ public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelL
     protected final MouseManager _manager;
 
     protected final Multiset<MouseButton> _clicks = EnumMultiset.create(MouseButton.class);
-    protected final EnumMap<MouseButton, Long> _lastClickTime = new EnumMap<MouseButton, Long>(MouseButton.class);
+    protected final EnumMap<MouseButton, Long> _lastClickTime = new EnumMap<>(MouseButton.class);
     protected final EnumSet<MouseButton> _clickArmed = EnumSet.noneOf(MouseButton.class);
 
     protected int _ignoreX = Integer.MAX_VALUE;

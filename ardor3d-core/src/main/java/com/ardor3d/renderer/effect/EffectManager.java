@@ -33,8 +33,8 @@ import com.ardor3d.util.geom.BufferUtils;
 public class EffectManager {
 
     protected final DisplaySettings _canvasSettings;
-    protected final List<RenderEffect> _effects = new ArrayList<RenderEffect>();
-    protected final Map<String, RenderTarget> _renderTargetMap = new HashMap<String, RenderTarget>();
+    protected final List<RenderEffect> _effects = new ArrayList<>();
+    protected final Map<String, RenderTarget> _renderTargetMap = new HashMap<>();
     protected Renderer _currentRenderer = null;
     protected RenderTarget _currentRenderTarget = null;
     protected Camera _fsqCamera, _sceneCamera;

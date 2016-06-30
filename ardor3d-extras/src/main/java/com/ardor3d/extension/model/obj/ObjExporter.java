@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import com.ardor3d.extension.model.util.KeyframeController;
@@ -36,7 +37,7 @@ import com.ardor3d.util.TextureKey;
  * WaveFront OBJ exporter. It supports only the meshes. Several meshes can be exported into the same OBJ file. Only a
  * few kinds of primitives are supported. N.B: If the texture is flipped in Ardor3D, you will have to flip it manually
  * when loading the resulting OBJ file.
- * 
+ *
  * @author Julien Gouesse
  */
 public class ObjExporter {
@@ -49,7 +50,7 @@ public class ObjExporter {
 
     /**
      * Save a mesh to a single WaveFront OBJ file and a MTL file
-     * 
+     *
      * @param mesh
      *            mesh to export
      * @param objFile
@@ -63,7 +64,7 @@ public class ObjExporter {
             save(mesh, objFile, mtlFile, false, 0, true, null, null);
         } else {
             final KeyframeController<?> controller = (KeyframeController<?>) mesh.getController(0);
-            final ArrayList<Mesh> meshList = new ArrayList<Mesh>();
+            final ArrayList<Mesh> meshList = new ArrayList<>();
             for (final KeyframeController.PointInTime pit : controller._keyframes) {
                 if (pit != null && pit._newShape != null) {
                     meshList.add(pit._newShape);
@@ -75,7 +76,7 @@ public class ObjExporter {
 
     /**
      * Save several meshes to a single WaveFront OBJ file and a MTL file
-     * 
+     *
      * @param meshList
      *            meshes to export
      * @param objFile
@@ -91,7 +92,7 @@ public class ObjExporter {
         if (!meshList.isEmpty()) {
             int firstVertexIndex = 0;
             boolean firstFiles = true;
-            final List<ObjMaterial> materialList = new ArrayList<ObjMaterial>();
+            final List<ObjMaterial> materialList = new ArrayList<>();
             for (final Mesh mesh : meshList) {
                 if (mesh != null) {
                     if (mesh.getControllerCount() == 0 || !(mesh.getController(0) instanceof KeyframeController)) {
@@ -101,7 +102,7 @@ public class ObjExporter {
                         firstVertexIndex += mesh.getMeshData().getVertexCount();
                     } else {
                         final KeyframeController<?> controller = (KeyframeController<?>) mesh.getController(0);
-                        final ArrayList<Mesh> subMeshList = new ArrayList<Mesh>();
+                        final ArrayList<Mesh> subMeshList = new ArrayList<>();
                         for (final KeyframeController.PointInTime pit : controller._keyframes) {
                             if (pit != null && pit._newShape != null) {
                                 subMeshList.add(pit._newShape);
@@ -122,7 +123,7 @@ public class ObjExporter {
 
     /**
      * Save a mesh to the given files.
-     * 
+     *
      * @param mesh
      *            mesh to export
      * @param objFile
@@ -155,207 +156,191 @@ public class ObjExporter {
                 parentDirectory.mkdirs();
             }
         }
-        PrintWriter objPw = null, mtlPw = null;
         try {
             // fills the MTL file
             final String mtlName;
             if (mtlFile != null) {
-                final FileOutputStream mtlOs = new FileOutputStream(mtlFile, append);
-                mtlPw = new PrintWriter(new BufferedOutputStream(mtlOs));
-                // writes some comments
-                if (firstFiles) {
-                    mtlPw.println("# Ardor3D 1.0 MTL file");
-                }
-                final ObjMaterial currentMtl = new ObjMaterial(null);
-                final MaterialState mtlState = (MaterialState) mesh.getLocalRenderState(StateType.Material);
-                if (mtlState != null) {
-                    final ReadOnlyColorRGBA ambientColor = mtlState.getAmbient();
-                    if (ambientColor != null) {
-                        currentMtl.d = ambientColor.getAlpha();
-                        currentMtl.Ka = new float[] { ambientColor.getRed(), ambientColor.getGreen(),
-                                ambientColor.getBlue(), ambientColor.getAlpha() };
+                try (final FileOutputStream mtlOs = new FileOutputStream(mtlFile, append);
+                        final PrintWriter mtlPw = new PrintWriter(new BufferedOutputStream(mtlOs))) {
+                    // writes some comments
+                    if (firstFiles) {
+                        mtlPw.println("# Ardor3D 1.0 MTL file");
                     }
-                    final ReadOnlyColorRGBA diffuseColor = mtlState.getDiffuse();
-                    if (diffuseColor != null) {
-                        currentMtl.Kd = new float[] { diffuseColor.getRed(), diffuseColor.getGreen(),
-                                diffuseColor.getBlue(), diffuseColor.getAlpha() };
+                    final ObjMaterial currentMtl = new ObjMaterial(null);
+                    final MaterialState mtlState = (MaterialState) mesh.getLocalRenderState(StateType.Material);
+                    if (mtlState != null) {
+                        final ReadOnlyColorRGBA ambientColor = mtlState.getAmbient();
+                        if (ambientColor != null) {
+                            currentMtl.d = ambientColor.getAlpha();
+                            currentMtl.Ka = new float[] { ambientColor.getRed(), ambientColor.getGreen(),
+                                    ambientColor.getBlue(), ambientColor.getAlpha() };
+                        }
+                        final ReadOnlyColorRGBA diffuseColor = mtlState.getDiffuse();
+                        if (diffuseColor != null) {
+                            currentMtl.Kd = new float[] { diffuseColor.getRed(), diffuseColor.getGreen(),
+                                    diffuseColor.getBlue(), diffuseColor.getAlpha() };
+                        }
+                        final ReadOnlyColorRGBA specularColor = mtlState.getSpecular();
+                        if (specularColor != null) {
+                            currentMtl.Ks = new float[] { specularColor.getRed(), specularColor.getGreen(),
+                                    specularColor.getBlue(), specularColor.getAlpha() };
+                        }
+                        currentMtl.Ns = mtlState.getShininess();
                     }
-                    final ReadOnlyColorRGBA specularColor = mtlState.getSpecular();
-                    if (specularColor != null) {
-                        currentMtl.Ks = new float[] { specularColor.getRed(), specularColor.getGreen(),
-                                specularColor.getBlue(), specularColor.getAlpha() };
+                    if (customTextureName == null) {
+                        currentMtl.textureName = getLocalMeshTextureName(mesh);
+                    } else {
+                        currentMtl.textureName = customTextureName;
                     }
-                    currentMtl.Ns = mtlState.getShininess();
-                }
-                if (customTextureName == null) {
-                    currentMtl.textureName = getLocalMeshTextureName(mesh);
-                } else {
-                    currentMtl.textureName = customTextureName;
-                }
-                if (mesh.getSceneHints().getLightCombineMode() == LightCombineMode.Off) {
-                    // Color on and Ambient off
-                    currentMtl.illumType = 0;
-                } else {
-                    // Color on and Ambient on
-                    currentMtl.illumType = 1;
-                }
-                ObjMaterial sameObjMtl = null;
-                if (materialList != null && !materialList.isEmpty()) {
-                    for (final ObjMaterial mtl : materialList) {
-                        if (mtl.illumType == currentMtl.illumType && mtl.Ns == currentMtl.Ns
-                                && mtl.forceBlend == currentMtl.forceBlend && mtl.d == currentMtl.d
-                                && Arrays.equals(mtl.Ka, currentMtl.Ka) && Arrays.equals(mtl.Kd, currentMtl.Kd)
-                                && Arrays.equals(mtl.Ks, currentMtl.Ks)
-                                && equals(mtl.textureName, currentMtl.textureName)) {
-                            sameObjMtl = mtl;
-                            break;
+                    if (mesh.getSceneHints().getLightCombineMode() == LightCombineMode.Off) {
+                        // Color on and Ambient off
+                        currentMtl.illumType = 0;
+                    } else {
+                        // Color on and Ambient on
+                        currentMtl.illumType = 1;
+                    }
+                    ObjMaterial sameObjMtl = null;
+                    if (materialList != null && !materialList.isEmpty()) {
+                        for (final ObjMaterial mtl : materialList) {
+                            if (mtl.illumType == currentMtl.illumType && mtl.Ns == currentMtl.Ns
+                                    && mtl.forceBlend == currentMtl.forceBlend && mtl.d == currentMtl.d
+                                    && Arrays.equals(mtl.Ka, currentMtl.Ka) && Arrays.equals(mtl.Kd, currentMtl.Kd)
+                                    && Arrays.equals(mtl.Ks, currentMtl.Ks)
+                                    && Objects.equals(mtl.textureName, currentMtl.textureName)) {
+                                sameObjMtl = mtl;
+                                break;
+                            }
                         }
                     }
-                }
-                if (sameObjMtl == null) {
-                    // writes the new material library
-                    mtlName = mtlFile.getName().trim().replaceAll(" ", "") + "_"
-                            + (materialList == null ? 1 : materialList.size() + 1);
-                    if (materialList != null) {
-                        final ObjMaterial mtl = new ObjMaterial(mtlName);
-                        mtl.illumType = currentMtl.illumType;
-                        mtl.textureName = currentMtl.textureName;
-                        materialList.add(mtl);
-                    }
-                    mtlPw.println("newmtl " + mtlName);
-                    if (currentMtl.Ns != -1) {
-                        mtlPw.println("Ns " + currentMtl.Ns);
-                    }
-                    if (currentMtl.Ka != null) {
-                        mtlPw.print("Ka");
-                        for (final float KaCoef : currentMtl.Ka) {
-                            mtlPw.print(" " + KaCoef);
+                    if (sameObjMtl == null) {
+                        // writes the new material library
+                        mtlName = mtlFile.getName().trim().replaceAll(" ", "") + "_"
+                                + (materialList == null ? 1 : materialList.size() + 1);
+                        if (materialList != null) {
+                            final ObjMaterial mtl = new ObjMaterial(mtlName);
+                            mtl.illumType = currentMtl.illumType;
+                            mtl.textureName = currentMtl.textureName;
+                            materialList.add(mtl);
                         }
-                        mtlPw.println();
-                    }
-                    if (currentMtl.Kd != null) {
-                        mtlPw.print("Kd");
-                        for (final float KdCoef : currentMtl.Kd) {
-                            mtlPw.print(" " + KdCoef);
+                        mtlPw.println("newmtl " + mtlName);
+                        if (currentMtl.Ns != -1) {
+                            mtlPw.println("Ns " + currentMtl.Ns);
                         }
-                        mtlPw.println();
-                    }
-                    if (currentMtl.Ks != null) {
-                        mtlPw.print("Ks");
-                        for (final float KsCoef : currentMtl.Ks) {
-                            mtlPw.print(" " + KsCoef);
+                        if (currentMtl.Ka != null) {
+                            mtlPw.print("Ka");
+                            for (final float KaCoef : currentMtl.Ka) {
+                                mtlPw.print(" " + KaCoef);
+                            }
+                            mtlPw.println();
                         }
-                        mtlPw.println();
+                        if (currentMtl.Kd != null) {
+                            mtlPw.print("Kd");
+                            for (final float KdCoef : currentMtl.Kd) {
+                                mtlPw.print(" " + KdCoef);
+                            }
+                            mtlPw.println();
+                        }
+                        if (currentMtl.Ks != null) {
+                            mtlPw.print("Ks");
+                            for (final float KsCoef : currentMtl.Ks) {
+                                mtlPw.print(" " + KsCoef);
+                            }
+                            mtlPw.println();
+                        }
+                        if (currentMtl.d != -1) {
+                            mtlPw.println("d " + currentMtl.d);
+                        }
+                        mtlPw.println("illum " + currentMtl.illumType);
+                        if (currentMtl.textureName != null) {
+                            mtlPw.println("map_Kd " + currentMtl.textureName);
+                        }
+                    } else {
+                        mtlName = sameObjMtl.getName();
                     }
-                    if (currentMtl.d != -1) {
-                        mtlPw.println("d " + currentMtl.d);
-                    }
-                    mtlPw.println("illum " + currentMtl.illumType);
-                    if (currentMtl.textureName != null) {
-                        mtlPw.println("map_Kd " + currentMtl.textureName);
-                    }
-                } else {
-                    mtlName = sameObjMtl.getName();
                 }
             } else {
                 mtlName = null;
             }
 
-            final FileOutputStream objOs = new FileOutputStream(objFile, append);
-            objPw = new PrintWriter(new BufferedOutputStream(objOs));
-            // writes some comments
-            if (firstFiles) {
-                objPw.println("# Ardor3D 1.0 OBJ file");
-                objPw.println("# www.ardor3d.com");
-                // writes the material file name if any
-                if (mtlFile != null) {
-                    final String mtlLibFilename = mtlFile.getName();
-                    objPw.println("mtllib " + mtlLibFilename);
+            try (final FileOutputStream objOs = new FileOutputStream(objFile, append);
+                    final PrintWriter objPw = new PrintWriter(new BufferedOutputStream(objOs))) {
+                // writes some comments
+                if (firstFiles) {
+                    objPw.println("# Ardor3D 1.0 OBJ file");
+                    objPw.println("# www.ardor3d.com");
+                    // writes the material file name if any
+                    if (mtlFile != null) {
+                        final String mtlLibFilename = mtlFile.getName();
+                        objPw.println("mtllib " + mtlLibFilename);
+                    }
                 }
-            }
-            // writes the object name
-            final String objName;
-            String meshName = mesh.getName();
-            // removes all spaces from the mesh name
-            if (meshName != null && !meshName.isEmpty()) {
-                meshName = meshName.trim().replaceAll(" ", "");
-            }
-            if (meshName != null && !meshName.isEmpty()) {
-                objName = meshName;
-            } else {
-                objName = "obj_mesh" + mesh.hashCode();
-            }
-            objPw.println("o " + objName);
-            final MeshData meshData = mesh.getMeshData();
-            // writes the coordinates
-            final FloatBufferData verticesData = meshData.getVertexCoords();
-            if (verticesData == null) {
-                throw new IllegalArgumentException("cannot export a mesh with no vertices");
-            }
-            final int expectedTupleCount = verticesData.getTupleCount();
-            saveFloatBufferData(verticesData, objPw, "v", expectedTupleCount);
-            final FloatBufferData texCoordsData = meshData.getTextureCoords(0);
-            saveFloatBufferData(texCoordsData, objPw, "vt", expectedTupleCount);
-            final FloatBufferData normalsData = meshData.getNormalCoords();
-            saveFloatBufferData(normalsData, objPw, "vn", expectedTupleCount);
-            // writes the used material library
-            if (mtlFile != null) {
-                objPw.println("usemtl " + mtlName);
-            }
-            // writes the faces
-            for (int sectionIndex = 0; sectionIndex < meshData.getSectionCount(); sectionIndex++) {
-                final IndexMode indexMode = meshData.getIndexMode(sectionIndex);
-                final int[] indices = new int[indexMode.getVertexCount()];
-                switch (indexMode) {
-                    case TriangleFan:
-                    case Triangles:
-                    case TriangleStrip:
-                    case Quads:
-                        for (int primIndex = 0, primCount = meshData.getPrimitiveCount(sectionIndex); primIndex < primCount; primIndex++) {
-                            meshData.getPrimitiveIndices(primIndex, sectionIndex, indices);
-                            objPw.print("f");
-                            for (int vertexIndex = 0; vertexIndex < indices.length; vertexIndex++) {
-                                // indices start at 1 in the WaveFront OBJ format whereas indices start at 0 in
-                                // Ardor3D
-                                final int shiftedIndex = indices[vertexIndex] + 1 + firstVertexIndex;
-                                // vertex index
-                                objPw.print(" " + shiftedIndex);
-                                // texture coordinate index
-                                if (texCoordsData != null) {
-                                    objPw.print("/" + shiftedIndex);
+                // writes the object name
+                final String objName;
+                String meshName = mesh.getName();
+                // removes all spaces from the mesh name
+                if (meshName != null && !meshName.isEmpty()) {
+                    meshName = meshName.trim().replaceAll(" ", "");
+                }
+                if (meshName != null && !meshName.isEmpty()) {
+                    objName = meshName;
+                } else {
+                    objName = "obj_mesh" + mesh.hashCode();
+                }
+                objPw.println("o " + objName);
+                final MeshData meshData = mesh.getMeshData();
+                // writes the coordinates
+                final FloatBufferData verticesData = meshData.getVertexCoords();
+                if (verticesData == null) {
+                    throw new IllegalArgumentException("cannot export a mesh with no vertices");
+                }
+                final int expectedTupleCount = verticesData.getTupleCount();
+                saveFloatBufferData(verticesData, objPw, "v", expectedTupleCount);
+                final FloatBufferData texCoordsData = meshData.getTextureCoords(0);
+                saveFloatBufferData(texCoordsData, objPw, "vt", expectedTupleCount);
+                final FloatBufferData normalsData = meshData.getNormalCoords();
+                saveFloatBufferData(normalsData, objPw, "vn", expectedTupleCount);
+                // writes the used material library
+                if (mtlFile != null) {
+                    objPw.println("usemtl " + mtlName);
+                }
+                // writes the faces
+                for (int sectionIndex = 0; sectionIndex < meshData.getSectionCount(); sectionIndex++) {
+                    final IndexMode indexMode = meshData.getIndexMode(sectionIndex);
+                    final int[] indices = new int[indexMode.getVertexCount()];
+                    switch (indexMode) {
+                        case TriangleFan:
+                        case Triangles:
+                        case TriangleStrip:
+                        case Quads:
+                            for (int primIndex = 0, primCount = meshData
+                                    .getPrimitiveCount(sectionIndex); primIndex < primCount; primIndex++) {
+                                meshData.getPrimitiveIndices(primIndex, sectionIndex, indices);
+                                objPw.print("f");
+                                for (int vertexIndex = 0; vertexIndex < indices.length; vertexIndex++) {
+                                    // indices start at 1 in the WaveFront OBJ format whereas indices start at 0 in
+                                    // Ardor3D
+                                    final int shiftedIndex = indices[vertexIndex] + 1 + firstVertexIndex;
+                                    // vertex index
+                                    objPw.print(" " + shiftedIndex);
+                                    // texture coordinate index
+                                    if (texCoordsData != null) {
+                                        objPw.print("/" + shiftedIndex);
+                                    }
+                                    // normal coordinate index
+                                    if (normalsData != null) {
+                                        objPw.print("/" + shiftedIndex);
+                                    }
                                 }
-                                // normal coordinate index
-                                if (normalsData != null) {
-                                    objPw.print("/" + shiftedIndex);
-                                }
+                                objPw.println();
                             }
-                            objPw.println();
-                        }
-                        break;
-                    default:
-                        throw new IllegalArgumentException("index mode " + indexMode + " not supported");
+                            break;
+                        default:
+                            throw new IllegalArgumentException("index mode " + indexMode + " not supported");
+                    }
                 }
             }
         } catch (final Throwable t) {
             throw new Error("Unable to save the mesh into an obj", t);
-        } finally {
-            if (objPw != null) {
-                objPw.flush();
-                objPw.close();
-            }
-            if (mtlPw != null) {
-                mtlPw.flush();
-                mtlPw.close();
-            }
-        }
-    }
-
-    // TODO replace it by java.util.Objects.equals(Object, Object)
-    private boolean equals(final Object a, final Object b) {
-        if (a == b) {
-            return true;
-        } else {
-            return a != null && a.equals(b);
         }
     }
 
@@ -407,9 +392,9 @@ public class ObjExporter {
                 final int tupleSize = data.getValuesPerTuple();
                 final int tupleCount = data.getTupleCount();
                 if (tupleCount < expectedTupleCount) {
-                    throw new IllegalArgumentException("[" + keyword
-                            + "] not enough data to match with the vertex count: " + tupleCount + " < "
-                            + expectedTupleCount);
+                    throw new IllegalArgumentException(
+                            "[" + keyword + "] not enough data to match with the vertex count: " + tupleCount + " < "
+                                    + expectedTupleCount);
                 } else {
                     if (tupleCount > expectedTupleCount) {
                         ObjExporter.logger.warning("[" + keyword + "] too much data to match with the vertex count: "

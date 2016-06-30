@@ -20,7 +20,7 @@ public class SimpleContextIdReference<T> extends PhantomReference<T> {
     /**
      * Keep a string reference to these objects until their reference is cleared.
      */
-    private static final List<SimpleContextIdReference<?>> REFS = new LinkedList<SimpleContextIdReference<?>>();
+    private static final List<SimpleContextIdReference<?>> REFS = new LinkedList<>();
 
     private final int _id;
     private final Object _glContext;

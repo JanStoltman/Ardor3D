@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -29,7 +29,7 @@ public class UIScrollBar extends UIPanel {
     private final UIButton btBottomRight;
     private int sliderLength;
     /** List of action listeners notified when this scrollbar is changed. */
-    private final List<ActionListener> _listeners = new ArrayList<ActionListener>();
+    private final List<ActionListener> _listeners = new ArrayList<>();
 
     public UIScrollBar(final Orientation orientation) {
         setLayout(new BorderLayout());
@@ -98,7 +98,7 @@ public class UIScrollBar extends UIPanel {
 
     /**
      * Add the specified listener to this scrollbar's list of listeners notified when it's changed.
-     * 
+     *
      * @param listener
      */
     public void addActionListener(final ActionListener listener) {

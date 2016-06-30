@@ -46,7 +46,7 @@ final public class TextureManager {
 
     private static Map<TextureKey, Texture> _tCache = new MapMaker().weakKeys().weakValues().makeMap();
 
-    private static ReferenceQueue<TextureKey> _textureRefQueue = new ReferenceQueue<TextureKey>();
+    private static ReferenceQueue<TextureKey> _textureRefQueue = new ReferenceQueue<>();
 
     static {
         ContextManager.addContextCleanListener(new ContextCleanListener() {

@@ -127,7 +127,7 @@ public class KeyframeController<T extends Spatial> extends ComplexSpatialControl
      */
     public KeyframeController() {
         setSpeed(1);
-        _keyframes = new ArrayList<PointInTime>();
+        _keyframes = new ArrayList<>();
         _curFrame = 0;
         setRepeatType(ComplexSpatialController.RepeatType.WRAP);
         setMinTime(0);
@@ -245,7 +245,7 @@ public class KeyframeController<T extends Spatial> extends ComplexSpatialControl
         }
         Mesh begin = null, end = null;
         if (_prevKeyframes == null) {
-            _prevKeyframes = new ArrayList<PointInTime>();
+            _prevKeyframes = new ArrayList<>();
             begin = new Mesh();
             end = new Mesh();
         } else {

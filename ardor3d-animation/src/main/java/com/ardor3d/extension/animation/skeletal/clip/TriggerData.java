@@ -19,7 +19,7 @@ import java.util.List;
 public class TriggerData {
 
     /** The current trigger name. */
-    private final List<String> _currentTriggers = new ArrayList<String>();
+    private final List<String> _currentTriggers = new ArrayList<>();
 
     /**
      * The current channel sample index. We keep this to make sure we don't miss two channels in a row with the same

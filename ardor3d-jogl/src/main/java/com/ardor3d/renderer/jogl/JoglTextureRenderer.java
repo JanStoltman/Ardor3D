@@ -179,8 +179,8 @@ public class JoglTextureRenderer extends AbstractFBOTextureRenderer {
 
             // Otherwise, we can streamline this by rendering to multiple textures at once.
             // first determine how many groups we need
-            final LinkedList<Texture> depths = new LinkedList<Texture>();
-            final LinkedList<Texture> colors = new LinkedList<Texture>();
+            final LinkedList<Texture> depths = new LinkedList<>();
+            final LinkedList<Texture> colors = new LinkedList<>();
             for (int i = 0; i < texs.size(); i++) {
                 final Texture tex = texs.get(i);
                 if (tex.getTextureStoreFormat().isDepthFormat()) {

@@ -57,7 +57,7 @@ public class MeshData implements Savable {
     protected FloatBufferData _colorCoords;
     protected FloatBufferData _fogCoords;
     protected FloatBufferData _tangentCoords;
-    protected List<FloatBufferData> _textureCoords = new ArrayList<FloatBufferData>(1);
+    protected List<FloatBufferData> _textureCoords = new ArrayList<>(1);
 
     /** Interleaved data (for VBO id use). */
     protected FloatBufferData _interleaved;
@@ -1204,7 +1204,7 @@ public class MeshData implements Savable {
         }
 
         if (_vboIdCache == null) {
-            _vboIdCache = new WeakHashMap<Object, Integer>(1);
+            _vboIdCache = new WeakHashMap<>(1);
         }
         _vboIdCache.put(glContext, vboId);
     }

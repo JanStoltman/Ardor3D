@@ -28,9 +28,9 @@ public class AbstractRenderBucket implements RenderBucket {
     protected Spatial[] _currentList, _tempList;
     protected int _currentListSize;
 
-    protected Stack<Spatial[]> _listStack = new Stack<Spatial[]>();
-    protected Stack<Spatial[]> _listStackPool = new Stack<Spatial[]>();
-    protected Stack<Integer> _listSizeStack = new Stack<Integer>();
+    protected Stack<Spatial[]> _listStack = new Stack<>();
+    protected Stack<Spatial[]> _listStackPool = new Stack<>();
+    protected Stack<Integer> _listSizeStack = new Stack<>();
 
     public AbstractRenderBucket() {
         _currentList = new Spatial[32];

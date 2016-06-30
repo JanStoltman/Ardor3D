@@ -46,7 +46,7 @@ public class BinaryInputCapsule implements InputCapsule {
     }
 
     public void setContent(final byte[] content, final int start, final int limit) {
-        _fieldData = new HashMap<Byte, Object>();
+        _fieldData = new HashMap<>();
         for (_index = start; _index < limit;) {
             final byte alias = content[_index];
 
@@ -543,7 +543,7 @@ public class BinaryInputCapsule implements InputCapsule {
         if (savables == null) {
             return null;
         }
-        final List<Savable> list = new ArrayList<Savable>(savables.length);
+        final List<Savable> list = new ArrayList<>(savables.length);
         for (int x = 0; x < savables.length; x++) {
             list.add(savables[x]);
         }
@@ -555,7 +555,7 @@ public class BinaryInputCapsule implements InputCapsule {
         if (savables == null) {
             return null;
         }
-        final Map<Savable, Savable> map = new HashMap<Savable, Savable>(savables.length);
+        final Map<Savable, Savable> map = new HashMap<>(savables.length);
         for (int x = 0; x < savables.length; x++) {
             map.put(savables[x][0], savables[x][1]);
         }
@@ -567,7 +567,7 @@ public class BinaryInputCapsule implements InputCapsule {
             return null;
         }
 
-        final Map<String, Savable> map = new HashMap<String, Savable>(keys.length);
+        final Map<String, Savable> map = new HashMap<>(keys.length);
         for (int x = 0; x < keys.length; x++) {
             map.put(keys[x], values[x]);
         }
@@ -1239,7 +1239,7 @@ public class BinaryInputCapsule implements InputCapsule {
         if (length == BinaryOutputCapsule.NULL_OBJECT) {
             return null;
         }
-        final List<FloatBuffer> rVal = new ArrayList<FloatBuffer>(length);
+        final List<FloatBuffer> rVal = new ArrayList<>(length);
         for (int x = 0; x < length; x++) {
             rVal.add(readFloatBuffer(content));
         }
@@ -1253,7 +1253,7 @@ public class BinaryInputCapsule implements InputCapsule {
         if (length == BinaryOutputCapsule.NULL_OBJECT) {
             return null;
         }
-        final List<ByteBuffer> rVal = new ArrayList<ByteBuffer>(length);
+        final List<ByteBuffer> rVal = new ArrayList<>(length);
         for (int x = 0; x < length; x++) {
             rVal.add(readByteBuffer(content));
         }

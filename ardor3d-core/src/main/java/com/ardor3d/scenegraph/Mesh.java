@@ -66,7 +66,7 @@ public class Mesh extends Spatial implements Renderable, Pickable {
      * The compiled list of renderstates for this mesh, taking into account ancestors states - updated with
      * updateRenderStates()
      */
-    protected final EnumMap<RenderState.StateType, RenderState> _states = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> _states = new EnumMap<>(
             RenderState.StateType.class);
 
     /** The compiled lightState for this mesh */
@@ -559,7 +559,7 @@ public class Mesh extends Spatial implements Renderable, Pickable {
 
     @Override
     public IntersectionRecord intersectsPrimitivesWhere(final Ray3 ray) {
-        final List<PrimitiveKey> primitives = new ArrayList<PrimitiveKey>();
+        final List<PrimitiveKey> primitives = new ArrayList<>();
 
         // What about Lines and Points?
         final CollisionTree ct = CollisionTreeManager.getInstance().getCollisionTree(this);

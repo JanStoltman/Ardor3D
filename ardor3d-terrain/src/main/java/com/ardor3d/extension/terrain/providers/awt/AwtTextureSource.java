@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -69,7 +69,7 @@ public class AwtTextureSource implements TextureSource, ElementUpdateListener {
 
         for (int i = 0; i < availableClipmapLevels; i++) {
             _image[i] = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB);
-            _updatedTiles[i] = new HashSet<Tile>();
+            _updatedTiles[i] = new HashSet<>();
         }
     }
 
@@ -79,7 +79,7 @@ public class AwtTextureSource implements TextureSource, ElementUpdateListener {
 
     @Override
     public TextureConfiguration getConfiguration() throws Exception {
-        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<Integer, TextureStoreFormat>();
+        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<>();
         textureStoreFormat.put(0, format);
 
         return new TextureConfiguration(availableClipmapLevels, textureStoreFormat, tileSize, 1f, false, true);
@@ -100,7 +100,7 @@ public class AwtTextureSource implements TextureSource, ElementUpdateListener {
             return null;
         }
 
-        final Set<Tile> tiles = new HashSet<Tile>();
+        final Set<Tile> tiles = new HashSet<>();
 
         int checkX, checkY;
         for (final Iterator<Tile> it = _updatedTiles[baseClipmapLevel].iterator(); it.hasNext();) {
@@ -149,7 +149,7 @@ public class AwtTextureSource implements TextureSource, ElementUpdateListener {
         graphics.setComposite(composite);
 
         // get list of elements that intersect the given region
-        final List<AbstractAwtElement> elements = new ArrayList<AbstractAwtElement>(provider.getElements());
+        final List<AbstractAwtElement> elements = new ArrayList<>(provider.getElements());
         for (final Iterator<AbstractAwtElement> it = elements.iterator(); it.hasNext();) {
             final AbstractAwtElement element = it.next();
 

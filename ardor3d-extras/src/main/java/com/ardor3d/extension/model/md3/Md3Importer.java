@@ -168,7 +168,7 @@ public class Md3Importer {
             final Node node = new Node(header._name);
             for (int i = 0; i < header._numSurfaces; i++) {
                 final Md3Surface surface = surfaces[i];
-                final KeyframeController<Mesh> controller = new KeyframeController<Mesh>();
+                final KeyframeController<Mesh> controller = new KeyframeController<>();
                 final Mesh morphingMesh = new Mesh(surface._name);
                 morphingMesh.getMeshData().setIndexBuffer(BufferUtils.createIntBuffer(surface._triIndexes));
                 morphingMesh.getMeshData().setVertexBuffer(BufferUtils.createFloatBuffer(surface._verts[0]));

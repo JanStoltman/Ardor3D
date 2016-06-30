@@ -27,7 +27,7 @@ import com.ardor3d.util.scenegraph.RenderDelegate;
 public class RenderedText extends Node implements Renderable {
 
     protected String _plainText = null;
-    protected List<StyleSpan> _parsedStyles = new LinkedList<StyleSpan>();
+    protected List<StyleSpan> _parsedStyles = new LinkedList<>();
 
     protected float _width;
     protected float _height;
@@ -203,11 +203,11 @@ public class RenderedText extends Node implements Renderable {
     }
 
     public static class RenderedTextData {
-        public List<Integer> _xStarts = new ArrayList<Integer>();
-        public List<Integer> _lineHeights = new ArrayList<Integer>();
-        public List<Integer> _lineEnds = new ArrayList<Integer>();
-        public List<Integer> _fontHeights = new ArrayList<Integer>();
-        public List<CharacterDescriptor> _characters = new ArrayList<CharacterDescriptor>();
+        public List<Integer> _xStarts = new ArrayList<>();
+        public List<Integer> _lineHeights = new ArrayList<>();
+        public List<Integer> _lineEnds = new ArrayList<>();
+        public List<Integer> _fontHeights = new ArrayList<>();
+        public List<CharacterDescriptor> _characters = new ArrayList<>();
 
         public RenderedTextData() {}
 

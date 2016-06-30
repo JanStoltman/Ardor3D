@@ -200,10 +200,10 @@ public class TransformChannel extends AbstractAnimationChannel {
         if (startTime > endTime) {
             throw new IllegalArgumentException("startTime > endTime");
         }
-        final List<Float> times = new ArrayList<Float>();
-        final List<ReadOnlyQuaternion> rotations = new ArrayList<ReadOnlyQuaternion>();
-        final List<ReadOnlyVector3> translations = new ArrayList<ReadOnlyVector3>();
-        final List<ReadOnlyVector3> scales = new ArrayList<ReadOnlyVector3>();
+        final List<Float> times = new ArrayList<>();
+        final List<ReadOnlyQuaternion> rotations = new ArrayList<>();
+        final List<ReadOnlyVector3> translations = new ArrayList<>();
+        final List<ReadOnlyVector3> scales = new ArrayList<>();
 
         final TransformData tData = new TransformData();
 

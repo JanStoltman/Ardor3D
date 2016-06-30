@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -39,7 +39,7 @@ public class FragmentProgramState extends RenderState {
     /**
      * <code>setEnvParameter</code> sets an environmental fragment program parameter that is accessable by all fragment
      * programs in memory.
-     * 
+     *
      * @param param
      *            four-element array of floating point numbers
      * @param paramID
@@ -50,7 +50,7 @@ public class FragmentProgramState extends RenderState {
      * public static void setEnvParameter(float[] param, int paramID){ if (paramID < 0 || paramID > 95) throw new
      * IllegalArgumentException("Invalid parameter ID"); if (param != null && param.length != 4) throw new
      * IllegalArgumentException("Vertex program parameters must be of type float[4]");
-     * 
+     *
      * envparameters[paramID] = param; }
      */
 
@@ -60,7 +60,7 @@ public class FragmentProgramState extends RenderState {
 
     /**
      * <code>setParameter</code> sets a parameter for this fragment program.
-     * 
+     *
      * @param paramID
      *            identity number of the parameter, ranging from 0 to 23
      * @param param
@@ -86,14 +86,12 @@ public class FragmentProgramState extends RenderState {
 
     /**
      * Loads the fragment program into a byte array.
-     * 
+     *
      * @see com.ardor3d.renderer.state.FragmentProgramState#load(java.net.URL)
      */
     public void load(final java.net.URL file) {
-        InputStream inputStream = null;
-        try {
-            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16 * 1024);
-            inputStream = new BufferedInputStream(file.openStream());
+        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16 * 1024);
+                final InputStream inputStream = new BufferedInputStream(file.openStream())) {
             final byte[] buffer = new byte[1024];
             int byteCount = -1;
 
@@ -107,7 +105,6 @@ public class FragmentProgramState extends RenderState {
 
             // Release resources
             inputStream.close();
-            outputStream.close();
 
             program = BufferUtils.createByteBuffer(data.length);
             program.put(data);
@@ -117,21 +114,12 @@ public class FragmentProgramState extends RenderState {
         } catch (final Exception e) {
             logger.severe("Could not load fragment program: " + e);
             logger.logp(Level.SEVERE, getClass().getName(), "load(URL)", "Exception", e);
-        } finally {
-            // Ensure that the stream is closed, even if there is an exception.
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (final IOException closeFailure) {
-                    logger.log(Level.WARNING, "Failed to close the fragment program", closeFailure);
-                }
-            }
         }
     }
 
     /**
      * Loads the fragment program into a byte array.
-     * 
+     *
      * @see com.ardor3d.renderer.state.FragmentProgramState#load(java.net.URL)
      */
     public void load(final String programContents) {
@@ -170,7 +158,7 @@ public class FragmentProgramState extends RenderState {
 
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @see java.io.Serializable
@@ -190,7 +178,7 @@ public class FragmentProgramState extends RenderState {
 
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @throws ClassNotFoundException

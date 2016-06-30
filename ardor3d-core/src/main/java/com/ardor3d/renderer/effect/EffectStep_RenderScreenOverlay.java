@@ -20,9 +20,9 @@ import com.ardor3d.renderer.state.TextureState;
 
 public class EffectStep_RenderScreenOverlay implements EffectStep {
 
-    private final EnumMap<StateType, RenderState> _states = new EnumMap<StateType, RenderState>(StateType.class);
+    private final EnumMap<StateType, RenderState> _states = new EnumMap<>(StateType.class);
     private final TextureState _texState = new TextureState();
-    private final Map<String, Integer> _targetMap = new HashMap<String, Integer>();
+    private final Map<String, Integer> _targetMap = new HashMap<>();
 
     public EffectStep_RenderScreenOverlay() {
         _states.put(StateType.Texture, _texState);

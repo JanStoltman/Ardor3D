@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -59,17 +59,17 @@ import com.ardor3d.util.resource.URLResourceSource;
  * Illustrates loading several animations from Collada and arranging them in an animation state machine.
  */
 @Purpose(htmlDescriptionKey = "com.ardor3d.example.pipeline.AnimationDemoExample", //
-thumbnailPath = "com/ardor3d/example/media/thumbnails/pipeline_AnimationDemoExample.jpg", //
-maxHeapMemory = 64)
+        thumbnailPath = "com/ardor3d/example/media/thumbnails/pipeline_AnimationDemoExample.jpg", //
+        maxHeapMemory = 64)
 public class AnimationDemoExample extends ExampleBase {
 
     private static final long MIN_STATE_TIME = 5000;
 
     static AnimationDemoExample instance;
 
-    private final List<AnimationManager> managers = new ArrayList<AnimationManager>();
-    private final List<AnimationInfo> animInfo = new ArrayList<AnimationInfo>();
-    private final Map<SkeletonPose, SkinnedMesh> poseToMesh = new IdentityHashMap<SkeletonPose, SkinnedMesh>();
+    private final List<AnimationManager> managers = new ArrayList<>();
+    private final List<AnimationInfo> animInfo = new ArrayList<>();
+    private final Map<SkeletonPose, SkinnedMesh> poseToMesh = new IdentityHashMap<>();
 
     public static void main(final String[] args) {
         ExampleBase.start(AnimationDemoExample.class);
@@ -148,8 +148,7 @@ public class AnimationDemoExample extends ExampleBase {
             try {
                 gpuShader.setVertexShader(ResourceLocatorTool.getClassPathResourceAsStream(AnimationDemoExample.class,
                         "com/ardor3d/extension/animation/skeletal/skinning_gpu_texture.vert"));
-                gpuShader.setFragmentShader(ResourceLocatorTool.getClassPathResourceAsStream(
-                        AnimationDemoExample.class,
+                gpuShader.setFragmentShader(ResourceLocatorTool.getClassPathResourceAsStream(AnimationDemoExample.class,
                         "com/ardor3d/extension/animation/skeletal/skinning_gpu_texture.frag"));
 
                 gpuShader.setUniform("texture", 0);
@@ -197,7 +196,7 @@ public class AnimationDemoExample extends ExampleBase {
         return skeleton;
     }
 
-    private final Map<String, AnimationClip> animationStore = new HashMap<String, AnimationClip>();
+    private final Map<String, AnimationClip> animationStore = new HashMap<>();
 
     private AnimationManager createAnimationManager(final SkeletonPose pose) {
         // Make our manager

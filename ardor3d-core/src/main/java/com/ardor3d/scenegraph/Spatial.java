@@ -79,7 +79,7 @@ public abstract class Spatial implements Savable, Hintable {
     protected List<SpatialController<?>> _controllers;
 
     /** The render states of this spatial. */
-    protected EnumMap<RenderState.StateType, RenderState> _renderStateList = new EnumMap<RenderState.StateType, RenderState>(
+    protected EnumMap<RenderState.StateType, RenderState> _renderStateList = new EnumMap<>(
             RenderState.StateType.class);
 
     /** Listener for dirty events. */
@@ -165,7 +165,7 @@ public abstract class Spatial implements Savable, Hintable {
             if (delegate == null) {
                 return;
             } else {
-                _delegateMap = new WeakHashMap<Object, RenderDelegate>();
+                _delegateMap = new WeakHashMap<>();
             }
         }
         if (delegate != null) {
@@ -1102,7 +1102,7 @@ public abstract class Spatial implements Savable, Hintable {
      */
     public void addController(final SpatialController<?> controller) {
         if (_controllers == null) {
-            _controllers = new ArrayList<SpatialController<?>>(1);
+            _controllers = new ArrayList<>(1);
         }
         _controllers.add(controller);
     }
@@ -1158,7 +1158,7 @@ public abstract class Spatial implements Savable, Hintable {
      */
     public SpatialController<?> getController(final int i) {
         if (_controllers == null) {
-            _controllers = new ArrayList<SpatialController<?>>(1);
+            _controllers = new ArrayList<>(1);
         }
         return _controllers.get(i);
     }
@@ -1170,7 +1170,7 @@ public abstract class Spatial implements Savable, Hintable {
      */
     public List<SpatialController<?>> getControllers() {
         if (_controllers == null) {
-            _controllers = new ArrayList<SpatialController<?>>(1);
+            _controllers = new ArrayList<>(1);
         }
         return _controllers;
     }
@@ -1416,7 +1416,7 @@ public abstract class Spatial implements Savable, Hintable {
         }
 
         if (_controllers != null) {
-            final List<Savable> list = new ArrayList<Savable>();
+            final List<Savable> list = new ArrayList<>();
             for (final SpatialController<?> sc : _controllers) {
                 if (sc instanceof Savable) {
                     list.add((Savable) sc);

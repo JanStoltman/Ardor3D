@@ -3,12 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.terrain.util;
+
+import java.util.Objects;
 
 /**
  * Used to calculate clipmap block boundaries etc
@@ -201,14 +203,8 @@ public class Region {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + height;
-        result = prime * result + level;
-        result = prime * result + width;
-        result = prime * result + x;
-        result = prime * result + y;
-        return result;
+        return Objects.hash(Integer.valueOf(getHeight()), Integer.valueOf(getLevel()), Integer.valueOf(getWidth()),
+                Integer.valueOf(getX()), Integer.valueOf(getY()));
     }
 
     @Override

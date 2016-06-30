@@ -45,7 +45,7 @@ public class ObjGeometryStore {
     private int _totalLines = 0;
     private int _totalMeshes = 0;
     private final Node _root = new Node();
-    private final Map<String, Spatial> _groupMap = new HashMap<String, Spatial>();
+    private final Map<String, Spatial> _groupMap = new HashMap<>();
 
     private ObjMaterial _currentMaterial = new ObjMaterial("default");
     private String _currentObjectName;
@@ -55,8 +55,8 @@ public class ObjGeometryStore {
     private ObjSetManager _lineManager;
     private ObjSetManager _pointManager;
 
-    private final Map<String, ObjMaterial> materialLibrary = new HashMap<String, ObjMaterial>();
-    private final Map<Spatial, String> _materialMap = new HashMap<Spatial, String>();
+    private final Map<String, ObjMaterial> materialLibrary = new HashMap<>();
+    private final Map<Spatial, String> _materialMap = new HashMap<>();
 
     private final GeometryTool _geometryTool;
 
@@ -274,7 +274,7 @@ public class ObjGeometryStore {
 
             int j = 0;
             final long[] vertGroups = new long[_meshManager.getStore().size()];
-            final List<Long> groups = new ArrayList<Long>();
+            final List<Long> groups = new ArrayList<>();
             Vector3 vector;
             for (final ObjIndexSet set : _meshManager.getStore().keySet()) {
                 vertGroups[j] = set.getSmoothGroup();

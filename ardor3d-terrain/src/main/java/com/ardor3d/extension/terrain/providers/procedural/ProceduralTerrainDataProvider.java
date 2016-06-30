@@ -43,7 +43,7 @@ public class ProceduralTerrainDataProvider implements TerrainDataProvider {
 
     @Override
     public Map<Integer, String> getAvailableMaps() throws Exception {
-        final Map<Integer, String> maps = new HashMap<Integer, String>();
+        final Map<Integer, String> maps = new HashMap<>();
         maps.put(0, "ProceduralMap");
 
         return maps;

@@ -21,9 +21,9 @@ public class MaterialInfo {
     private String _materialName;
     private String _profile;
     private String _technique;
-    private final Map<String, String> _textureReferences = new HashMap<String, String>();
-    private final Map<String, Texture> _textures = new HashMap<String, Texture>();
-    private final Map<String, String> _textureFileNames = new HashMap<String, String>();
+    private final Map<String, String> _textureReferences = new HashMap<>();
+    private final Map<String, Texture> _textures = new HashMap<>();
+    private final Map<String, String> _textureFileNames = new HashMap<>();
     private boolean _useTransparency;
     private float _transparency = 1.0f;
 

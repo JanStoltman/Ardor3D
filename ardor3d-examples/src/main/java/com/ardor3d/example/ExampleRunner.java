@@ -449,7 +449,7 @@ public class ExampleRunner extends JFrame {
                     final Class<?> clazz = (Class<?>) selected;
 
                     final boolean isWindows = System.getProperty("os.name").contains("Windows");
-                    final List<String> args = new ArrayList<String>();
+                    final List<String> args = new ArrayList<>();
                     args.add(isWindows ? "javaw" : "java");
                     args.add("-Xmx" + maxHeapMemory + "M");
                     args.add("-cp");
@@ -509,10 +509,10 @@ public class ExampleRunner extends JFrame {
     class ClassTreeModel implements TreeModel, SearchFilter {
 
         private final EventListenerList listeners = new EventListenerList();
-        private final LinkedHashMap<Package, Vector<Class<?>>> classes = new LinkedHashMap<Package, Vector<Class<?>>>();
+        private final LinkedHashMap<Package, Vector<Class<?>>> classes = new LinkedHashMap<>();
         // the next two maps are for caching the status for the search filter
-        private final HashMap<Class<?>, Boolean> classMatches = new HashMap<Class<?>, Boolean>();
-        private final HashMap<Package, Boolean> packageMatches = new HashMap<Package, Boolean>();
+        private final HashMap<Class<?>, Boolean> classMatches = new HashMap<>();
+        private final HashMap<Package, Boolean> packageMatches = new HashMap<>();
         private String root = "all examples";
         private FileFilter classFileFilter;
         private int size;
@@ -526,7 +526,7 @@ public class ExampleRunner extends JFrame {
         @Override
         public Object getChild(final Object parent, final int index) {
             if (root.equals(parent)) {
-                final Vector<Package> vec = new Vector<Package>(classes.keySet());
+                final Vector<Package> vec = new Vector<>(classes.keySet());
                 return vec.get(index);
             }
             final Vector<Class<?>> cl = classes.get(parent);
@@ -545,7 +545,7 @@ public class ExampleRunner extends JFrame {
         @Override
         public int getIndexOfChild(final Object parent, final Object child) {
             if (root.equals(parent)) {
-                final Vector<Package> vec = new Vector<Package>(classes.keySet());
+                final Vector<Package> vec = new Vector<>(classes.keySet());
                 return vec.indexOf(child);
             }
             final Vector<Class<?>> cl = classes.get(parent);
@@ -566,7 +566,7 @@ public class ExampleRunner extends JFrame {
             classMatches.put(clazz, false);
             Vector<Class<?>> cl = classes.get(clazz.getPackage());
             if (cl == null) {
-                cl = new Vector<Class<?>>();
+                cl = new Vector<>();
                 classes.put(clazz.getPackage(), cl);
             }
             size++;

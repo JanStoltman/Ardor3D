@@ -40,8 +40,8 @@ public class ImageTextureSource implements TextureSource {
 
     public ImageTextureSource(final int tileSize, final Image map, final List<Integer> heightMapSizes) {
         this.tileSize = tileSize;
-        maps = new ArrayList<byte[]>(heightMapSizes.size());
-        this.heightMapSizes = new ArrayList<Integer>(heightMapSizes);
+        maps = new ArrayList<>(heightMapSizes.size());
+        this.heightMapSizes = new ArrayList<>(heightMapSizes);
         buildMips(map);
     }
 
@@ -72,7 +72,7 @@ public class ImageTextureSource implements TextureSource {
 
     @Override
     public TextureConfiguration getConfiguration() throws Exception {
-        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<Integer, TextureStoreFormat>();
+        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<>();
         textureStoreFormat.put(0, TextureStoreFormat.RGB8);
 
         return new TextureConfiguration(maps.size(), textureStoreFormat, tileSize, 1f, true, false);
@@ -81,7 +81,7 @@ public class ImageTextureSource implements TextureSource {
     @Override
     public Set<Tile> getValidTiles(final int clipmapLevel, final int tileX, final int tileY, final int numTilesX,
             final int numTilesY) throws Exception {
-        final Set<Tile> validTiles = new HashSet<Tile>();
+        final Set<Tile> validTiles = new HashSet<>();
 
         final int heightMapSize = heightMapSizes.get(clipmapLevel);
         for (int y = 0; y < numTilesY; y++) {

@@ -159,8 +159,8 @@ public class Md2Importer {
             bis.seek(header.offsetGlCommands);
             int length, absLength;
             Md2GlCommand cmd;
-            final List<Integer> fanIndices = new ArrayList<Integer>();
-            final List<Integer> stripIndices = new ArrayList<Integer>();
+            final List<Integer> fanIndices = new ArrayList<>();
+            final List<Integer> stripIndices = new ArrayList<>();
             for (int i = 0; i < header.numGlCommands; i++) {
                 length = bis.readInt();
                 if (length == 0) {
@@ -299,7 +299,7 @@ public class Md2Importer {
             mesh.setName(resource.getName());
 
             // Add controller
-            final KeyframeController<Mesh> controller = new KeyframeController<Mesh>();
+            final KeyframeController<Mesh> controller = new KeyframeController<>();
             mesh.addController(controller);
             controller.setMorphingMesh(mesh);
             controller.setInterpTex(false);

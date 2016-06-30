@@ -62,8 +62,8 @@ public class InMemoryTerrainData {
         updatedTerrainTiles = new Set[clipmapLevels];
         updatedTextureTiles = new Set[clipmapLevels];
         for (int i = 0; i < clipmapLevels; i++) {
-            updatedTerrainTiles[i] = new HashSet<Tile>();
-            updatedTextureTiles[i] = new HashSet<Tile>();
+            updatedTerrainTiles[i] = new HashSet<>();
+            updatedTextureTiles[i] = new HashSet<>();
         }
 
         final double procScale = 1.0 / 4000.0;

@@ -20,7 +20,7 @@ public class VertGroupData {
 
     public static final int DEFAULT_GROUP = 0;
 
-    private final Map<Long, EnumSet<MatchCondition>> _groupConditions = new HashMap<Long, EnumSet<MatchCondition>>();
+    private final Map<Long, EnumSet<MatchCondition>> _groupConditions = new HashMap<>();
     private long[] _vertGroups = null;
 
     public VertGroupData() {}

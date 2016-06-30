@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -22,12 +22,12 @@ import com.ardor3d.math.MathUtils;
 public class MapperFunction3D implements Function3D {
 
     private Function3D _mapFunction;
-    private final List<Entry> _entries = new ArrayList<Entry>();
+    private final List<Entry> _entries = new ArrayList<>();
     private double _domainStart, _domainEnd;
 
     /**
      * Construct a mapper function using the given map function and a start and end for the domain we'll use.
-     * 
+     *
      * @param mapFunction
      * @param domainStart
      * @param domainEnd
@@ -38,6 +38,7 @@ public class MapperFunction3D implements Function3D {
         _domainEnd = domainEnd;
     }
 
+    @SuppressWarnings("null")
     @Override
     public double eval(final double x, final double y, final double z) {
         // grab a value from our map function.
@@ -66,7 +67,7 @@ public class MapperFunction3D implements Function3D {
                 // check if we are in the ease-out region and have a next function.
                 else if (next != null && mappingValue > end - current.easeOut) {
                     // ...interpolate with a quintic S-curve.
-                    final double ratio = ((mappingValue - end) / current.easeOut) + 1;
+                    final double ratio = (mappingValue - end) / current.easeOut + 1;
                     final double amount = MathUtils.scurve5(ratio);
                     return MathUtils.lerp(amount, current.source.eval(x, y, z), next.source.eval(x, y, z));
                 }
@@ -108,7 +109,7 @@ public class MapperFunction3D implements Function3D {
     /**
      * Add a new source function to the end of our set of ranged functions. Our place in the range is based on the place
      * of the previous source function and the offsetStart provided.
-     * 
+     *
      * @param source
      *            the new function to add
      * @param offsetStart
@@ -120,7 +121,8 @@ public class MapperFunction3D implements Function3D {
      *            a "fade out" range between this function and the next function, starting at the next function's
      *            offsetStart - easeOut. Over this range we'll lerp between the two functions.
      */
-    public void addFunction(final Function3D source, final double offsetStart, final double easeIn, final double easeOut) {
+    public void addFunction(final Function3D source, final double offsetStart, final double easeIn,
+            final double easeOut) {
         final Entry e = new Entry();
         e.source = source;
         e.offsetStart = offsetStart;

@@ -18,7 +18,7 @@ import com.ardor3d.scenegraph.Node;
 
 public class JointNode {
     private JointNode parent;
-    private final List<JointNode> children = new ArrayList<JointNode>();
+    private final List<JointNode> children = new ArrayList<>();
     private final Joint joint;
 
     /** Scene node associated with the Joint. */

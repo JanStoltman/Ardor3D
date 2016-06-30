@@ -38,13 +38,13 @@ public class GameTaskQueue {
     public static final String RENDER = "render";
     public static final String UPDATE = "update";
 
-    private final ConcurrentLinkedQueue<GameTask<?>> _queue = new ConcurrentLinkedQueue<GameTask<?>>();
+    private final ConcurrentLinkedQueue<GameTask<?>> _queue = new ConcurrentLinkedQueue<>();
     private final AtomicBoolean _executeMultiple = new AtomicBoolean();
 
     // Default execution time is 0, which means only 1 task will be executed at a time.
     private long _executionTime = 0;
 
-    private final List<ExecutionExceptionListener> _executionExceptionListeners = new LinkedList<ExecutionExceptionListener>();
+    private final List<ExecutionExceptionListener> _executionExceptionListeners = new LinkedList<>();
 
     public void addExecutionExceptionListener(final ExecutionExceptionListener l) {
         _executionExceptionListeners.add(l);
@@ -111,7 +111,7 @@ public class GameTaskQueue {
      * @return
      */
     public <V> Future<V> enqueue(final Callable<V> callable) {
-        final GameTask<V> task = new GameTask<V>(callable);
+        final GameTask<V> task = new GameTask<>(callable);
         _queue.add(task);
         return task;
     }

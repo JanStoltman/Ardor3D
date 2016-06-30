@@ -95,7 +95,7 @@ public class LightState extends RenderState {
      * Constructor instantiates a new <code>LightState</code> object. Initially there are no lights set.
      */
     public LightState() {
-        lightList = new ArrayList<Light>();
+        lightList = new ArrayList<>();
     }
 
     @Override

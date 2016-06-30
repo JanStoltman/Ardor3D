@@ -48,7 +48,7 @@ public class TabledLabelGrapher extends AbstractStatGrapher {
 
     protected BlendState _defBlendState = null;
 
-    private final HashMap<StatType, LabelEntry> _entries = new HashMap<StatType, LabelEntry>();
+    private final HashMap<StatType, LabelEntry> _entries = new HashMap<>();
 
     private boolean _minimalBackground;
 

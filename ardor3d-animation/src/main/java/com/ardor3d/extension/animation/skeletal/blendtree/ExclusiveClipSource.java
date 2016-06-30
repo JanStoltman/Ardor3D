@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 public class ExclusiveClipSource extends ClipSource {
 
     /** Our List of channels to exclude by name. */
-    private final List<String> _disabledChannels = new ArrayList<String>();
+    private final List<String> _disabledChannels = new ArrayList<>();
 
     /**
      * Construct a new source. Clip and Manager must be set separately before use.
@@ -91,7 +91,7 @@ public class ExclusiveClipSource extends ClipSource {
         final Map<String, ? extends Object> orig = super.getSourceData(manager);
 
         // make a copy, removing specific channels
-        final Map<String, Object> data = new HashMap<String, Object>(orig);
+        final Map<String, Object> data = new HashMap<>(orig);
         if (_disabledChannels != null) {
             for (final String key : _disabledChannels) {
                 data.remove(key);

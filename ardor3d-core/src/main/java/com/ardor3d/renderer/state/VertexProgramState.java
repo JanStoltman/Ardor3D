@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -46,7 +46,7 @@ public class VertexProgramState extends RenderState {
     /**
      * <code>setEnvParameter</code> sets an environmental vertex program parameter that is accessible by all vertex
      * programs in memory.
-     * 
+     *
      * @param param
      *            four-element array of floating point numbers
      * @param paramID
@@ -72,7 +72,7 @@ public class VertexProgramState extends RenderState {
 
     /**
      * <code>setParameter</code> sets a parameter for this vertex program.
-     * 
+     *
      * @param paramID
      *            identity number of the parameter, ranging from 0 to 95
      * @param param
@@ -97,10 +97,8 @@ public class VertexProgramState extends RenderState {
     }
 
     public void load(final java.net.URL file) {
-        InputStream inputStream = null;
-        try {
-            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16 * 1024);
-            inputStream = new BufferedInputStream(file.openStream());
+        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16 * 1024);
+                final InputStream inputStream = new BufferedInputStream(file.openStream())) {
             final byte[] buffer = new byte[1024];
             int byteCount = -1;
 
@@ -112,10 +110,6 @@ public class VertexProgramState extends RenderState {
             // Set data with byte content from stream
             final byte[] data = outputStream.toByteArray();
 
-            // Release resources
-            inputStream.close();
-            outputStream.close();
-
             _program = BufferUtils.createByteBuffer(data.length);
             _program.put(data);
             _program.rewind();
@@ -125,22 +119,12 @@ public class VertexProgramState extends RenderState {
         } catch (final Exception e) {
             logger.severe("Could not load vertex program: " + e);
             logger.logp(Level.SEVERE, getClass().getName(), "load(URL)", "Exception", e);
-        } finally {
-            // Ensure that the stream is closed, even if there is an exception.
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (final IOException closeFailure) {
-                    logger.log(Level.WARNING, "Failed to close the vertex program", closeFailure);
-                }
-            }
-
         }
     }
 
     /**
      * Loads the vertex program into a byte array.
-     * 
+     *
      * @see com.ardor3d.renderer.state.VertexProgramState#load(java.net.URL)
      */
     public void load(final String programContents) {
@@ -184,7 +168,7 @@ public class VertexProgramState extends RenderState {
 
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @see java.io.Serializable
@@ -204,7 +188,7 @@ public class VertexProgramState extends RenderState {
 
     /**
      * Used with Serialization. Do not call this directly.
-     * 
+     *
      * @param s
      * @throws IOException
      * @throws ClassNotFoundException

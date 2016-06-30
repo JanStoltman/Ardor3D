@@ -115,7 +115,7 @@ public class BinaryLERPSource extends AbstractTwoPartSource {
 
         Map<String, Object> rVal = store;
         if (rVal == null) {
-            rVal = new HashMap<String, Object>();
+            rVal = new HashMap<>();
         }
 
         for (final Entry<String, ? extends Object> entryAData : sourceAData.entrySet()) {

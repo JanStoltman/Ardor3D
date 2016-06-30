@@ -70,8 +70,8 @@ public class WaterNode extends Node {
     protected Texture2D textureRefract;
     protected Texture2D textureDepth;
 
-    protected List<Spatial> renderList = new ArrayList<Spatial>();
-    protected List<Texture> texArray = new ArrayList<Texture>();
+    protected List<Spatial> renderList = new ArrayList<>();
+    protected List<Texture> texArray = new ArrayList<>();
     protected Node skyBox;
 
     protected GLSLShaderObjectsState waterShader;

@@ -387,7 +387,7 @@ public class ParticleController extends ComplexSpatialController<ParticleSystem>
      */
     public void addInfluence(final ParticleInfluence influence) {
         if (influences == null) {
-            influences = new ArrayList<ParticleInfluence>(1);
+            influences = new ArrayList<>(1);
         }
         influences.add(influence);
     }
@@ -429,7 +429,7 @@ public class ParticleController extends ComplexSpatialController<ParticleSystem>
      */
     public void addListener(final ParticleControllerListener listener) {
         if (listeners == null) {
-            listeners = new ArrayList<ParticleControllerListener>();
+            listeners = new ArrayList<>();
         }
 
         listeners.add(listener);

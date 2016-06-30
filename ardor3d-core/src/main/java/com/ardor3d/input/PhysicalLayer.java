@@ -67,7 +67,7 @@ public class PhysicalLayer {
         _mouseWrapper = mouseWrapper;
         _focusWrapper = focusWrapper;
         _controllerWrapper = controllerWrapper;
-        _stateQueue = new LinkedBlockingQueue<InputState>();
+        _stateQueue = new LinkedBlockingQueue<>();
 
         _currentKeyboardState = KeyboardState.NOTHING;
         _currentMouseState = MouseState.NOTHING;
@@ -189,7 +189,7 @@ public class PhysicalLayer {
             return EMPTY_LIST;
         }
 
-        final LinkedList<InputState> result = new LinkedList<InputState>();
+        final LinkedList<InputState> result = new LinkedList<>();
 
         _stateQueue.drainTo(result);
 

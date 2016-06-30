@@ -21,7 +21,7 @@ import com.ardor3d.extension.animation.skeletal.AttachmentPoint;
 public class OutputStore {
 
     /** List of attachment points created during layer import. */
-    private final List<AttachmentPoint> _attachments = new ArrayList<AttachmentPoint>();
+    private final List<AttachmentPoint> _attachments = new ArrayList<>();
 
     /** List of animation clip sources encountered during layer import. */
     private final OutputClipSourceMap _usedClipSources = new OutputClipSourceMap();

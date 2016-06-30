@@ -39,7 +39,7 @@ maxHeapMemory = 64)
 public class MatrixLookAtExample extends ExampleBase {
 
     private Mesh targetMesh;
-    private final List<Mesh> boxes = new ArrayList<Mesh>();
+    private final List<Mesh> boxes = new ArrayList<>();
 
     private double time = 0.0;
 

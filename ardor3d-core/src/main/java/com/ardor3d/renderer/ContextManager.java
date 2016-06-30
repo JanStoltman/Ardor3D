@@ -19,9 +19,9 @@ public class ContextManager {
 
     protected static RenderContext currentContext = null;
 
-    private static List<ContextCleanListener> _cleanListeners = new ArrayList<ContextCleanListener>();
+    private static List<ContextCleanListener> _cleanListeners = new ArrayList<>();
 
-    protected static final Map<Object, RenderContext> contextStore = new WeakHashMap<Object, RenderContext>();
+    protected static final Map<Object, RenderContext> contextStore = new WeakHashMap<>();
 
     /**
      * @return a RenderContext object representing the current OpenGL context.

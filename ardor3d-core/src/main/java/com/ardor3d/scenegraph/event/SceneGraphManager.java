@@ -24,7 +24,7 @@ public class SceneGraphManager implements DirtyEventListener {
     private final List<DirtyEventListener> _listeners;
 
     private SceneGraphManager() {
-        _listeners = new ArrayList<DirtyEventListener>();
+        _listeners = new ArrayList<>();
     }
 
     public static SceneGraphManager getSceneGraphManager() {

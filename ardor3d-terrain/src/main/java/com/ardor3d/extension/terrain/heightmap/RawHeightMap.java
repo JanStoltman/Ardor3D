@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -83,7 +83,7 @@ public class RawHeightMap {
 
     /**
      * <code>load</code> fills the height data array with the appropriate data from the set RAW image stream or file.
-     * 
+     *
      * @return true if the load is successful, false otherwise.
      */
     public boolean loadHeightmap() {
@@ -91,14 +91,14 @@ public class RawHeightMap {
         heightData = new float[size * size];
 
         // attempt to connect to the supplied file.
-        BufferedInputStream bis = null;
 
-        try {
-            bis = new BufferedInputStream(stream);
-            final DataInputStream dis = new DataInputStream(bis);
-            DataInput di = dis;
+        try (final BufferedInputStream bis = new BufferedInputStream(stream);
+                final DataInputStream dis = new DataInputStream(bis)) {
+            final DataInput di;
             if (isLittleEndian) {
                 di = new LittleEndianDataInput(dis);
+            } else {
+                di = dis;
             }
 
             // read the raw file
@@ -143,7 +143,6 @@ public class RawHeightMap {
                     }
                 }
             }
-            dis.close();
         } catch (final IOException e1) {
             logger.warning("Error reading height data from stream.");
             return false;

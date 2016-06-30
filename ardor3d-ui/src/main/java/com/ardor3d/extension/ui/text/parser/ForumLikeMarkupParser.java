@@ -38,7 +38,7 @@ public class ForumLikeMarkupParser implements StyleParser {
         int index = 0;
         TagStatus tagStatus = TagStatus.NONE;
         String currTagText = "";
-        final LinkedList<StyleSpan> buildingSpans = new LinkedList<StyleSpan>();
+        final LinkedList<StyleSpan> buildingSpans = new LinkedList<>();
         final StringTokenizer st = new StringTokenizer(text, "[]\\", true);
         String token;
         while (st.hasMoreTokens()) {
@@ -184,12 +184,12 @@ public class ForumLikeMarkupParser implements StyleParser {
         }
 
         // list of spans, sorted by start index
-        final List<StyleSpan> starts = new ArrayList<StyleSpan>();
+        final List<StyleSpan> starts = new ArrayList<>();
         starts.addAll(spans);
         Collections.sort(starts);
 
         // list of spans, to be sorted by end index
-        final List<StyleSpan> ends = new LinkedList<StyleSpan>();
+        final List<StyleSpan> ends = new LinkedList<>();
 
         final StringBuilder builder = new StringBuilder();
 

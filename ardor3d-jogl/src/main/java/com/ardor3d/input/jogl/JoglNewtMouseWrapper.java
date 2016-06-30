@@ -36,7 +36,7 @@ import com.jogamp.newt.opengl.GLWindow;
 public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
 
     @GuardedBy("this")
-    protected final LinkedList<MouseState> _upcomingEvents = new LinkedList<MouseState>();
+    protected final LinkedList<MouseState> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
     protected JoglNewtMouseIterator _currentIterator = null;
@@ -53,7 +53,7 @@ public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
     protected boolean _skipAutoRepeatEvents = false;
 
     protected final Multiset<MouseButton> _clicks = EnumMultiset.create(MouseButton.class);
-    protected final EnumMap<MouseButton, Long> _lastClickTime = new EnumMap<MouseButton, Long>(MouseButton.class);
+    protected final EnumMap<MouseButton, Long> _lastClickTime = new EnumMap<>(MouseButton.class);
     protected final EnumSet<MouseButton> _clickArmed = EnumSet.noneOf(MouseButton.class);
 
     protected int _ignoreX = Integer.MAX_VALUE;

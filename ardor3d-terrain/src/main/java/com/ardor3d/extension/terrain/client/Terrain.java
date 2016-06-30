@@ -73,7 +73,7 @@ public class Terrain extends Node implements Pickable {
     private GLSLShaderObjectsState _geometryClipmapShader;
 
     /** Reference to the texture clipmap */
-    private final List<TextureClipmap> _textureClipmaps = new ArrayList<TextureClipmap>();
+    private final List<TextureClipmap> _textureClipmaps = new ArrayList<>();
 
     /** Reference to normal map */
     private TextureClipmap _normalClipmap;
@@ -81,7 +81,7 @@ public class Terrain extends Node implements Pickable {
 
     private final Vector3 transformedFrustumPos = new Vector3();
 
-    private final DoubleBufferedList<Region> mailBox = new DoubleBufferedList<Region>();
+    private final DoubleBufferedList<Region> mailBox = new DoubleBufferedList<>();
 
     private ByteSource vertexShader;
     private ByteSource pixelShader;
@@ -130,7 +130,7 @@ public class Terrain extends Node implements Pickable {
         // getSceneHints().setLightCombineMode(LightCombineMode.Off);
 
         try {
-            _clips = new ArrayList<ClipmapLevel>();
+            _clips = new ArrayList<>();
 
             final float heightScale = terrainConfiguration.getScale().getYf();
 
@@ -167,7 +167,7 @@ public class Terrain extends Node implements Pickable {
         setHeightRange(terrainConfiguration.getHeightRangeMin(), terrainConfiguration.getHeightRangeMax());
     }
 
-    private final List<Long> timers = new ArrayList<Long>();
+    private final List<Long> timers = new ArrayList<>();
 
     @Override
     protected void updateChildren(final double time) {

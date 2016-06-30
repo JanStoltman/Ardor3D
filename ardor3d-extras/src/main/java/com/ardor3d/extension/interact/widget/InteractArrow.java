@@ -29,7 +29,7 @@ public class InteractArrow extends Arrow {
     protected double _lengthGap = 0;
     protected double _tipGap = 0;
 
-    protected static final Quaternion rotator = new Quaternion().applyRotationX(MathUtils.HALF_PI);
+    protected static final Quaternion ROTATOR = new Quaternion().applyRotationX(MathUtils.HALF_PI);
 
     public InteractArrow() {}
 
@@ -66,8 +66,8 @@ public class InteractArrow extends Arrow {
         final double tipLength = _length / 2.0;
         final Pyramid tip = new Pyramid("tip", 2 * _width, tipLength);
         tip.getMeshData().translatePoints(0, _tipGap + _length + 0.5 * tipLength, 0);
-        tip.getMeshData().rotatePoints(InteractArrow.rotator);
-        tip.getMeshData().rotateNormals(InteractArrow.rotator);
+        tip.getMeshData().rotatePoints(InteractArrow.ROTATOR);
+        tip.getMeshData().rotateNormals(InteractArrow.ROTATOR);
 
         attachChild(tip);
         tip.updateModelBound();

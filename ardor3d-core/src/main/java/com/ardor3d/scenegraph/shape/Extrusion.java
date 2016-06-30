@@ -266,7 +266,7 @@ public class Extrusion extends Mesh {
         final double d[][] = new double[3][np]; // Newton form coefficients
         final double x[] = new double[np]; // x-coordinates of nodes
 
-        final List<ReadOnlyVector3> path = new ArrayList<ReadOnlyVector3>();
+        final List<ReadOnlyVector3> path = new ArrayList<>();
 
         for (int i = 0; i < np; i++) {
             ReadOnlyVector3 p;

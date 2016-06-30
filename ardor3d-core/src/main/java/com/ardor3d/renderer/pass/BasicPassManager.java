@@ -22,7 +22,7 @@ import com.ardor3d.renderer.TextureRenderer;
  */
 public class BasicPassManager {
 
-    protected List<Pass> _passes = new ArrayList<Pass>();
+    protected List<Pass> _passes = new ArrayList<>();
 
     public void add(final Pass toAdd) {
         if (toAdd != null) {

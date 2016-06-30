@@ -21,8 +21,8 @@ import com.ardor3d.image.Texture2D;
  */
 public class UIFont {
 
-    private final Map<Character, CharacterDescriptor> _charDescriptors = new HashMap<Character, CharacterDescriptor>();
-    private final Map<Character, Map<Character, Integer>> _kernMap = new HashMap<Character, Map<Character, Integer>>();
+    private final Map<Character, CharacterDescriptor> _charDescriptors = new HashMap<>();
+    private final Map<Character, Map<Character, Integer>> _kernMap = new HashMap<>();
     private final Texture2D _fontTexture;
     private final int _fontHeight;
     private final int _fontSize;
@@ -59,7 +59,7 @@ public class UIFont {
     public void addKerning(final char charA, final char charB, final int amount) {
         Map<Character, Integer> map = _kernMap.get(charA);
         if (map == null) {
-            map = new HashMap<Character, Integer>();
+            map = new HashMap<>();
             _kernMap.put(charA, map);
         }
 

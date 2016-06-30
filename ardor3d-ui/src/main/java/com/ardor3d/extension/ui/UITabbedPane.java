@@ -32,7 +32,7 @@ public class UITabbedPane extends UIPanel {
     private static final Logger logger = Logger.getLogger(UITabbedPane.class.getName());
 
     /** Our contents... Used instead of the normal children field because we need to track and show just one at a time. */
-    private final ArrayList<UIComponent> _contents = new ArrayList<UIComponent>();
+    private final ArrayList<UIComponent> _contents = new ArrayList<>();
 
     /** The panel containing our navigation tab buttons. */
     private final UIPanel _tabsPanel;
@@ -272,7 +272,7 @@ public class UITabbedPane extends UIPanel {
      * @return an array of tabs from our tab panel.
      */
     private ArrayList<UITab> getTabs() {
-        final ArrayList<UITab> buttons = new ArrayList<UITab>();
+        final ArrayList<UITab> buttons = new ArrayList<>();
         for (int x = 0, max = _tabsPanel.getNumberOfChildren(); x < max; x++) {
             final Spatial spat = _tabsPanel.getChild(x);
             if (spat instanceof UITab) {

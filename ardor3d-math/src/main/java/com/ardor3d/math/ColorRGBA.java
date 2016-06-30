@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
 import com.ardor3d.math.type.ReadOnlyColorRGBA;
 import com.ardor3d.util.export.InputCapsule;
@@ -107,7 +108,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Constructs a new, mutable color set to the (r, g, b, a) values of the provided source color.
-     * 
+     *
      * @param src
      */
     public ColorRGBA(final ReadOnlyColorRGBA src) {
@@ -116,7 +117,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Constructs a new color set to (r, g, b, a).
-     * 
+     *
      * @param r
      * @param g
      * @param b
@@ -198,7 +199,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Stores the float values of this color in the given float array.
-     * 
+     *
      * @param store
      *            if null, a new float[4] array is created.
      * @return the float array
@@ -222,7 +223,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Sets the red component of this color to the given float value.
-     * 
+     *
      * @param r
      *            new red value, generally should be in the range [0.0f, 1.0f]
      */
@@ -232,7 +233,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Sets the green component of this color to the given float value.
-     * 
+     *
      * @param g
      *            new green value, generally should be in the range [0.0f, 1.0f]
      */
@@ -242,7 +243,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Sets the blue component of this color to the given float value.
-     * 
+     *
      * @param b
      *            new blue value, generally should be in the range [0.0f, 1.0f]
      */
@@ -253,7 +254,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
     /**
      * Sets the alpha component of this color to the given float value. Consider that an alpha of 1.0f means opaque (can
      * not see through) and 0.0f means transparent.
-     * 
+     *
      * @param a
      *            new alpha value, generally should be in the range [0.0f, 1.0f]
      */
@@ -263,7 +264,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Sets the value of this color to (r, g, b, a)
-     * 
+     *
      * @param r
      *            new red value, generally should be in the range [0.0f, 1.0f]
      * @param g
@@ -284,7 +285,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Sets the value of this color to the (r, g, b, a) values of the provided source color.
-     * 
+     *
      * @param source
      * @return this color for chaining
      * @throws NullPointerException
@@ -300,7 +301,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Sets the value of this color to (0, 0, 0, 0)
-     * 
+     *
      * @return this color for chaining
      */
     public ColorRGBA zero() {
@@ -310,7 +311,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
     /**
      * Brings all values (r,g,b,a) into the range [0.0f, 1.0f]. If a value is above or below this range it is replaced
      * with the appropriate end of the range.
-     * 
+     *
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
      */
@@ -353,7 +354,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
     /**
      * Brings all values (r,g,b,a) into the range [0.0f, 1.0f]. If a value is above or below this range it is replaced
      * with the appropriate end of the range.
-     * 
+     *
      * @return this color for chaining
      */
     public ColorRGBA clampLocal() {
@@ -405,7 +406,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
     /**
      * Reads a color, packed into a 4 byte int as 1 byte values in the order ARGB. These byte values are normalized to
      * the range [0.0f, 1.0f]
-     * 
+     *
      * @param color
      * @return this color for chaining
      */
@@ -420,7 +421,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
     /**
      * Reads a color, packed into a 4 byte int as 1 byte values in the order RGBA. These byte values are normalized to
      * the range [0.0f, 1.0f]
-     * 
+     *
      * @param color
      * @return this color for chaining
      */
@@ -463,7 +464,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Adds the given values to those of this color and returns them in store.
-     * 
+     *
      * @param r
      * @param g
      * @param b
@@ -484,7 +485,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Increments the values of this color with the given r, g, b and a values.
-     * 
+     *
      * @param r
      * @param g
      * @param b
@@ -497,7 +498,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Adds the values of the given source color to those of this color and returns them in store.
-     * 
+     *
      * @param source
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
@@ -512,7 +513,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Increments the values of this color with the r, g, b and a values of the given color.
-     * 
+     *
      * @param source
      * @return this color for chaining
      * @throws NullPointerException
@@ -524,7 +525,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Subtracts the given values from those of this color and returns them in store.
-     * 
+     *
      * @param r
      * @param g
      * @param b
@@ -545,7 +546,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Decrements the values of this color by the given r, g, b and a values.
-     * 
+     *
      * @param r
      * @param g
      * @param b
@@ -558,7 +559,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Subtracts the values of the given source color from those of this color and returns them in store.
-     * 
+     *
      * @param source
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
@@ -573,7 +574,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Decrements the values of this color by the r, g, b and a values from the given source color.
-     * 
+     *
      * @param source
      * @return this color for chaining
      * @throws NullPointerException
@@ -585,7 +586,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Multiplies the values of this color by the given scalar value and returns the result in store.
-     * 
+     *
      * @param scalar
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
@@ -603,10 +604,10 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Internally modifies the values of this color by multiplying them each by the given scalar value.
-     * 
+     *
      * @param scalar
      * @return this color for chaining
-     * 
+     *
      *         .
      */
     public ColorRGBA multiplyLocal(final float scalar) {
@@ -615,7 +616,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Multiplies the values of this color by the given scalar value and returns the result in store.
-     * 
+     *
      * @param scale
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
@@ -634,18 +635,18 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Internally modifies the values of this color by multiplying them each by the given scale values.
-     * 
+     *
      * @param scale
      * @return this color for chaining
      */
     public ColorRGBA multiplyLocal(final ReadOnlyColorRGBA scale) {
-        return set(getRed() * scale.getRed(), getGreen() * scale.getGreen(), getBlue() * scale.getBlue(), getAlpha()
-                * scale.getAlpha());
+        return set(getRed() * scale.getRed(), getGreen() * scale.getGreen(), getBlue() * scale.getBlue(),
+                getAlpha() * scale.getAlpha());
     }
 
     /**
      * Divides the values of this color by the given scalar value and returns the result in store.
-     * 
+     *
      * @param scalar
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
@@ -663,7 +664,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Internally modifies the values of this color by dividing them each by the given scalar value.
-     * 
+     *
      * @param scalar
      * @return this color for chaining
      * @throws ArithmeticException
@@ -677,7 +678,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Divides the values of this color by the given scale values and returns the result in store.
-     * 
+     *
      * @param scale
      * @param store
      *            the color to store the result in for return. If null, a new color object is created and returned.
@@ -696,20 +697,20 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Internally modifies the values of this color by dividing them each by the given scale values.
-     * 
+     *
      * @param scale
      * @return this color for chaining
      */
     public ColorRGBA divideLocal(final ReadOnlyColorRGBA scale) {
-        return set(getRed() / scale.getRed(), getGreen() / scale.getGreen(), getBlue() / scale.getBlue(), getAlpha()
-                / scale.getAlpha());
+        return set(getRed() / scale.getRed(), getGreen() / scale.getGreen(), getBlue() / scale.getBlue(),
+                getAlpha() / scale.getAlpha());
     }
 
     /**
      * Performs a linear interpolation between this color and the given end color, using the given scalar as a percent.
      * iow, if changeAmnt is closer to 0, the result will be closer to the current value of this color and if it is
      * closer to 1, the result will be closer to the end value.
-     * 
+     *
      * @param endColor
      * @param scalar
      * @param store
@@ -736,7 +737,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
      * Performs a linear interpolation between this color and the given end color, using the given scalar as a percent.
      * iow, if changeAmnt is closer to 0, the result will be closer to the current value of this color and if it is
      * closer to 1, the result will be closer to the end value. The result is stored back in this color.
-     * 
+     *
      * @param endColor
      * @param scalar
      * @return this color for chaining
@@ -755,7 +756,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
      * Performs a linear interpolation between the given begin and end colors, using the given scalar as a percent. iow,
      * if changeAmnt is closer to 0, the result will be closer to the begin value and if it is closer to 1, the result
      * will be closer to the end value.
-     * 
+     *
      * @param beginColor
      * @param endColor
      * @param scalar
@@ -784,7 +785,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
      * Performs a linear interpolation between the given begin and end colors, using the given scalar as a percent. iow,
      * if changeAmnt is closer to 0, the result will be closer to the begin value and if it is closer to 1, the result
      * will be closer to the end value. The result is stored back in this color.
-     * 
+     *
      * @param beginColor
      * @param endColor
      * @param changeAmnt
@@ -793,7 +794,8 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
      * @throws NullPointerException
      *             if beginVec or endVec are null.
      */
-    public ColorRGBA lerpLocal(final ReadOnlyColorRGBA beginColor, final ReadOnlyColorRGBA endColor, final float scalar) {
+    public ColorRGBA lerpLocal(final ReadOnlyColorRGBA beginColor, final ReadOnlyColorRGBA endColor,
+            final float scalar) {
         setRed((1.0f - scalar) * beginColor.getRed() + scalar * endColor.getRed());
         setGreen((1.0f - scalar) * beginColor.getGreen() + scalar * endColor.getGreen());
         setBlue((1.0f - scalar) * beginColor.getBlue() + scalar * endColor.getBlue());
@@ -803,7 +805,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Check a color... if it is null or its values are NaN or infinite, return false. Else return true.
-     * 
+     *
      * @param color
      *            the color to check
      * @return true or false as stated above.
@@ -838,21 +840,8 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
      */
     @Override
     public int hashCode() {
-        int result = 17;
-
-        final int r = Float.floatToIntBits(getRed());
-        result += 31 * result + r;
-
-        final int g = Float.floatToIntBits(getGreen());
-        result += 31 * result + g;
-
-        final int b = Float.floatToIntBits(getBlue());
-        result += 31 * result + b;
-
-        final int a = Float.floatToIntBits(getAlpha());
-        result += 31 * result + a;
-
-        return result;
+        return Objects.hash(Float.valueOf(getRed()), Float.valueOf(getGreen()), Float.valueOf(getBlue()),
+                Float.valueOf(getAlpha()));
     }
 
     /**
@@ -913,7 +902,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param in
      *            ObjectInput
      * @throws IOException
@@ -929,7 +918,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param out
      *            ObjectOutput
      * @throws IOException
@@ -961,7 +950,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
     /**
      * Releases a ColorRGBA back to be used by a future call to fetchTempInstance. TAKE CARE: this ColorRGBA object
      * should no longer have other classes referencing it or "Bad Things" will happen.
-     * 
+     *
      * @param color
      *            the ColorRGBA to release.
      */
@@ -983,7 +972,7 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
      * <li>6: RRGGBB - RGB is parsed as RR/255, GG/255, BB/255, A=1</li>
      * <li>8: RRGGBBAA - RGBA is parsed as RR/255, GG/255, BB/255, AA/255</li>
      * </ul>
-     * 
+     *
      * @param colorString
      * @param store
      * @return
@@ -1030,8 +1019,8 @@ public class ColorRGBA implements Cloneable, Savable, Externalizable, ReadOnlyCo
             b = Integer.parseInt(colorString.substring(5, 7), 16) / 255f;
             a = Integer.parseInt(colorString.substring(7, 9), 16) / 255f;
         } else {
-            throw new IllegalArgumentException("unsupported value, must be 1, 2, 3, 4, 5, 7 or 9 hexvalues: "
-                    + colorString);
+            throw new IllegalArgumentException(
+                    "unsupported value, must be 1, 2, 3, 4, 5, 7 or 9 hexvalues: " + colorString);
         }
         rVal.set(r, g, b, a);
 

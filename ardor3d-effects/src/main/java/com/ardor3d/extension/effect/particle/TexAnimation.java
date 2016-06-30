@@ -21,7 +21,7 @@ import com.ardor3d.util.export.Savable;
 
 public class TexAnimation implements Savable {
 
-    protected List<AnimationEntry> _entries = new ArrayList<AnimationEntry>();
+    protected List<AnimationEntry> _entries = new ArrayList<>();
 
     public void addEntry(final AnimationEntry entry) {
         _entries.add(entry);
@@ -82,7 +82,7 @@ public class TexAnimation implements Savable {
     public void read(final InputCapsule capsule) throws IOException {
         _entries = capsule.readSavableList("entries", null);
         if (_entries == null) {
-            _entries = new ArrayList<AnimationEntry>();
+            _entries = new ArrayList<>();
         }
     }
 

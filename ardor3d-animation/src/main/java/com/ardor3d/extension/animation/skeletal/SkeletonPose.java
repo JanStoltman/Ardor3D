@@ -48,7 +48,7 @@ public class SkeletonPose implements Savable {
     /**
      * The list of elements interested in notification when this SkeletonPose updates. Not saved to savable.
      */
-    private transient final List<PoseListener> _poseListeners = new ArrayList<PoseListener>(1);
+    private transient final List<PoseListener> _poseListeners = new ArrayList<>(1);
 
     /**
      * Construct a new SkeletonPose using the given Skeleton.

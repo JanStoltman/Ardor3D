@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
 import com.ardor3d.math.type.ReadOnlyPlane;
 import com.ardor3d.math.type.ReadOnlyVector3;
@@ -48,7 +49,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Copy constructor.
-     * 
+     *
      * @param source
      *            the plane to copy from.
      */
@@ -58,7 +59,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Constructs a new plane using the supplied normal vector and plane constant
-     * 
+     *
      * @param normal
      * @param constant
      */
@@ -73,7 +74,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
     }
 
     /**
-     * 
+     *
      * @return normal as a readable vector
      */
     @Override
@@ -83,7 +84,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Sets the value of this plane to the constant and normal values of the provided source plane.
-     * 
+     *
      * @param source
      * @return this plane for chaining
      * @throws NullPointerException
@@ -97,7 +98,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Sets the constant value of this plane to the given double value.
-     * 
+     *
      * @param constant
      */
     public void setConstant(final double constant) {
@@ -106,7 +107,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Sets the plane normal to the values of the given vector.
-     * 
+     *
      * @param normal
      * @throws NullPointerException
      *             if normal is null.
@@ -148,7 +149,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Sets this plane to the plane defined by the given three points.
-     * 
+     *
      * @param pointA
      * @param pointB
      * @param pointC
@@ -156,7 +157,8 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
      * @throws NullPointerException
      *             if one or more of the points are null.
      */
-    public Plane setPlanePoints(final ReadOnlyVector3 pointA, final ReadOnlyVector3 pointB, final ReadOnlyVector3 pointC) {
+    public Plane setPlanePoints(final ReadOnlyVector3 pointA, final ReadOnlyVector3 pointB,
+            final ReadOnlyVector3 pointC) {
         _normal.set(pointB).subtractLocal(pointA);
         _normal.crossLocal(pointC.getX() - pointA.getX(), pointC.getY() - pointA.getY(), pointC.getZ() - pointA.getZ())
                 .normalizeLocal();
@@ -166,7 +168,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Reflects an incoming vector across the normal of this Plane.
-     * 
+     *
      * @param unitVector
      *            the incoming vector. Must be a unit vector.
      * @param store
@@ -189,7 +191,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
     /**
      * Check a plane... if it is null or its constant, or the doubles of its normal are NaN or infinite, return false.
      * Else return true.
-     * 
+     *
      * @param plane
      *            the plane to check
      * @return true or false as stated above.
@@ -219,14 +221,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
      */
     @Override
     public int hashCode() {
-        int result = 17;
-
-        result += 31 * result + _normal.hashCode();
-
-        final long c = Double.doubleToLongBits(getConstant());
-        result += 31 * result + (int) (c ^ c >>> 32);
-
-        return result;
+        return Objects.hash(getNormal(), Double.valueOf(getConstant()));
     }
 
     /**
@@ -282,7 +277,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param in
      *            ObjectInput
      * @throws IOException
@@ -296,7 +291,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param out
      *            ObjectOutput
      * @throws IOException
@@ -326,7 +321,7 @@ public class Plane implements Cloneable, Savable, Externalizable, ReadOnlyPlane,
     /**
      * Releases a Plane back to be used by a future call to fetchTempInstance. TAKE CARE: this Plane object should no
      * longer have other classes referencing it or "Bad Things" will happen.
-     * 
+     *
      * @param plane
      *            the Plane to release.
      */

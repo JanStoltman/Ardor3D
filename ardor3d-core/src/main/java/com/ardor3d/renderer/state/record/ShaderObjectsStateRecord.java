@@ -22,7 +22,7 @@ public class ShaderObjectsStateRecord extends StateRecord {
     // XXX checking system.
     GLSLShaderObjectsState reference = null;
 
-    public List<ShaderVariable> enabledAttributes = new ArrayList<ShaderVariable>();
+    public List<ShaderVariable> enabledAttributes = new ArrayList<>();
 
     public int shaderId = -1;
 

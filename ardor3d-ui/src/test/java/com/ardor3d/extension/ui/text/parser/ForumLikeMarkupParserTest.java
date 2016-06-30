@@ -35,7 +35,7 @@ public class ForumLikeMarkupParserTest {
     @Test
     public void parseWithoutMarkup() {
         final String text = "A text without any markup what so ever [13] dum di dum [/23]";
-        final List<StyleSpan> spans = new ArrayList<StyleSpan>();
+        final List<StyleSpan> spans = new ArrayList<>();
         final String result = parser.parseStyleSpans(text, spans);
 
         Assert.assertEquals(text, result);
@@ -46,7 +46,7 @@ public class ForumLikeMarkupParserTest {
     @Test
     public void parseWithSimpleStyle() throws Exception {
         final String text = "A text with [size=30]simple markup[/size] dum di dum";
-        final List<StyleSpan> spans = new ArrayList<StyleSpan>();
+        final List<StyleSpan> spans = new ArrayList<>();
         final String result = parser.parseStyleSpans(text, spans);
 
         Assert.assertEquals("A text with simple markup dum di dum", result);
@@ -62,13 +62,13 @@ public class ForumLikeMarkupParserTest {
     @Test
     public void parseWithNestedStyle() throws Exception {
         final String text = "A text [size=30]with [f=arial]simple markup[/f][/size] dum di dum";
-        final List<StyleSpan> spans = new ArrayList<StyleSpan>();
+        final List<StyleSpan> spans = new ArrayList<>();
         final String result = parser.parseStyleSpans(text, spans);
 
         Assert.assertEquals("A text with simple markup dum di dum", result);
 
         Assert.assertEquals(2, spans.size());
-        final SortedSet<StyleSpan> sortedSpans = new TreeSet<StyleSpan>(spans);
+        final SortedSet<StyleSpan> sortedSpans = new TreeSet<>(spans);
         final Iterator<StyleSpan> spanIterator = sortedSpans.iterator();
         final StyleSpan span1 = spanIterator.next();
         Assert.assertEquals(7, span1.getSpanStart());
@@ -83,13 +83,13 @@ public class ForumLikeMarkupParserTest {
     @Test
     public void parseWithNestedSameStyleBackToBackTags() throws Exception {
         final String text = "[size=10][size=20]A text [/size]with simple markup[/size] dum di dum";
-        final List<StyleSpan> spans = new ArrayList<StyleSpan>();
+        final List<StyleSpan> spans = new ArrayList<>();
         final String result = parser.parseStyleSpans(text, spans);
 
         Assert.assertEquals("A text with simple markup dum di dum", result);
 
         Assert.assertEquals(2, spans.size());
-        final SortedSet<StyleSpan> sortedSpans = new TreeSet<StyleSpan>(spans);
+        final SortedSet<StyleSpan> sortedSpans = new TreeSet<>(spans);
         final Iterator<StyleSpan> spanIterator = sortedSpans.iterator();
         final StyleSpan span1 = spanIterator.next();
         Assert.assertEquals(0, span1.getSpanStart());

@@ -36,7 +36,7 @@ public class SimpleArrayTextureSource implements TextureSource {
 
     @Override
     public TextureConfiguration getConfiguration() throws Exception {
-        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<Integer, TextureStoreFormat>();
+        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<>();
         textureStoreFormat.put(0, TextureStoreFormat.RGBA8);
 
         return new TextureConfiguration(availableClipmapLevels, textureStoreFormat, tileSize, 1f, true, true);
@@ -45,7 +45,7 @@ public class SimpleArrayTextureSource implements TextureSource {
     @Override
     public Set<Tile> getValidTiles(final int clipmapLevel, final int tileX, final int tileY, final int numTilesX,
             final int numTilesY) throws Exception {
-        final Set<Tile> validTiles = new HashSet<Tile>();
+        final Set<Tile> validTiles = new HashSet<>();
 
         final int levelSize = 1 << availableClipmapLevels - clipmapLevel;
 

@@ -32,7 +32,7 @@ public abstract class PickResults {
      * Constructor instantiates a new <code>PickResults</code> object.
      */
     public PickResults() {
-        _nodeList = new ArrayList<PickData>();
+        _nodeList = new ArrayList<>();
     }
 
     /**

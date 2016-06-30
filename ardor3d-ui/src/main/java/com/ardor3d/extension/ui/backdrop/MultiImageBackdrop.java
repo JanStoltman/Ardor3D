@@ -27,7 +27,7 @@ import com.ardor3d.renderer.Renderer;
 public class MultiImageBackdrop extends SolidBackdrop {
 
     /** The image(s) to draw. */
-    private final List<TransformedSubTex> _images = new ArrayList<TransformedSubTex>();
+    private final List<TransformedSubTex> _images = new ArrayList<>();
 
     /**
      * Construct this back drop, using the default, no alpha backdrop color.

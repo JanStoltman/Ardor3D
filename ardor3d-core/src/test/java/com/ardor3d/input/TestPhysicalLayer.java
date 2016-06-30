@@ -38,15 +38,15 @@ public class TestPhysicalLayer {
 
     Object[] mocks;
 
-    List<KeyEvent> noKeys = new LinkedList<KeyEvent>();
-    List<KeyEvent> Adown = new LinkedList<KeyEvent>();
-    List<KeyEvent> AdownBdown = new LinkedList<KeyEvent>();
-    List<KeyEvent> AdownAup = new LinkedList<KeyEvent>();
+    List<KeyEvent> noKeys = new LinkedList<>();
+    List<KeyEvent> Adown = new LinkedList<>();
+    List<KeyEvent> AdownBdown = new LinkedList<>();
+    List<KeyEvent> AdownAup = new LinkedList<>();
 
-    List<ControllerEvent> nothing = new LinkedList<ControllerEvent>();
+    List<ControllerEvent> nothing = new LinkedList<>();
 
-    List<MouseState> buttonDown = new LinkedList<MouseState>();
-    List<MouseState> noMice = new LinkedList<MouseState>();
+    List<MouseState> buttonDown = new LinkedList<>();
+    List<MouseState> noMice = new LinkedList<>();
 
     List<InputState> inputStates;
     InputState is;

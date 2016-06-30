@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -123,14 +123,14 @@ public class BinaryExporter implements Ardor3dExporter {
     protected int _aliasCount = 1;
     protected int _idCount = 1;
 
-    protected final Map<Savable, BinaryIdContentPair> _contentTable = new IdentityHashMap<Savable, BinaryIdContentPair>();
+    protected final Map<Savable, BinaryIdContentPair> _contentTable = new IdentityHashMap<>();
 
-    protected final Map<Integer, Integer> _locationTable = new HashMap<Integer, Integer>();
+    protected final Map<Integer, Integer> _locationTable = new HashMap<>();
 
     // key - class name, value = bco
-    protected final Map<String, BinaryClassObject> _classes = new HashMap<String, BinaryClassObject>();
+    protected final Map<String, BinaryClassObject> _classes = new HashMap<>();
 
-    protected final List<Savable> _contentKeys = new ArrayList<Savable>();
+    protected final List<Savable> _contentKeys = new ArrayList<>();
 
     public BinaryExporter() {
         this(DEFAULT_COMPRESSION);
@@ -138,7 +138,7 @@ public class BinaryExporter implements Ardor3dExporter {
 
     /**
      * Construct a new exporter, specifying some options.
-     * 
+     *
      * @param compression
      *            the compression type to use. One of the constants from {@link java.util.zip.Deflater}
      */
@@ -196,8 +196,7 @@ public class BinaryExporter implements Ardor3dExporter {
             // write out data to a seperate stream
             int location = 0;
             // keep track of location for each piece
-            final HashMap<String, List<BinaryIdContentPair>> alreadySaved = new HashMap<String, List<BinaryIdContentPair>>(
-                    _contentTable.size());
+            final HashMap<String, List<BinaryIdContentPair>> alreadySaved = new HashMap<>(_contentTable.size());
             for (final Savable savable : _contentKeys) {
                 // look back at previous written data for matches
                 final String savableName = savable.getClassTag().getName();
@@ -211,7 +210,7 @@ public class BinaryExporter implements Ardor3dExporter {
 
                 _locationTable.put(pair.getId(), location);
                 if (bucket == null) {
-                    bucket = new ArrayList<BinaryIdContentPair>();
+                    bucket = new ArrayList<>();
                     alreadySaved.put(savableName + getChunk(pair), bucket);
                 }
                 bucket.add(pair);
@@ -304,9 +303,9 @@ public class BinaryExporter implements Ardor3dExporter {
             parentDirectory.mkdirs();
         }
 
-        final FileOutputStream fos = new FileOutputStream(file);
-        save(object, fos);
-        fos.close();
+        try (final FileOutputStream fos = new FileOutputStream(file)) {
+            save(object, fos);
+        }
     }
 
     public int processBinarySavable(final Savable object) throws IOException {
@@ -318,7 +317,7 @@ public class BinaryExporter implements Ardor3dExporter {
         if (bco == null) {
             bco = new BinaryClassObject();
             bco._alias = generateTag();
-            bco._nameFields = new HashMap<String, BinaryClassField>();
+            bco._nameFields = new HashMap<>();
             _classes.put(object.getClassTag().getName(), bco);
         }
 

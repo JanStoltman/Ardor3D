@@ -417,8 +417,8 @@ public abstract class ExampleBase implements Runnable, Updater, Scene {
         }
 
         final URL dialogImageRef = dialogImage;
-        final AtomicReference<PropertiesDialog> dialogRef = new AtomicReference<PropertiesDialog>();
-        final Stack<Runnable> mainThreadTasks = new Stack<Runnable>();
+        final AtomicReference<PropertiesDialog> dialogRef = new AtomicReference<>();
+        final Stack<Runnable> mainThreadTasks = new Stack<>();
         try {
             if (EventQueue.isDispatchThread()) {
                 dialogRef.set(new PropertiesDialog(settings, dialogImageRef, mainThreadTasks));

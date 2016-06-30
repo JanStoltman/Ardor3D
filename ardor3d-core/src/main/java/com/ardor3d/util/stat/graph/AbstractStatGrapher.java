@@ -31,7 +31,7 @@ public abstract class AbstractStatGrapher implements StatListener {
     protected Texture2D _texture;
     protected int _gWidth, _gHeight;
 
-    protected TreeMap<StatType, HashMap<String, Object>> _config = new TreeMap<StatType, HashMap<String, Object>>();
+    protected TreeMap<StatType, HashMap<String, Object>> _config = new TreeMap<>();
 
     protected boolean _enabled = true;
 
@@ -92,7 +92,7 @@ public abstract class AbstractStatGrapher implements StatListener {
     public void addConfig(final StatType type, final String key, final Object value) {
         HashMap<String, Object> vals = _config.get(type);
         if (vals == null) {
-            vals = new HashMap<String, Object>();
+            vals = new HashMap<>();
             _config.put(type, vals);
         }
         vals.put(key, value);

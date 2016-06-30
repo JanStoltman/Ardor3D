@@ -26,7 +26,7 @@ public class RendererRecord extends StateRecord {
     private boolean _clippingTestEnabled;
     private transient final ColorRGBA _tempColor = new ColorRGBA();
     private DrawBufferTarget _drawBufferTarget = null;
-    private final Stack<ReadOnlyRectangle2> _clips = new Stack<ReadOnlyRectangle2>();
+    private final Stack<ReadOnlyRectangle2> _clips = new Stack<>();
     private int _normalMode = -1; // signifies disabled
     private int _enabledTextures = 0;
     private boolean _texturesValid = false;

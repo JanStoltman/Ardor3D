@@ -138,7 +138,7 @@ public class MouseState {
     public EnumMap<MouseButton, ButtonState> getButtonStates(final EnumMap<MouseButton, ButtonState> store) {
         EnumMap<MouseButton, ButtonState> rVal = store;
         if (store == null) {
-            rVal = new EnumMap<MouseButton, ButtonState>(MouseButton.class);
+            rVal = new EnumMap<>(MouseButton.class);
         }
         rVal.clear();
         rVal.putAll(_buttonStates);

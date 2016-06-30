@@ -28,7 +28,7 @@ public class SteadyState extends AbstractFiniteState {
     private final String _name;
 
     /** A map of possible transitions for moving from this state to another. */
-    private final Map<String, AbstractTransitionState> _transitions = new HashMap<String, AbstractTransitionState>();
+    private final Map<String, AbstractTransitionState> _transitions = new HashMap<>();
 
     /** A transition to use if we reach the end of this state. May be null. */
     private AbstractTransitionState _endTransition;

@@ -198,8 +198,8 @@ public class GridLayout extends UILayout {
         ArrayList<Integer> columnWidths;
 
         LayoutGrid() {
-            components = new LinkedList<LayoutComponent>();
-            columnWidths = new ArrayList<Integer>();
+            components = new LinkedList<>();
+            columnWidths = new ArrayList<>();
         }
 
         void add(final UIComponent c) {

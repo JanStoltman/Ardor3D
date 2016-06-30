@@ -49,8 +49,8 @@ public class ArrayTerrainDataProvider implements TerrainDataProvider {
         final int clipLevelCount = 6;
 
         int currentSize = size;
-        heightMaps = new ArrayList<float[]>();
-        heightMapSizes = new ArrayList<Integer>();
+        heightMaps = new ArrayList<>();
+        heightMapSizes = new ArrayList<>();
         heightMaps.add(data);
         heightMapSizes.add(currentSize);
         float[] parentHeightMap = data;
@@ -73,7 +73,7 @@ public class ArrayTerrainDataProvider implements TerrainDataProvider {
 
     @Override
     public Map<Integer, String> getAvailableMaps() throws Exception {
-        final Map<Integer, String> maps = new HashMap<Integer, String>();
+        final Map<Integer, String> maps = new HashMap<>();
         maps.put(0, "ArrayBasedMap");
 
         return maps;

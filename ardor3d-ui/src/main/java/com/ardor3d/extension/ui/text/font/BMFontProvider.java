@@ -36,9 +36,9 @@ public class BMFontProvider implements FontProvider {
 
     private static Logger logger = Logger.getLogger(BMFontProvider.class.getName());
 
-    protected Map<UIFont, Integer> _scoreMap = new HashMap<UIFont, Integer>();
+    protected Map<UIFont, Integer> _scoreMap = new HashMap<>();
 
-    protected final Set<FontInfo> _fonts = new HashSet<FontInfo>();
+    protected final Set<FontInfo> _fonts = new HashSet<>();
 
     public void addFont(final String source, final String family, final int size, final boolean bold,
             final boolean italic) {
@@ -128,7 +128,7 @@ public class BMFontProvider implements FontProvider {
                 }
             }
 
-            final Map<Character, CharacterDescriptor> descriptors = new HashMap<Character, CharacterDescriptor>();
+            final Map<Character, CharacterDescriptor> descriptors = new HashMap<>();
             for (final int val : closest.bmFont.getMappedChars()) {
                 final Char c = closest.bmFont.getChar(val);
                 final CharacterDescriptor desc = new CharacterDescriptor(c.x, c.y, c.width, c.height, c.xadvance,

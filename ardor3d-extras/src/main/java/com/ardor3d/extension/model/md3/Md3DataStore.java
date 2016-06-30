@@ -19,9 +19,9 @@ public class Md3DataStore {
 
     private final Node _mainNode;
 
-    private final List<String> _frameNames = new ArrayList<String>();
+    private final List<String> _frameNames = new ArrayList<>();
 
-    private final List<String> _skinNames = new ArrayList<String>();
+    private final List<String> _skinNames = new ArrayList<>();
 
     public Md3DataStore(final Node mainNode) {
         super();

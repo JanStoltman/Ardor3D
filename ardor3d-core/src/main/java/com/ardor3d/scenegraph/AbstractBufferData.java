@@ -32,10 +32,10 @@ import com.google.common.collect.Multimap;
 
 public abstract class AbstractBufferData<T extends Buffer> {
 
-    private static Map<AbstractBufferData<?>, Object> _identityCache = new WeakHashMap<AbstractBufferData<?>, Object>();
+    private static Map<AbstractBufferData<?>, Object> _identityCache = new WeakHashMap<>();
     private static final Object STATIC_REF = new Object();
 
-    private static ReferenceQueue<AbstractBufferData<?>> _vboRefQueue = new ReferenceQueue<AbstractBufferData<?>>();
+    private static ReferenceQueue<AbstractBufferData<?>> _vboRefQueue = new ReferenceQueue<>();
 
     static {
         ContextManager.addContextCleanListener(new ContextCleanListener() {
@@ -165,7 +165,7 @@ public abstract class AbstractBufferData<T extends Buffer> {
         }
 
         if (_vboIdCache == null) {
-            _vboIdCache = new ContextIdReference<AbstractBufferData<T>>(this, _vboRefQueue);
+            _vboIdCache = new ContextIdReference<>(this, _vboRefQueue);
         }
         _vboIdCache.put(glContextRep, vboId);
     }
@@ -300,8 +300,8 @@ public abstract class AbstractBufferData<T extends Buffer> {
             }
             // Otherwise, add a delete request to that context's render task queue.
             else {
-                GameTaskQueueManager.getManager(ContextManager.getContextForRef(glref)).render(
-                        new RendererCallable<Void>() {
+                GameTaskQueueManager.getManager(ContextManager.getContextForRef(glref))
+                        .render(new RendererCallable<Void>() {
                             @Override
                             public Void call() throws Exception {
                                 getRenderer().deleteVBOs(idMap.get(glref));

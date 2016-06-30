@@ -91,8 +91,8 @@ public class TestLogicalLayer {
 
         final double tpf = 14;
 
-        final LinkedList<InputState> states1 = new LinkedList<InputState>();
-        final LinkedList<InputState> states2 = new LinkedList<InputState>();
+        final LinkedList<InputState> states1 = new LinkedList<>();
+        final LinkedList<InputState> states2 = new LinkedList<>();
 
         states1.add(state1);
         states2.add(state2);
@@ -120,8 +120,8 @@ public class TestLogicalLayer {
 
         final double tpf = 14;
 
-        final LinkedList<InputState> states1 = new LinkedList<InputState>();
-        final LinkedList<InputState> states2 = new LinkedList<InputState>();
+        final LinkedList<InputState> states1 = new LinkedList<>();
+        final LinkedList<InputState> states2 = new LinkedList<>();
 
         states1.add(state1);
         states2.add(state2);
@@ -154,8 +154,8 @@ public class TestLogicalLayer {
 
         final double tpf = 14;
 
-        final LinkedList<InputState> states1 = new LinkedList<InputState>();
-        final LinkedList<InputState> states2 = new LinkedList<InputState>();
+        final LinkedList<InputState> states1 = new LinkedList<>();
+        final LinkedList<InputState> states2 = new LinkedList<>();
 
         states1.add(state1);
         states2.add(state2);
@@ -188,8 +188,8 @@ public class TestLogicalLayer {
 
         final double tpf = 14;
 
-        final LinkedList<InputState> states1 = new LinkedList<InputState>();
-        final LinkedList<InputState> states2 = new LinkedList<InputState>();
+        final LinkedList<InputState> states1 = new LinkedList<>();
+        final LinkedList<InputState> states2 = new LinkedList<>();
 
         states1.add(state1);
 
@@ -223,8 +223,8 @@ public class TestLogicalLayer {
 
         final double tpf = 14;
 
-        final LinkedList<InputState> states1 = new LinkedList<InputState>();
-        final LinkedList<InputState> states2 = new LinkedList<InputState>();
+        final LinkedList<InputState> states1 = new LinkedList<>();
+        final LinkedList<InputState> states2 = new LinkedList<>();
 
         states1.add(state1);
         states2.add(InputState.LOST_FOCUS);

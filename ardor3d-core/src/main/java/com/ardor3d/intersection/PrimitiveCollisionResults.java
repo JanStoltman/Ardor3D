@@ -34,8 +34,8 @@ public class PrimitiveCollisionResults extends CollisionResults {
     public void addCollision(final Mesh s, final Mesh t) {
         // find the triangle that is being hit.
         // add this node and the triangle to the CollisionResults list.
-        final List<PrimitiveKey> a = new ArrayList<PrimitiveKey>();
-        final List<PrimitiveKey> b = new ArrayList<PrimitiveKey>();
+        final List<PrimitiveKey> a = new ArrayList<>();
+        final List<PrimitiveKey> b = new ArrayList<>();
         PickingUtil.findPrimitiveCollision(s, t, a, b);
         final CollisionData data = new CollisionData(s, t, a, b);
         addCollisionData(data);

@@ -195,7 +195,7 @@ public abstract class AbstractTwoStateLerpTransition extends AbstractTransitionS
         // too many new transform data objects. This assumes that a
         // same state always returns the same transform data objects.
         if (_sourceData == null) {
-            _sourceData = new HashMap<String, Object>();
+            _sourceData = new HashMap<>();
         }
         return BinaryLERPSource.combineSourceData(sourceAData, sourceBData, getPercent(), _sourceData);
     }

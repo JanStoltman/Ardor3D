@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -26,18 +26,18 @@ import com.ardor3d.renderer.state.record.StateRecord;
 public class RenderContext {
 
     /** List of states that override any set states on a spatial if not null. */
-    protected final EnumMap<RenderState.StateType, RenderState> _enforcedStates = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> _enforcedStates = new EnumMap<>(
             RenderState.StateType.class);
 
-    protected final Stack<EnumMap<StateType, RenderState>> _enforcedBackStack = new Stack<EnumMap<StateType, RenderState>>();
+    protected final Stack<EnumMap<StateType, RenderState>> _enforcedBackStack = new Stack<>();
 
-    protected final Stack<AbstractFBOTextureRenderer> _textureRenderers = new Stack<AbstractFBOTextureRenderer>();
+    protected final Stack<AbstractFBOTextureRenderer> _textureRenderers = new Stack<>();
 
     /** RenderStates a Spatial contains during rendering. */
-    protected final EnumMap<RenderState.StateType, RenderState> _currentStates = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> _currentStates = new EnumMap<>(
             RenderState.StateType.class);
 
-    protected final EnumMap<RenderState.StateType, StateRecord> _stateRecords = new EnumMap<RenderState.StateType, StateRecord>(
+    protected final EnumMap<RenderState.StateType, StateRecord> _stateRecords = new EnumMap<>(
             RenderState.StateType.class);
 
     protected final LineRecord _lineRecord = new LineRecord();
@@ -105,7 +105,7 @@ public class RenderContext {
      * Enforce a particular state. In other words, the given state will override any state of the same type set on a
      * scene object. Remember to clear the state when done enforcing. Very useful for multipass techniques where
      * multiple sets of states need to be applied to a scenegraph drawn multiple times.
-     * 
+     *
      * @param state
      *            state to enforce
      */
@@ -122,7 +122,7 @@ public class RenderContext {
 
     /**
      * Clears an enforced render state index by setting it to null. This allows object specific states to be used.
-     * 
+     *
      * @param type
      *            The type of RenderState to clear enforcement on.
      */
@@ -188,12 +188,12 @@ public class RenderContext {
      * Saves the currently set states to a stack. Does not changes the currently enforced states.
      */
     public void pushEnforcedStates() {
-        _enforcedBackStack.push(new EnumMap<StateType, RenderState>(_enforcedStates));
+        _enforcedBackStack.push(new EnumMap<>(_enforcedStates));
     }
 
     /**
      * Restores the enforced states from the stack. Any states enforced or cleared since the last push are reverted.
-     * 
+     *
      * @throws EmptyStackException
      *             if this method is called without first calling {@link #pushEnforcedStates()}
      */

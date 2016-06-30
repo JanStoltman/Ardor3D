@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.util.export.InputCapsule;
@@ -46,7 +47,7 @@ public abstract class Line3Base implements Savable, Externalizable {
 
     /**
      * Sets the line's origin point to the values of the given vector.
-     * 
+     *
      * @param origin
      * @throws NullPointerException
      *             if normal is null.
@@ -57,7 +58,7 @@ public abstract class Line3Base implements Savable, Externalizable {
 
     /**
      * Sets the line's direction to the values of the given vector.
-     * 
+     *
      * @param direction
      * @throws NullPointerException
      *             if direction is null.
@@ -72,12 +73,7 @@ public abstract class Line3Base implements Savable, Externalizable {
      */
     @Override
     public int hashCode() {
-        int result = 17;
-
-        result += 31 * result + _origin.hashCode();
-        result += 31 * result + _direction.hashCode();
-
-        return result;
+        return Objects.hash(getOrigin(), getDirection());
     }
 
     // /////////////////
@@ -107,7 +103,7 @@ public abstract class Line3Base implements Savable, Externalizable {
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param in
      *            ObjectInput
      * @throws IOException
@@ -121,7 +117,7 @@ public abstract class Line3Base implements Savable, Externalizable {
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param out
      *            ObjectOutput
      * @throws IOException

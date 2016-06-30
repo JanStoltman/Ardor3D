@@ -61,7 +61,7 @@ public class JoglAwtDesktopExample {
     static MouseCursor _cursor1;
     static MouseCursor _cursor2;
 
-    static Map<Canvas, Boolean> _showCursor1 = new HashMap<Canvas, Boolean>();
+    static Map<Canvas, Boolean> _showCursor1 = new HashMap<>();
 
     public static void main(final String[] args) throws Exception {
         System.setProperty("ardor3d.useMultipleContexts", "true");

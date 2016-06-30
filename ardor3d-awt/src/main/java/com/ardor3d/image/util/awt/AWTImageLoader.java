@@ -49,7 +49,7 @@ public class AWTImageLoader implements ImageLoader {
 
     public static void registerLoader() {
         if (supportedFormats == null) {
-            final List<String> formats = new ArrayList<String>();
+            final List<String> formats = new ArrayList<>();
             for (String format : ImageIO.getReaderFormatNames()) {
                 format = "." + format.toUpperCase();
                 if (!formats.contains(format)) {

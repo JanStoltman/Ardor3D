@@ -184,7 +184,7 @@ public abstract class TextSelection {
         final RenderedTextData data = getTextData();
         float xStart = 0, xEnd = 0, height = 0, yOffset = 0;
         boolean exit = false;
-        final List<Float> verts = new ArrayList<Float>();
+        final List<Float> verts = new ArrayList<>();
         for (int j = 0; !exit && j < data._lineEnds.size(); j++) {
             height = data._lineHeights.get(j);
             final int end = data._lineEnds.get(j);

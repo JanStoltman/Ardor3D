@@ -21,9 +21,9 @@ public class Md2DataStore {
     private final Mesh _mainMesh;
     private final KeyframeController<Mesh> _controller;
 
-    private final List<String> _frameNames = new ArrayList<String>();
+    private final List<String> _frameNames = new ArrayList<>();
 
-    private final List<String> _skinNames = new ArrayList<String>();
+    private final List<String> _skinNames = new ArrayList<>();
 
     public Md2DataStore(final Mesh mainMesh, final KeyframeController<Mesh> controller) {
         _mainMesh = mainMesh;

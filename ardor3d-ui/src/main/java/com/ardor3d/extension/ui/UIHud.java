@@ -94,7 +94,7 @@ public class UIHud extends Node {
      * List of potential drag listeners. When a drag operation is detected, we will offer it to each item in the list
      * until one accepts it.
      */
-    private final List<WeakReference<DragListener>> _dragListeners = new ArrayList<WeakReference<DragListener>>();
+    private final List<WeakReference<DragListener>> _dragListeners = new ArrayList<>();
 
     /** Our current drag listener. When an drag finished, this is set back to null. */
     private DragListener _dragListener = null;
@@ -108,7 +108,7 @@ public class UIHud extends Node {
     /**
      * List of hud listeners.
      */
-    private final List<HudListener> _hudListeners = new ArrayList<HudListener>();
+    private final List<HudListener> _hudListeners = new ArrayList<>();
 
     /**
      * An optional mouseManager, required in order to test mouse is grabbed.
@@ -118,7 +118,7 @@ public class UIHud extends Node {
     /**
      * The list of currently displayed popup menus, with each entry being a submenu of the one previous.
      */
-    private final List<UIPopupMenu> _popupMenus = new ArrayList<UIPopupMenu>();
+    private final List<UIPopupMenu> _popupMenus = new ArrayList<>();
 
     /**
      * Construct a new UIHud
@@ -376,7 +376,7 @@ public class UIHud extends Node {
      *            the listener to add
      */
     public void addDragListener(final DragListener listener) {
-        _dragListeners.add(new WeakReference<DragListener>(listener));
+        _dragListeners.add(new WeakReference<>(listener));
 
         // Clean list.
         for (int i = _dragListeners.size(); --i >= 0;) {

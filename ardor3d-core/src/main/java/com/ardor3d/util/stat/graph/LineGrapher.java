@@ -53,7 +53,7 @@ public class LineGrapher extends AbstractStatGrapher implements TableLinkable {
     private static final int majorHBar = 20;
     private static final int majorVBar = 10;
 
-    private final HashMap<StatType, LineEntry> _entries = new HashMap<StatType, LineEntry>();
+    private final HashMap<StatType, LineEntry> _entries = new HashMap<>();
 
     private BlendState _defBlendState = null;
 
@@ -267,7 +267,7 @@ public class LineGrapher extends AbstractStatGrapher implements TableLinkable {
     }
 
     class LineEntry {
-        public List<Vector3> verts = new ArrayList<Vector3>();
+        public List<Vector3> verts = new ArrayList<>();
         public int maxSamples;
         public double min = 0;
         public double max = 10;

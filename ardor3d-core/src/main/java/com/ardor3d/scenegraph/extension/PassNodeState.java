@@ -33,7 +33,7 @@ public class PassNodeState implements Savable, Serializable {
      * RenderStates registered with this pass - if a given state is not null it overrides the corresponding state set
      * during rendering.
      */
-    protected final EnumMap<RenderState.StateType, RenderState> _passStates = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> _passStates = new EnumMap<>(
             RenderState.StateType.class);
 
     /**

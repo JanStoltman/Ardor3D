@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -103,7 +103,7 @@ public class ObjImporter {
 
     /**
      * Reads a Wavefront OBJ file from the given resource
-     * 
+     *
      * @param resource
      *            the name of the resource to find.
      * @return an ObjGeometryStore data object containing the scene and other useful elements.
@@ -114,7 +114,7 @@ public class ObjImporter {
 
     /**
      * Reads a Wavefront OBJ file from the given resource
-     * 
+     *
      * @param resource
      *            the name of the resource to find.
      * @param geometryTool
@@ -138,7 +138,7 @@ public class ObjImporter {
 
     /**
      * Reads a Wavefront OBJ file from the given resource
-     * 
+     *
      * @param resource
      *            the name of the resource to find.
      * @return an ObjGeometryStore data object containing the scene and other useful elements.
@@ -149,7 +149,7 @@ public class ObjImporter {
 
     /**
      * Reads a Wavefront OBJ file from the given resource
-     * 
+     *
      * @param resource
      *            the name of the resource to find.
      * @param geometryTool
@@ -259,7 +259,7 @@ public class ObjImporter {
                     if (tokens.length < 2) {
                         store.setCurrentGroupNames(null);
                         continue;
-                        // throw new Error("wrong number of args.  g must have at least 1 argument.  (line " + lineNo
+                        // throw new Error("wrong number of args. g must have at least 1 argument. (line " + lineNo
                         // + ") " + line);
                     }
 
@@ -272,7 +272,8 @@ public class ObjImporter {
                 // if smoothing group
                 else if ("s".equals(keyword)) {
                     if (tokens.length != 2) {
-                        throw new Error("wrong number of args.  s must have 1 argument.  (line " + lineNo + ") " + line);
+                        throw new Error(
+                                "wrong number of args.  s must have 1 argument.  (line " + lineNo + ") " + line);
                     }
 
                     if ("off".equalsIgnoreCase(tokens[1])) {
@@ -291,7 +292,8 @@ public class ObjImporter {
                 // if object name
                 else if ("o".equals(keyword)) {
                     if (tokens.length < 2) {
-                        throw new Error("wrong number of args.  o must have 1 argument.  (line " + lineNo + ") " + line);
+                        throw new Error(
+                                "wrong number of args.  o must have 1 argument.  (line " + lineNo + ") " + line);
                     }
                     store.setCurrentObjectName(tokens[1]);
                 }
@@ -314,8 +316,8 @@ public class ObjImporter {
                 // if use material command
                 else if ("usemtl".equals(keyword)) {
                     if (tokens.length != 2) {
-                        throw new Error("wrong number of args.  usemtl must have 1 argument.  (line " + lineNo + ") "
-                                + line);
+                        throw new Error(
+                                "wrong number of args.  usemtl must have 1 argument.  (line " + lineNo + ") " + line);
                     }
 
                     // set new material
@@ -327,12 +329,12 @@ public class ObjImporter {
                 // if point
                 else if ("p".equals(keyword) && tokens.length > 1) {
                     if (tokens.length < 2) {
-                        throw new Error("wrong number of args.  p must have at least 1 vertex.  (line " + lineNo + ") "
-                                + line);
+                        throw new Error(
+                                "wrong number of args.  p must have at least 1 vertex.  (line " + lineNo + ") " + line);
                     }
 
                     // Each token corresponds to 1 vertex entry
-                    final List<ObjIndexSet> indices = new ArrayList<ObjIndexSet>();
+                    final List<ObjIndexSet> indices = new ArrayList<>();
                     for (int i = 1; i < tokens.length; i++) {
                         indices.add(new ObjIndexSet(tokens[i], store.getDataStore(), currentSmoothGroup));
                     }
@@ -347,7 +349,7 @@ public class ObjImporter {
                     }
 
                     // Each token corresponds to 1 vertex entry and possibly one texture entry
-                    final List<ObjIndexSet> indices = new ArrayList<ObjIndexSet>();
+                    final List<ObjIndexSet> indices = new ArrayList<>();
                     for (int i = 1; i < tokens.length; i++) {
                         indices.add(new ObjIndexSet(tokens[i], store.getDataStore(), currentSmoothGroup));
                     }
@@ -362,7 +364,7 @@ public class ObjImporter {
                     }
 
                     // Each token corresponds to 1 vertex entry and possibly one texture entry and normal entry.
-                    final List<ObjIndexSet> indices = new ArrayList<ObjIndexSet>();
+                    final List<ObjIndexSet> indices = new ArrayList<>();
                     for (int i = 1; i < tokens.length; i++) {
                         indices.add(new ObjIndexSet(tokens[i], store.getDataStore(), currentSmoothGroup));
                     }
@@ -398,7 +400,7 @@ public class ObjImporter {
 
     /**
      * Load a .mtl resource
-     * 
+     *
      * @param fileName
      *            the name of the mtl resource to load.
      * @param modelSource
@@ -424,7 +426,7 @@ public class ObjImporter {
 
     /**
      * Load a .mtl resource
-     * 
+     *
      * @param resource
      *            the mtl file to load, as a ResourceSource
      * @param store
@@ -524,14 +526,18 @@ public class ObjImporter {
                     final String textureName = line.substring("map_Kd".length()).trim();
                     currentMaterial.textureName = textureName;
                     if (_textureLocator == null) {
-                        currentMaterial.map_Kd = TextureManager.load(textureName, getMinificationFilter(),
-                                isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
-                                        : TextureStoreFormat.GuessNoCompressedFormat, isFlipTextureVertically());
+                        currentMaterial.map_Kd = TextureManager
+                                .load(textureName, getMinificationFilter(),
+                                        isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
+                                                : TextureStoreFormat.GuessNoCompressedFormat,
+                                        isFlipTextureVertically());
                     } else {
                         final ResourceSource source = _textureLocator.locateResource(textureName);
-                        currentMaterial.map_Kd = TextureManager.load(source, getMinificationFilter(),
-                                isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
-                                        : TextureStoreFormat.GuessNoCompressedFormat, isFlipTextureVertically());
+                        currentMaterial.map_Kd = TextureManager
+                                .load(source, getMinificationFilter(),
+                                        isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
+                                                : TextureStoreFormat.GuessNoCompressedFormat,
+                                        isFlipTextureVertically());
                     }
                 }
             }

@@ -71,7 +71,7 @@ public class ColladaImporter {
     private final EnumSet<MatchCondition> _optimizeSettings = EnumSet.of(MatchCondition.UVs, MatchCondition.Normal,
             MatchCondition.Color);
     private Map<String, Joint> _externalJointMapping;
-    private final List<ColladaExtraPlugin> _extraPlugins = new ArrayList<ColladaExtraPlugin>();
+    private final List<ColladaExtraPlugin> _extraPlugins = new ArrayList<>();
 
     public boolean isLoadTextures() {
         return _loadTextures;
@@ -361,7 +361,7 @@ public class ColladaImporter {
         private Element currentElement;
         private BufferType bufferType = BufferType.None;
         private int count = 0;
-        private final List<String> list = new ArrayList<String>();
+        private final List<String> list = new ArrayList<>();
 
         ArdorFactory(final DataCache dataCache) {
             this.dataCache = dataCache;

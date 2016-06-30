@@ -96,7 +96,7 @@ public class ColladaNodeUtils {
 
             // build a list of joints - one list per skeleton - and build a skeleton for each joint list.
             for (final JointNode jointChildNode : _dataCache.getRootJointNode().getChildren()) {
-                final List<Joint> jointList = new ArrayList<Joint>();
+                final List<Joint> jointList = new ArrayList<>();
                 buildJointLists(jointChildNode, jointList);
                 final Joint[] joints = jointList.toArray(new Joint[jointList.size()]);
                 final Skeleton skeleton = new Skeleton(joints[0].getName() + "_skeleton", joints);
@@ -266,7 +266,7 @@ public class ColladaNodeUtils {
         }
         final Node node = new Node(nodeName);
 
-        final List<Element> transforms = new ArrayList<Element>();
+        final List<Element> transforms = new ArrayList<>();
         for (final Element child : dNode.getChildren()) {
             if (_dataCache.getTransformTypes().contains(child.getName())) {
                 transforms.add(child);

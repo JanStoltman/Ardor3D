@@ -24,7 +24,7 @@ import com.ardor3d.util.export.Savable;
 @SavableFactory(factoryMethod = "initSavable")
 public class AnimationItem implements Savable {
     private final String _name;
-    private final List<AnimationItem> _children = new ArrayList<AnimationItem>();
+    private final List<AnimationItem> _children = new ArrayList<>();
     private AnimationClip _animationClip;
 
     public AnimationItem(final String name) {

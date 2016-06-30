@@ -26,7 +26,7 @@ public abstract class CollisionResults {
      * Constructor instantiates a new <code>PickResults</code> object.
      */
     public CollisionResults() {
-        _nodeList = new ArrayList<CollisionData>();
+        _nodeList = new ArrayList<>();
     }
 
     /**

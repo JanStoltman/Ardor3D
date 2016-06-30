@@ -13,6 +13,7 @@ package com.ardor3d.bounding;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 import com.ardor3d.intersection.IntersectionRecord;
 import com.ardor3d.math.Vector3;
@@ -47,10 +48,7 @@ public abstract class BoundingVolume implements Serializable, Savable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_center == null) ? 0 : _center.hashCode());
-        return result;
+        return Objects.hashCode(getCenter());
     }
 
     @Override
@@ -65,14 +63,7 @@ public abstract class BoundingVolume implements Serializable, Savable {
             return false;
         }
         final BoundingVolume other = (BoundingVolume) obj;
-        if (_center == null) {
-            if (other._center != null) {
-                return false;
-            }
-        } else if (!_center.equals(other._center)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(_center, other._center);
     }
 
     /**

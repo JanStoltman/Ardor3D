@@ -12,6 +12,8 @@ package com.ardor3d.input;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.util.Objects;
+
 import com.ardor3d.annotation.Immutable;
 import com.ardor3d.image.Image;
 import com.ardor3d.image.ImageDataFormat;
@@ -21,7 +23,7 @@ import com.ardor3d.util.geom.BufferUtils;
 /**
  * An immutable representation of a mouse cursor. A mouse cursor consists of an image and a hotspot where clicking is
  * done.
- * 
+ *
  */
 @Immutable
 public class MouseCursor {
@@ -29,8 +31,9 @@ public class MouseCursor {
      * This constant is used to identify that the native operating system's default cursor should be used. It is not a
      * valid mouse cursor in itself.
      */
-    public static final MouseCursor SYSTEM_DEFAULT = new MouseCursor("system default", new Image(ImageDataFormat.RGBA,
-            PixelDataType.UnsignedByte, 1, 1, BufferUtils.createByteBuffer(4), null), 0, 0);
+    public static final MouseCursor SYSTEM_DEFAULT = new MouseCursor("system default",
+            new Image(ImageDataFormat.RGBA, PixelDataType.UnsignedByte, 1, 1, BufferUtils.createByteBuffer(4), null), 0,
+            0);
 
     private final String _name;
     private final Image _image;
@@ -39,7 +42,7 @@ public class MouseCursor {
 
     /**
      * Instantiates a MouseCursor.
-     * 
+     *
      * @param name
      *            the name of this cursor, for debugging purposes.
      * @param image
@@ -55,10 +58,10 @@ public class MouseCursor {
         _hotspotX = hotspotX;
         _hotspotY = hotspotY;
 
-        checkArgument(hotspotX >= 0 && hotspotX < image.getWidth(), "hotspot X is out of bounds: 0 <= %s  < "
-                + image.getWidth(), hotspotX);
-        checkArgument(hotspotY >= 0 && hotspotY < image.getHeight(), "hotspot Y is out of bounds: 0 <= %s  < "
-                + image.getHeight(), hotspotY);
+        checkArgument(hotspotX >= 0 && hotspotX < image.getWidth(),
+                "hotspot X is out of bounds: 0 <= %s  < " + image.getWidth(), hotspotX);
+        checkArgument(hotspotY >= 0 && hotspotY < image.getHeight(),
+                "hotspot Y is out of bounds: 0 <= %s  < " + image.getHeight(), hotspotY);
     }
 
     public String getName() {
@@ -102,11 +105,10 @@ public class MouseCursor {
         if (_hotspotY != that._hotspotY) {
             return false;
         }
-        if (_image != null ? !_image.equals(that._image) : that._image != null) {
+        if (!Objects.equals(_image, that._image)) {
             return false;
         }
-        // noinspection RedundantIfStatement
-        if (_name != null ? !_name.equals(that._name) : that._name != null) {
+        if (!Objects.equals(_name, that._name)) {
             return false;
         }
 
@@ -115,10 +117,6 @@ public class MouseCursor {
 
     @Override
     public int hashCode() {
-        int result = _name != null ? _name.hashCode() : 0;
-        result = 31 * result + (_image != null ? _image.hashCode() : 0);
-        result = 31 * result + _hotspotX;
-        result = 31 * result + _hotspotY;
-        return result;
+        return Objects.hash(getName(), getImage(), Integer.valueOf(getHotspotX()), Integer.valueOf(getHotspotY()));
     }
 }

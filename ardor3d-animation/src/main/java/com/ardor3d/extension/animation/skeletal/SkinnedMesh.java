@@ -12,6 +12,7 @@ package com.ardor3d.extension.animation.skeletal;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.Objects;
 import java.util.TreeSet;
 
 import com.ardor3d.bounding.CollisionTreeManager;
@@ -625,7 +626,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
         final short[] joints = new short[vcount * maxCount];
         final float[] weights = new float[vcount * maxCount];
 
-        final TreeSet<JointWeight> weightSort = new TreeSet<JointWeight>();
+        final TreeSet<JointWeight> weightSort = new TreeSet<>();
         // Walk through old data vertex by vertex
         int index;
         for (int i = 0; i < vcount; i++) {
@@ -723,12 +724,7 @@ public class SkinnedMesh extends Mesh implements PoseListener {
 
         @Override
         public int hashCode() {
-            int result = 17;
-
-            // only care about joint
-            result += 31 * result + joint;
-
-            return result;
+            return Objects.hashCode(Short.valueOf(joint));
         }
 
         @Override

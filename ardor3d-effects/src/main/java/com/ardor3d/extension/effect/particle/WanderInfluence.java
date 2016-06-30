@@ -28,13 +28,13 @@ public class WanderInfluence extends ParticleInfluence {
     private double _wanderDistance = DEFAULT_DISTANCE;
     private double _wanderJitter = DEFAULT_JITTER;
 
-    private ArrayList<Vector3> _wanderTargets = new ArrayList<Vector3>(1);
+    private ArrayList<Vector3> _wanderTargets = new ArrayList<>(1);
     private final Vector3 _workVect = new Vector3();
 
     @Override
     public void prepare(final ParticleSystem system) {
         if (_wanderTargets.size() != system.getNumParticles()) {
-            _wanderTargets = new ArrayList<Vector3>(system.getNumParticles());
+            _wanderTargets = new ArrayList<>(system.getNumParticles());
             for (int x = system.getNumParticles(); --x >= 0;) {
                 _wanderTargets.add(new Vector3(system.getEmissionDirection()).normalizeLocal());
             }

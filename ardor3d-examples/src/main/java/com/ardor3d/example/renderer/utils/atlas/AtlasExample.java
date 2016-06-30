@@ -158,7 +158,7 @@ public class AtlasExample extends ExampleBase {
 
     private void packIntoAtlas(final Spatial spatial) {
         // Gather up all meshes to do the atlas operation on
-        final List<Mesh> meshes = new ArrayList<Mesh>();
+        final List<Mesh> meshes = new ArrayList<>();
         final Visitor visitor = new Visitor() {
             @Override
             public void visit(final Spatial spatial) {

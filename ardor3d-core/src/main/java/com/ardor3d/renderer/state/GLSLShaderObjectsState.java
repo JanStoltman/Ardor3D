@@ -70,9 +70,9 @@ public class GLSLShaderObjectsState extends RenderState {
     private static final Logger logger = Logger.getLogger(GLSLShaderObjectsState.class.getName());
 
     /** Storage for shader uniform values */
-    protected List<ShaderVariable> _shaderUniforms = new ArrayList<ShaderVariable>();
+    protected List<ShaderVariable> _shaderUniforms = new ArrayList<>();
     /** Storage for shader attribute values */
-    protected List<ShaderVariable> _shaderAttributes = new ArrayList<ShaderVariable>();
+    protected List<ShaderVariable> _shaderAttributes = new ArrayList<>();
 
     protected ByteBuffer _vertShader, _fragShader, _geomShader, _tessControlShader, _tessEvalShader, _compShader;
 
@@ -240,28 +240,14 @@ public class GLSLShaderObjectsState extends RenderState {
     }
 
     protected ByteBuffer load(final InputStream in) throws IOException {
-        DataInputStream dataStream = null;
-        try {
-            final BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
-            dataStream = new DataInputStream(bufferedInputStream);
+        try (final BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
+                final DataInputStream dataStream = new DataInputStream(bufferedInputStream)) {
             final byte shaderCode[] = new byte[bufferedInputStream.available()];
             dataStream.readFully(shaderCode);
-            bufferedInputStream.close();
-            dataStream.close();
             final ByteBuffer shaderByteBuffer = BufferUtils.createByteBuffer(shaderCode.length);
             shaderByteBuffer.put(shaderCode);
             shaderByteBuffer.rewind();
-
             return shaderByteBuffer;
-        } finally {
-            // Ensure that the stream is closed, even if there is an exception.
-            if (dataStream != null) {
-                try {
-                    dataStream.close();
-                } catch (final IOException closeFailure) {
-                    logger.log(Level.WARNING, "Failed to close the shader object", closeFailure);
-                }
-            }
         }
     }
 
@@ -1190,8 +1176,8 @@ public class GLSLShaderObjectsState extends RenderState {
      * @param data
      *            The actual data to use as attribute pointer
      */
-    public void setAttributePointer(final String name, final int size, final boolean normalized,
-            final boolean unsigned, final int stride, final ByteBufferData data) {
+    public void setAttributePointer(final String name, final int size, final boolean normalized, final boolean unsigned,
+            final int stride, final ByteBufferData data) {
         final ShaderVariablePointerByte shaderUniform = getShaderAttribute(name, ShaderVariablePointerByte.class);
         shaderUniform.size = size;
         shaderUniform.normalized = normalized;
@@ -1221,8 +1207,8 @@ public class GLSLShaderObjectsState extends RenderState {
      * @param data
      *            The actual data to use as attribute pointer
      */
-    public void setAttributePointer(final String name, final int size, final boolean normalized,
-            final boolean unsigned, final int stride, final IntBufferData data) {
+    public void setAttributePointer(final String name, final int size, final boolean normalized, final boolean unsigned,
+            final int stride, final IntBufferData data) {
         final ShaderVariablePointerInt shaderUniform = getShaderAttribute(name, ShaderVariablePointerInt.class);
         shaderUniform.size = size;
         shaderUniform.normalized = normalized;
@@ -1252,8 +1238,8 @@ public class GLSLShaderObjectsState extends RenderState {
      * @param data
      *            The actual data to use as attribute pointer
      */
-    public void setAttributePointer(final String name, final int size, final boolean normalized,
-            final boolean unsigned, final int stride, final ShortBufferData data) {
+    public void setAttributePointer(final String name, final int size, final boolean normalized, final boolean unsigned,
+            final int stride, final ShortBufferData data) {
         final ShaderVariablePointerShort shaderUniform = getShaderAttribute(name, ShaderVariablePointerShort.class);
         shaderUniform.size = size;
         shaderUniform.normalized = normalized;
@@ -1332,11 +1318,11 @@ public class GLSLShaderObjectsState extends RenderState {
 
             return shaderUniform;
         } catch (final InstantiationException e) {
-            logger.logp(Level.SEVERE, this.getClass().toString(),
-                    "getShaderVariable(name, classz, shaderVariableList)", "Exception", e);
+            logger.logp(Level.SEVERE, this.getClass().toString(), "getShaderVariable(name, classz, shaderVariableList)",
+                    "Exception", e);
         } catch (final IllegalAccessException e) {
-            logger.logp(Level.SEVERE, this.getClass().toString(),
-                    "getShaderVariable(name, classz, shaderVariableList)", "Exception", e);
+            logger.logp(Level.SEVERE, this.getClass().toString(), "getShaderVariable(name, classz, shaderVariableList)",
+                    "Exception", e);
         }
 
         return null;

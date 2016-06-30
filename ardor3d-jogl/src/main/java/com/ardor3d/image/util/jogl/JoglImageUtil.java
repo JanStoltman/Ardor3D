@@ -56,7 +56,7 @@ public class JoglImageUtil {
         final int width = input.getWidth(), height = input.getHeight();
 
         // create our return list
-        final List<TextureData> rVal = new ArrayList<TextureData>();
+        final List<TextureData> rVal = new ArrayList<>();
 
         // go through each layer
         for (int i = 0; i < size; i++) {

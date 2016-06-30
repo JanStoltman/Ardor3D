@@ -80,7 +80,7 @@ public enum CollisionTreeManager {
      * private constructor for the Singleton. Initializes the cache.
      */
     private CollisionTreeManager() {
-        _cache = new WeakHashMap<Mesh, CollisionTree>();
+        _cache = new WeakHashMap<>();
         _protectedList = Collections.synchronizedList(new ArrayList<Mesh>(1));
         setCollisionTreeController(new UsageTreeController());
     }

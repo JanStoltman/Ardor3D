@@ -28,7 +28,7 @@ public abstract class AbstractPbufferTextureRenderer implements TextureRenderer 
     private static final Logger logger = Logger.getLogger(AbstractPbufferTextureRenderer.class.getName());
 
     /** List of states that override any set states on a spatial if not null. */
-    protected final EnumMap<RenderState.StateType, RenderState> _enforcedStates = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> _enforcedStates = new EnumMap<>(
             RenderState.StateType.class);
 
     protected final Camera _camera = new Camera(1, 1);

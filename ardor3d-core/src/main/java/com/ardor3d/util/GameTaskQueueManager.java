@@ -25,7 +25,7 @@ public final class GameTaskQueueManager {
     private static final Object MAP_LOCK = new Object();
     private static final ConcurrentMap<Object, GameTaskQueueManager> _managers = new MapMaker().weakKeys().makeMap();
 
-    private final ConcurrentMap<String, GameTaskQueue> _managedQueues = new ConcurrentHashMap<String, GameTaskQueue>(2);
+    private final ConcurrentMap<String, GameTaskQueue> _managedQueues = new ConcurrentHashMap<>(2);
 
     public static GameTaskQueueManager getManager(final Object key) {
         synchronized (MAP_LOCK) {

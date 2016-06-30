@@ -103,7 +103,7 @@ public class ColladaMaterialUtils {
              * temp cache for textures, we do not want to add textures twice (for example, transparant map might point
              * to diffuse texture)
              */
-            final HashMap<String, Texture> loadedTextures = new HashMap<String, Texture>();
+            final HashMap<String, Texture> loadedTextures = new HashMap<>();
             final Element effect = effectNode;
             // XXX: For now, just grab the common technique:
             final Element common = effect.getChild("profile_COMMON");

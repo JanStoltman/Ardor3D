@@ -126,8 +126,8 @@ public class GeometryTool {
                 }
             }
 
-            final Map<VertKey, Integer> store = new HashMap<VertKey, Integer>();
-            final Map<Integer, Integer> indexRemap = new HashMap<Integer, Integer>();
+            final Map<VertKey, Integer> store = new HashMap<>();
+            final Map<Integer, Integer> indexRemap = new HashMap<>();
             int good = 0;
             long group;
             for (int x = 0, max = verts.length; x < max; x++) {
@@ -350,7 +350,7 @@ public class GeometryTool {
             final int numberOfUnits = meshData.getNumberOfUnits();
             if (numberOfUnits > 0) {
                 final List<FloatBufferData> previousTextureCoordsList = meshData.getTextureCoords();
-                final List<FloatBufferData> nextTextureCoordsList = new ArrayList<FloatBufferData>();
+                final List<FloatBufferData> nextTextureCoordsList = new ArrayList<>();
                 for (int unitIndex = 0; unitIndex < numberOfUnits; unitIndex++) {
                     final FloatBufferData previousTextureCoords = previousTextureCoordsList.get(unitIndex);
                     if (previousTextureCoords == null) {

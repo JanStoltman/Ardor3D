@@ -75,7 +75,7 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
         // FIXME rather pass the monitor(s) to the constructor, create a screen to get the primary monitor
         _newtWindow = GLWindow.create(capsUtil.getCapsForSettingsWithHints(settings, onscreen, bitmapRequested,
                 pbufferRequested, fboRequested));
-        _monitorDevices = new ArrayList<MonitorDevice>();
+        _monitorDevices = new ArrayList<>();
         // uses the primary monitor by default
         _newtWindow.getScreen().createNative();
         final MonitorDevice primaryMonitor = _newtWindow.getScreen().getPrimaryMonitor();

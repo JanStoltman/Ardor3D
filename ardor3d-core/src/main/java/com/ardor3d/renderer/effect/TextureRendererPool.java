@@ -22,7 +22,7 @@ import com.ardor3d.renderer.TextureRendererFactory;
 public enum TextureRendererPool {
     INSTANCE;
 
-    private final List<TextureRenderer> renderers = new LinkedList<TextureRenderer>();
+    private final List<TextureRenderer> renderers = new LinkedList<>();
 
     public static TextureRenderer fetch(final int width, final int height, final Renderer renderer) {
         for (final Iterator<TextureRenderer> it = INSTANCE.renderers.iterator(); it.hasNext();) {

@@ -90,7 +90,7 @@ public class TrailMesh extends Mesh {
         this.nrTrailSections = nrTrailSections;
         trailVertices = nrTrailSections * 2;
 
-        trailVectors = new LinkedList<TrailData>();
+        trailVectors = new LinkedList<>();
         for (int i = 0; i < nrTrailSections; i++) {
             trailVectors.add(new TrailData());
         }

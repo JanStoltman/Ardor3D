@@ -47,7 +47,7 @@ public abstract class AbstractRenderer implements Renderer {
     protected RenderLogic renderLogic;
 
     /** List of default rendering states for this specific renderer type */
-    protected final EnumMap<RenderState.StateType, RenderState> defaultStateList = new EnumMap<RenderState.StateType, RenderState>(
+    protected final EnumMap<RenderState.StateType, RenderState> defaultStateList = new EnumMap<>(
             RenderState.StateType.class);
 
     public AbstractRenderer() {

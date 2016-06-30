@@ -449,7 +449,7 @@ public class CollisionTree implements Serializable {
     public List<PrimitiveKey> intersect(final Ray3 ray, final List<PrimitiveKey> store) {
         List<PrimitiveKey> result = store;
         if (result == null) {
-            result = new ArrayList<PrimitiveKey>();
+            result = new ArrayList<>();
         }
 
         // if our ray doesn't hit the bounds, then it must not hit a primitive.
@@ -594,6 +594,6 @@ public class CollisionTree implements Serializable {
      * @return a new reference to the given mesh.
      */
     private WeakReference<Mesh> makeRef(final Mesh mesh) {
-        return new WeakReference<Mesh>(mesh);
+        return new WeakReference<>(mesh);
     }
 }

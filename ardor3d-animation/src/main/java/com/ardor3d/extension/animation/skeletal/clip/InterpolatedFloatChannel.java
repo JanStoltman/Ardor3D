@@ -90,8 +90,8 @@ public class InterpolatedFloatChannel extends AbstractAnimationChannel {
         if (startTime > endTime) {
             throw new IllegalArgumentException("startTime > endTime");
         }
-        final List<Float> times = new ArrayList<Float>();
-        final List<Float> keys = new ArrayList<Float>();
+        final List<Float> times = new ArrayList<>();
+        final List<Float> keys = new ArrayList<>();
 
         final float[] data = new float[1];
 

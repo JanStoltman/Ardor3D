@@ -3,12 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.ui.util;
+
+import java.util.Objects;
 
 /**
  * This class is patterned after awt's {@link java.awt.Insets Insets} class. It describes the margins on four sides of a
@@ -30,7 +32,7 @@ public class Insets {
 
     /**
      * Constructs a new insets using the given sizes.
-     * 
+     *
      * @param top
      * @param left
      * @param bottom
@@ -42,7 +44,7 @@ public class Insets {
 
     /**
      * Constructs a new insets using the sizes from the given source.
-     * 
+     *
      * @param source
      */
     public Insets(final Insets source) {
@@ -51,7 +53,7 @@ public class Insets {
 
     /**
      * Set the size of the sides to the given values.
-     * 
+     *
      * @param top
      * @param left
      * @param bottom
@@ -114,11 +116,7 @@ public class Insets {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result += 31 * result + getLeft();
-        result += 31 * result + getRight();
-        result += 31 * result + getTop();
-        result += 31 * result + getBottom();
-        return result;
+        return Objects.hash(Integer.valueOf(getLeft()), Integer.valueOf(getRight()), Integer.valueOf(getTop()),
+                Integer.valueOf(getBottom()));
     }
 }

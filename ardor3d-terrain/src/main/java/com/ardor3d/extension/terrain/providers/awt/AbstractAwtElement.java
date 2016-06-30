@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,7 +13,6 @@ package com.ardor3d.extension.terrain.providers.awt;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.RenderingHints;
-import java.awt.RenderingHints.Key;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +28,7 @@ public abstract class AbstractAwtElement {
     protected final Transform _transform = new Transform();
     protected Composite _compositeOverride;
     protected ElementUpdateListener _listener;
-    protected Map<RenderingHints.Key, Object> hints = new HashMap<Key, Object>();
+    protected Map<RenderingHints.Key, Object> hints = new HashMap<>();
 
     protected Vector4 _awtBounds = new Vector4();
 
@@ -70,10 +69,10 @@ public abstract class AbstractAwtElement {
         updateBoundsFromElement();
 
         // So apply transform
-        final double x = _awtBounds.getX(), y = _awtBounds.getY(), width = _awtBounds.getZ(), height = _awtBounds
-                .getW();
+        final double x = _awtBounds.getX(), y = _awtBounds.getY(), width = _awtBounds.getZ(),
+                height = _awtBounds.getW();
         final Vector3[] vects = new Vector3[] { //
-        //
+                //
                 new Vector3(x, y, 0), //
                 new Vector3(x + width, y, 0), //
                 new Vector3(x + width, y + height, 0), //

@@ -44,7 +44,7 @@ public class AnimationClip implements Savable {
      */
     public AnimationClip(final String name) {
         _name = name;
-        _channels = new ArrayList<AbstractAnimationChannel>();
+        _channels = new ArrayList<>();
     }
 
     /**
@@ -58,7 +58,7 @@ public class AnimationClip implements Savable {
      */
     public AnimationClip(final String name, final List<AbstractAnimationChannel> channels) {
         _name = name;
-        _channels = new ArrayList<AbstractAnimationChannel>(channels);
+        _channels = new ArrayList<>(channels);
         updateMaxTimeIndex();
     }
 

@@ -2,6 +2,7 @@
 package com.ardor3d.extension.terrain.util;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Tile implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -23,10 +24,7 @@ public class Tile implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result += 31 * result + x;
-        result += 31 * result + y;
-        return result;
+        return Objects.hash(Integer.valueOf(getX()), Integer.valueOf(getY()));
     }
 
     @Override

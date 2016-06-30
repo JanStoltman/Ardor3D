@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
 import com.ardor3d.math.type.ReadOnlyRectangle2;
 import com.ardor3d.util.export.InputCapsule;
@@ -46,7 +47,7 @@ public class Rectangle2 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Constructor creates a new <code>Rectangle2</code> with using the given x,y,width and height values.
-     * 
+     *
      */
     public Rectangle2(final int x, final int y, final int width, final int height) {
         setX(x);
@@ -57,7 +58,7 @@ public class Rectangle2 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Constructor creates a new <code>Rectangle2</code> using the values of the provided source rectangle.
-     * 
+     *
      * @param source
      *            the rectangle to copy from
      */
@@ -167,14 +168,8 @@ public class Rectangle2 implements Cloneable, Savable, Externalizable, ReadOnlyR
      */
     @Override
     public int hashCode() {
-        int result = 17;
-
-        result += 31 * result + _x;
-        result += 31 * result + _y;
-        result += 31 * result + _width;
-        result += 31 * result + _height;
-
-        return result;
+        return Objects.hash(Integer.valueOf(getX()), Integer.valueOf(getY()), Integer.valueOf(getWidth()),
+                Integer.valueOf(getHeight()));
     }
 
     /**
@@ -235,7 +230,7 @@ public class Rectangle2 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param in
      *            ObjectInput
      * @throws IOException
@@ -251,7 +246,7 @@ public class Rectangle2 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param out
      *            ObjectOutput
      * @throws IOException
@@ -283,7 +278,7 @@ public class Rectangle2 implements Cloneable, Savable, Externalizable, ReadOnlyR
     /**
      * Releases a Rectangle2 back to be used by a future call to fetchTempInstance. TAKE CARE: this object should no
      * longer have other classes referencing it or "Bad Things" will happen.
-     * 
+     *
      * @param rectangle
      *            the Rectangle2 to release.
      */

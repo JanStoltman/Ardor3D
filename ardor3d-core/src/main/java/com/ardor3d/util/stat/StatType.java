@@ -3,12 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.util.stat;
+
+import java.util.Objects;
 
 public class StatType implements Comparable<StatType> {
 
@@ -56,8 +58,7 @@ public class StatType implements Comparable<StatType> {
 
     @Override
     public int hashCode() {
-        final int hash = _statName.hashCode();
-        return hash;
+        return Objects.hashCode(getStatName());
     }
 
     @Override

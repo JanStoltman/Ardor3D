@@ -23,7 +23,7 @@ import com.ardor3d.util.export.Savable;
 
 public class ParticleAppearanceRamp implements Savable {
 
-    protected List<RampEntry> _entries = new ArrayList<RampEntry>();
+    protected List<RampEntry> _entries = new ArrayList<>();
 
     public void addEntry(final RampEntry entry) {
         _entries.add(entry);
@@ -163,7 +163,7 @@ public class ParticleAppearanceRamp implements Savable {
     public void read(final InputCapsule capsule) throws IOException {
         _entries = capsule.readSavableList("entries", null);
         if (_entries == null) {
-            _entries = new ArrayList<RampEntry>();
+            _entries = new ArrayList<>();
         }
     }
 

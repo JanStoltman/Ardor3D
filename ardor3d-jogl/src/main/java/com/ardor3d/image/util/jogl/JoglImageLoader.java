@@ -60,7 +60,7 @@ public class JoglImageLoader implements ImageLoader {
     private static final String[] _supportedFormats = computeSupportedFormats();
 
     private static final String[] computeSupportedFormats() {
-        final List<String> supportedFormatsList = new ArrayList<String>();
+        final List<String> supportedFormatsList = new ArrayList<>();
         if (Platform.AWT_AVAILABLE) {
             supportedFormatsList.add("." + TextureIO.GIF.toUpperCase());
         }

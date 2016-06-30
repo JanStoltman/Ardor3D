@@ -23,7 +23,7 @@ import com.ardor3d.extension.ui.UIButton;
 public class ButtonGroup {
 
     /** The list of buttons participating in this group. */
-    private final List<UIButton> _buttons = new ArrayList<UIButton>();
+    private final List<UIButton> _buttons = new ArrayList<>();
 
     /** The currently selected button. */
     private UIButton _selected;

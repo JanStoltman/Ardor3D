@@ -28,7 +28,7 @@ public final class RenderBucketType {
         return bucketType;
     }
 
-    private static final Map<String, RenderBucketType> bucketTypeMap = new HashMap<String, RenderBucketType>();
+    private static final Map<String, RenderBucketType> bucketTypeMap = new HashMap<>();
 
     private final String name;
 

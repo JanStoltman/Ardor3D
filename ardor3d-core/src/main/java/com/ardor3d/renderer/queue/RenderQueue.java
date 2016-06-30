@@ -22,7 +22,7 @@ import com.ardor3d.util.Constants;
 
 public class RenderQueue {
 
-    private final Map<RenderBucketType, RenderBucket> renderBuckets = new LinkedHashMap<RenderBucketType, RenderBucket>();
+    private final Map<RenderBucketType, RenderBucket> renderBuckets = new LinkedHashMap<>();
 
     public RenderQueue() {
         setupDefaultBuckets();

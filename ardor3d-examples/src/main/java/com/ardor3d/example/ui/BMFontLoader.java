@@ -25,7 +25,7 @@ public class BMFontLoader {
     static Logger logger = Logger.getLogger(BMFontLoader.class.getName());
 
     static BMFontLoader s_instance = null;
-    final ArrayList<BMFont> _fontList = new ArrayList<BMFont>();
+    final ArrayList<BMFont> _fontList = new ArrayList<>();
 
     public static List<BMFont> allFonts() {
         return instance()._fontList;

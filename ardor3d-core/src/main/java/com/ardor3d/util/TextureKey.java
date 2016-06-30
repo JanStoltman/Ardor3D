@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -67,14 +68,14 @@ final public class TextureKey implements Savable {
     private boolean _dirty;
 
     /** cache of OpenGL context specific texture ids for the associated texture. */
-    protected final transient ContextIdReference<TextureKey> _idCache = new ContextIdReference<TextureKey>(this,
+    protected final transient ContextIdReference<TextureKey> _idCache = new ContextIdReference<>(this,
             TextureManager.getRefQueue());
 
     /** cached hashcode value. */
     protected transient int _code = Integer.MAX_VALUE;
 
     /** cache of texturekey objects allowing us to find an existing texture key. */
-    protected static final List<WeakReference<TextureKey>> _keyCache = new LinkedList<WeakReference<TextureKey>>();
+    protected static final List<WeakReference<TextureKey>> _keyCache = new LinkedList<>();
 
     private static final Integer ZERO = new Integer(0);
 
@@ -84,7 +85,7 @@ final public class TextureKey implements Savable {
     /** DO NOT USE. FOR INTERNAL USE ONLY */
     protected TextureKey() {
         if (Constants.useMultipleContexts) {
-            _dirtyContexts = new ArrayList<WeakReference<Object>>();
+            _dirtyContexts = new ArrayList<>();
         } else {
             _dirtyContexts = null;
         }
@@ -101,7 +102,7 @@ final public class TextureKey implements Savable {
                 _dirtyContexts.clear();
                 // grab all contexts we currently have ids for and add them all as dirty
                 for (final Object context : _idCache.getContextObjects()) {
-                    final WeakReference<Object> ref = new WeakReference<Object>(context);
+                    final WeakReference<Object> ref = new WeakReference<>(context);
                     _dirtyContexts.add(ref);
                 }
             }
@@ -166,7 +167,7 @@ final public class TextureKey implements Savable {
     /**
      * Get a new unique TextureKey. This is meant for use by RTT and other situations where we know we are making a
      * unique texture.
-     * 
+     *
      * @param minFilter
      *            our minification filter value.
      * @return the new TextureKey
@@ -216,7 +217,7 @@ final public class TextureKey implements Savable {
         }
 
         // not found
-        _keyCache.add(new WeakReference<TextureKey>(key));
+        _keyCache.add(new WeakReference<>(key));
         return key;
     }
 
@@ -264,7 +265,7 @@ final public class TextureKey implements Savable {
      * Note: This does not remove the texture from the card and is provided for use by code that does remove textures
      * from the card.
      * </p>
-     * 
+     *
      * @param glContext
      *            the object representing the OpenGL context this texture belongs to. See
      *            {@link RenderContext#getGlContextRep()}
@@ -288,7 +289,7 @@ final public class TextureKey implements Savable {
 
     /**
      * Sets the id for a texture in regards to the given OpenGL context.
-     * 
+     *
      * @param glContext
      *            the object representing the OpenGL context a texture belongs to. See
      *            {@link RenderContext#getGlContextRep()}
@@ -347,13 +348,8 @@ final public class TextureKey implements Savable {
     @Override
     public int hashCode() {
         if (_code == Integer.MAX_VALUE) {
-            _code = 17;
-
-            _code += 31 * _code + (_source != null ? _source.hashCode() : 0);
-            _code += 31 * _code + (_id != null ? _id.hashCode() : 0);
-            _code += 31 * _code + _minFilter.hashCode();
-            _code += 31 * _code + _format.hashCode();
-            _code += 31 * _code + (_flipped ? 1 : 0);
+            _code = Objects.hash(getSource(), getId(), getMinificationFilter(), getFormat(),
+                    Boolean.valueOf(isFlipped()));
         }
         return _code;
     }

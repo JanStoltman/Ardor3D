@@ -15,7 +15,7 @@ import java.util.List;
 
 final class NvStripInfo {
     NvStripStartInfo _startInfo;
-    List<NvFaceInfo> _faces = new ArrayList<NvFaceInfo>();
+    List<NvFaceInfo> _faces = new ArrayList<>();
     int _stripId;
     int _experimentId;
 
@@ -176,11 +176,11 @@ final class NvStripInfo {
      */
     void build(final List<NvEdgeInfo> edgeInfos, final List<NvFaceInfo> faceInfos) {
         // used in building the strips forward and backward
-        final List<Integer> scratchIndices = new ArrayList<Integer>();
+        final List<Integer> scratchIndices = new ArrayList<>();
 
         // build forward... start with the initial face
-        final List<NvFaceInfo> forwardFaces = new ArrayList<NvFaceInfo>();
-        final List<NvFaceInfo> backwardFaces = new ArrayList<NvFaceInfo>();
+        final List<NvFaceInfo> forwardFaces = new ArrayList<>();
+        final List<NvFaceInfo> backwardFaces = new ArrayList<>();
         forwardFaces.add(_startInfo._startFace);
 
         markTriangle(_startInfo._startFace);
@@ -250,7 +250,7 @@ final class NvStripInfo {
 
         // tempAllFaces is going to be forwardFaces + backwardFaces
         // it's used for Unique()
-        final List<NvFaceInfo> tempAllFaces = new ArrayList<NvFaceInfo>();
+        final List<NvFaceInfo> tempAllFaces = new ArrayList<>();
         for (int i = 0; i < forwardFaces.size(); i++) {
             tempAllFaces.add(forwardFaces.get(i));
         }

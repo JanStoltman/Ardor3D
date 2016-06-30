@@ -60,7 +60,7 @@ public class TextureClipmap {
     private Texture3D textureClipmap;
     private GLSLShaderObjectsState textureClipmapShader;
 
-    private final List<LevelData> levelDataList = new ArrayList<LevelData>();
+    private final List<LevelData> levelDataList = new ArrayList<>();
 
     private final FloatBuffer sliceDataBuffer;
 
@@ -70,7 +70,7 @@ public class TextureClipmap {
 
     private final List<TextureCache> cacheList;
 
-    private final DoubleBufferedList<Region> mailBox = new DoubleBufferedList<Region>();
+    private final DoubleBufferedList<Region> mailBox = new DoubleBufferedList<>();
 
     private final boolean useAlpha;
     private final int colorBits;
@@ -115,7 +115,7 @@ public class TextureClipmap {
         createTexture();
     }
 
-    private final List<Long> timers = new ArrayList<Long>();
+    private final List<Long> timers = new ArrayList<>();
 
     public void update(final Renderer renderer, final ReadOnlyVector3 position) {
         eyePosition.set(position);
@@ -279,7 +279,7 @@ public class TextureClipmap {
 
                 Collections.sort(regionList, regionSorter);
 
-                final Set<Integer> affectedUnits = new HashSet<Integer>();
+                final Set<Integer> affectedUnits = new HashSet<>();
                 for (int i = regionList.size() - 1; i >= 0; i--) {
                     final Region region = regionList.get(i);
 

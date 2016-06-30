@@ -36,7 +36,7 @@ public class AnimationLayer implements StateOwner {
     private static final Logger logger = Logger.getLogger(AnimationLayer.class.getName());
 
     /** Our animation states */
-    private final Map<String, SteadyState> _steadyStates = new HashMap<String, SteadyState>();
+    private final Map<String, SteadyState> _steadyStates = new HashMap<>();
 
     /** Our current animation state */
     private AbstractFiniteState _currentState;
@@ -51,7 +51,7 @@ public class AnimationLayer implements StateOwner {
     private final String _name;
 
     /** A map of general transitions for moving from the current state to another. */
-    private final Map<String, AbstractTransitionState> _transitions = new HashMap<String, AbstractTransitionState>();
+    private final Map<String, AbstractTransitionState> _transitions = new HashMap<>();
 
     /**
      * Construct a new AnimationLayer.

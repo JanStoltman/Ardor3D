@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import com.ardor3d.annotation.Immutable;
 
@@ -25,8 +26,8 @@ public class ControllerState {
 
     public static final ControllerState NOTHING = new ControllerState(0);
 
-    protected final Map<String, Map<String, Float>> _controllerStates = new LinkedHashMap<String, Map<String, Float>>();
-    protected final List<ControllerEvent> _eventsSinceLastState = new ArrayList<ControllerEvent>();
+    protected final Map<String, Map<String, Float>> _controllerStates = new LinkedHashMap<>();
+    protected final List<ControllerEvent> _eventsSinceLastState = new ArrayList<>();
 
     protected ControllerState(final int ignore) {}
 
@@ -50,7 +51,7 @@ public class ControllerState {
         if (_controllerStates.containsKey(controllerName)) {
             controllerState = _controllerStates.get(controllerName);
         } else {
-            controllerState = new LinkedHashMap<String, Float>();
+            controllerState = new LinkedHashMap<>();
             _controllerStates.put(controllerName, controllerState);
         }
 
@@ -65,6 +66,11 @@ public class ControllerState {
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(_controllerStates);
     }
 
     @Override
@@ -94,7 +100,7 @@ public class ControllerState {
     private void duplicateStates(final Map<String, Map<String, Float>> store) {
         store.clear();
         for (final Entry<String, Map<String, Float>> entry : _controllerStates.entrySet()) {
-            store.put(entry.getKey(), new LinkedHashMap<String, Float>(entry.getValue()));
+            store.put(entry.getKey(), new LinkedHashMap<>(entry.getValue()));
         }
     }
 
@@ -119,11 +125,11 @@ public class ControllerState {
     }
 
     public List<String> getControllerNames() {
-        return new ArrayList<String>(_controllerStates.keySet());
+        return new ArrayList<>(_controllerStates.keySet());
     }
 
     public List<String> getControllerComponentNames(final String controller) {
-        return new ArrayList<String>(_controllerStates.get(controller).keySet());
+        return new ArrayList<>(_controllerStates.get(controller).keySet());
     }
 
     public Map<String, Float> getControllerComponentValues(final String controller) {

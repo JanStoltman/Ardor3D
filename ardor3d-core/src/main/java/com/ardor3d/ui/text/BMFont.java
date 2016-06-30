@@ -55,11 +55,11 @@ import com.ardor3d.util.resource.ResourceSource;
 public class BMFont implements Savable {
     private static Logger logger = Logger.getLogger(BMFont.class.getName());
 
-    private final Map<Integer, Char> _charMap = new HashMap<Integer, Char>();
-    private final Map<Integer, Map<Integer, Integer>> _kernMap = new HashMap<Integer, Map<Integer, Integer>>();
+    private final Map<Integer, Char> _charMap = new HashMap<>();
+    private final Map<Integer, Map<Integer, Integer>> _kernMap = new HashMap<>();
 
     private String _styleName; // e.g. "Courier-12-bold"
-    private final ArrayList<Page> _pages = new ArrayList<Page>();
+    private final ArrayList<Page> _pages = new ArrayList<>();
     private Texture _pageTexture;
     private RenderStateSetter _blendStateSetter = null;
     private RenderStateSetter _alphaStateSetter = null;
@@ -424,7 +424,7 @@ public class BMFont implements Savable {
     }
 
     public List<Integer> getMappedChars() {
-        return new ArrayList<Integer>(_charMap.keySet());
+        return new ArrayList<>(_charMap.keySet());
     }
 
     public Map<Integer, Integer> getKerningsForCharacter(final int val) {
@@ -556,7 +556,7 @@ public class BMFont implements Savable {
         Map<Integer, Integer> amtHash;
         amtHash = _kernMap.get(first);
         if (amtHash == null) {
-            amtHash = new HashMap<Integer, Integer>();
+            amtHash = new HashMap<>();
             _kernMap.put(first, amtHash);
         }
         amtHash.put(second, amount);
@@ -884,10 +884,10 @@ public class BMFont implements Savable {
         // Pages
         capsule.writeSavableList(_pages, "pages", _pages);
         // Chars
-        capsule.writeSavableList(new ArrayList<Char>(_charMap.values()), "charMap", null);
+        capsule.writeSavableList(new ArrayList<>(_charMap.values()), "charMap", null);
 
         // Kernings
-        final List<Kerning> kernings = new ArrayList<Kerning>();
+        final List<Kerning> kernings = new ArrayList<>();
         for (final Iterator<Integer> iterator = _kernMap.keySet().iterator(); iterator.hasNext();) {
             final Integer first = iterator.next();
             final Map<Integer, Integer> amtHash = _kernMap.get(first);
@@ -938,7 +938,7 @@ public class BMFont implements Savable {
             Map<Integer, Integer> amtHash;
             amtHash = _kernMap.get(k.first);
             if (amtHash == null) {
-                amtHash = new HashMap<Integer, Integer>();
+                amtHash = new HashMap<>();
                 _kernMap.put(k.first, amtHash);
             }
             amtHash.put(k.second, k.amount);

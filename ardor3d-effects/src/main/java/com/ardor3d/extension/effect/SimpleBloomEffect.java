@@ -32,7 +32,7 @@ public class SimpleBloomEffect extends RenderEffect {
     protected static final String RT_SECONDARY = "LDRBloomEffect.SECONDARY";
 
     protected String shaderDirectory = "com/ardor3d/extension/effect/";
-    protected final List<Spatial> _bloomItems = new ArrayList<Spatial>();
+    protected final List<Spatial> _bloomItems = new ArrayList<>();
 
     protected float _downsampleRatio = .33f;
     private final GLSLShaderObjectsState _extractionShader, _blurHorizShader, _blurVertShader;

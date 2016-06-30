@@ -10,8 +10,8 @@ import java.util.List;
  * @param <T>
  */
 public class DoubleBufferedList<T> {
-    private List<T> frontList = new ArrayList<T>();
-    private List<T> backList = new ArrayList<T>();
+    private List<T> frontList = new ArrayList<>();
+    private List<T> backList = new ArrayList<>();
 
     /**
      * The add method can be called at any point.

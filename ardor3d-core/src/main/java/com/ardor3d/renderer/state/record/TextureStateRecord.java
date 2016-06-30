@@ -46,7 +46,7 @@ public class TextureStateRecord extends StateRecord {
     public final DoubleBuffer tmp_matrixBuffer = BufferUtils.createDoubleBuffer(16);
 
     public TextureStateRecord() {
-        textures = new HashMap<Integer, TextureRecord>();
+        textures = new HashMap<>();
         units = new TextureUnitRecord[TextureState.MAX_TEXTURES];
         for (int i = 0; i < units.length; i++) {
             units[i] = new TextureUnitRecord();

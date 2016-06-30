@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -80,7 +80,7 @@ public class NormalGenerator {
 
     /**
      * Generates the normals for one Mesh, using the specified crease angle.
-     * 
+     *
      * @param mesh
      *            The Mesh to generate the normals for
      * @param creaseAngle
@@ -97,7 +97,7 @@ public class NormalGenerator {
 
     /**
      * Generates the normals for one Mesh, using the crease angle stored in the field <code>creaseAngle</code>
-     * 
+     *
      * @param mesh
      *            The Mesh to generate the normals for
      */
@@ -252,12 +252,12 @@ public class NormalGenerator {
      */
     private void initialize() {
         // Copy the source vertices as a base for the normal generation
-        _destVerts = new ArrayList<Vector3>(_sourceVerts.length);
+        _destVerts = new ArrayList<>(_sourceVerts.length);
         for (int i = 0; i < _sourceVerts.length; i++) {
             _destVerts.add(_sourceVerts[i]);
         }
         if (_sourceColors != null) {
-            _destColors = new ArrayList<ColorRGBA>(_sourceColors.length);
+            _destColors = new ArrayList<>(_sourceColors.length);
             for (int i = 0; i < _sourceColors.length; i++) {
                 _destColors.add(_sourceColors[i]);
             }
@@ -265,7 +265,7 @@ public class NormalGenerator {
             _destColors = null;
         }
         if (_sourceTexCoords != null) {
-            _destTexCoords = new ArrayList<Vector2>(_sourceTexCoords.length);
+            _destTexCoords = new ArrayList<>(_sourceTexCoords.length);
             for (int i = 0; i < _sourceTexCoords.length; i++) {
                 _destTexCoords.add(_sourceTexCoords[i]);
             }
@@ -274,7 +274,7 @@ public class NormalGenerator {
         }
 
         // Set up the base triangles of the mesh and their face normals
-        _triangles = new LinkedList<Triangle>();
+        _triangles = new LinkedList<>();
         for (int i = 0; i * 3 < _sourceInds.length; i++) {
             final Triangle tri = new Triangle(_sourceInds[i * 3 + 0], _sourceInds[i * 3 + 1], _sourceInds[i * 3 + 2]);
             tri.computeNormal(_sourceVerts);
@@ -283,12 +283,12 @@ public class NormalGenerator {
 
         // Set up the lists to store the created mesh split data
         if (_splitMeshes == null) {
-            _splitMeshes = new LinkedList<LinkedList<Triangle>>();
+            _splitMeshes = new LinkedList<>();
         } else {
             _splitMeshes.clear();
         }
         if (_splitMeshBorders == null) {
-            _splitMeshBorders = new LinkedList<LinkedList<Edge>>();
+            _splitMeshBorders = new LinkedList<>();
         } else {
             _splitMeshBorders.clear();
         }
@@ -300,8 +300,8 @@ public class NormalGenerator {
      * border of the split mesh in splitMeshBorders.
      */
     private void createMeshSplit() {
-        _destTris = new LinkedList<Triangle>();
-        _edges = new LinkedList<Edge>();
+        _destTris = new LinkedList<>();
+        _edges = new LinkedList<>();
         final Triangle tri = _triangles.removeFirst();
         _destTris.addLast(tri);
         _edges.addLast(tri.edges[0]);
@@ -321,9 +321,10 @@ public class NormalGenerator {
      * Finds one triangle connected to the split mesh currently being assembled over an edge whose angle does not exceed
      * the creaseAngle. The Triangle is inserted into destTris and the list edges is updated with the edges of the
      * triangle accordingly.
-     * 
+     *
      * @return The triangle, if one was found, or <code>null</code> otherwise
      */
+    @SuppressWarnings("null")
     private Triangle insertTriangle() {
         final ListIterator<Triangle> triIt = _triangles.listIterator();
         ListIterator<Edge> edgeIt = null;
@@ -386,7 +387,7 @@ public class NormalGenerator {
      * Connects the remaining edges of the given triangle to the split mesh currently being assembled, if possible. The
      * respective edges are removed from the border, and if the crease angle at this additional connection is exceeded,
      * the vertices at this link are duplicated.
-     * 
+     *
      * @param triangle
      *            The triangle being connected to the split mesh
      * @param i
@@ -431,7 +432,7 @@ public class NormalGenerator {
 
     /**
      * Checks if the transition between the tqo given triangles should be smooth, according to the creaseAngle.
-     * 
+     *
      * @param tri1
      *            The first triangle
      * @param tri2
@@ -446,7 +447,7 @@ public class NormalGenerator {
     /**
      * Copies the vertex, color and texCoord at the given index in each of the source lists (if not null) and adds it to
      * the end of the list.
-     * 
+     *
      * @param index
      *            The index to copy the value in each list from
      */
@@ -542,7 +543,7 @@ public class NormalGenerator {
     /**
      * If the triangle contains the given index, it is replaced with the replacement index, unless it is already
      * overridden with a newIndex (newI0, newI1).
-     * 
+     *
      * @param tri
      *            The triangle
      * @param index
@@ -661,7 +662,7 @@ public class NormalGenerator {
     /**
      * A helper class for the normal generator. Stores one triangle, consisting of 3 edges, and the normal for the
      * triangle.
-     * 
+     *
      * @author M. Sattler
      */
     private class Triangle {
@@ -674,7 +675,7 @@ public class NormalGenerator {
 
         /**
          * Creates the triangle.
-         * 
+         *
          * @param i0
          *            The index of vertex 0 in the triangle
          * @param i1
@@ -690,7 +691,7 @@ public class NormalGenerator {
 
         /**
          * Computes the normal from the three vertices in the given array that are indexed by the edges.
-         * 
+         *
          * @param verts
          *            The array containing the vertices
          */
@@ -708,6 +709,7 @@ public class NormalGenerator {
          *            An Edge to get the index of
          * @return The index of the edge in the triangle, or -1, if it is not contained in the triangle
          */
+        @SuppressWarnings("unused")
         public int indexOf(final Edge edge) {
             for (int i = 0; i < 3; i++) {
                 if (edges[i] == edge) {
@@ -743,7 +745,7 @@ public class NormalGenerator {
     /**
      * Another helper class for the normal generator. Stores one edge in the mesh, consisting of two vertex indices, the
      * triangle the edge belongs to, and, if applicable, another triangle the edge is connected to.
-     * 
+     *
      * @author M. Sattler
      */
     private class Edge {
@@ -760,13 +762,14 @@ public class NormalGenerator {
         public Triangle parent;
 
         // A Triangle this Edge is connected to, or null, if it is not connected
+        @SuppressWarnings("unused")
         public Triangle connected;
 
         // public Edge() {}
 
         /**
          * Creates this edge.
-         * 
+         *
          * @param parent
          *            The Triangle containing this Edge
          * @param i0
@@ -782,7 +785,7 @@ public class NormalGenerator {
 
         /**
          * Checks if this edge is connected to another one.
-         * 
+         *
          * @param other
          *            The other edge
          * @return <code>true</code>, if the indices in this edge and the other one are identical, but in inverse order

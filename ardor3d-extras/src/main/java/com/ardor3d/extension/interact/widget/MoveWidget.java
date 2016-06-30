@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -48,8 +48,6 @@ public class MoveWidget extends AbstractInteractWidget {
     protected ColorRGBA _xColor = new ColorRGBA(1, 0, 0, .65f);
     protected ColorRGBA _yColor = new ColorRGBA(0, 1, 0, .65f);
     protected ColorRGBA _zColor = new ColorRGBA(0, 0, 1, .65f);
-
-    protected InteractMatrix _interactMatrix = InteractMatrix.World;
 
     public MoveWidget() {
         _handle = new Node("moveHandle");
@@ -275,16 +273,6 @@ public class MoveWidget extends AbstractInteractWidget {
         }
 
         return _calcVec3D.subtractLocal(_calcVec3C);
-    }
-
-    @Override
-    public void setInteractMatrix(final InteractMatrix matrix) {
-        _interactMatrix = matrix;
-    }
-
-    @Override
-    public InteractMatrix getInteractMatrix() {
-        return _interactMatrix;
     }
 
     public InteractArrow getXArrow() {

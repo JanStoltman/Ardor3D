@@ -144,7 +144,7 @@ public abstract class GeneratedImageFactory {
         double val;
         final double rangeDiv = 1.0 / (rangeEnd - rangeStart);
         // prepare list of image slices.
-        final List<ByteBuffer> dataList = new ArrayList<ByteBuffer>(depth);
+        final List<ByteBuffer> dataList = new ArrayList<>(depth);
 
         final byte[] data = new byte[width * height];
         for (double z = 0; z < depth; z++) {
@@ -199,7 +199,7 @@ public abstract class GeneratedImageFactory {
             final ReadOnlyColorRGBA... colorTable) {
         assert (colorTable.length == 256) : "color table must be size 256.";
 
-        final List<ByteBuffer> dataList = new ArrayList<ByteBuffer>(lumImage.getDepth());
+        final List<ByteBuffer> dataList = new ArrayList<>(lumImage.getDepth());
         ReadOnlyColorRGBA c;
         for (int i = 0; i < lumImage.getDepth(); i++) {
             final ByteBuffer src = lumImage.getData(i);

@@ -3,19 +3,17 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.input.logical;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
 import java.util.EnumMap;
 import java.util.EnumSet;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ardor3d.input.ButtonState;
@@ -29,8 +27,8 @@ import com.ardor3d.input.MouseState;
 
 public class TestStandardConditions {
     final KeyboardState ks = new KeyboardState(EnumSet.noneOf(Key.class), KeyEvent.NOTHING);
-    final MouseState ms = new MouseState(0, 0, 0, 0, 0, MouseButton.makeMap(ButtonState.UP, ButtonState.UP,
-            ButtonState.UP), null);
+    final MouseState ms = new MouseState(0, 0, 0, 0, 0,
+            MouseButton.makeMap(ButtonState.UP, ButtonState.UP, ButtonState.UP), null);
     final ControllerState cs = new ControllerState();
     InputState is1, is2, is3, is4, is5;
 
@@ -40,8 +38,8 @@ public class TestStandardConditions {
     EnumMap<MouseButton, ButtonState> bothUp = MouseButton.makeMap(ButtonState.UP, ButtonState.UP, ButtonState.UP);
     EnumMap<MouseButton, ButtonState> upDown = MouseButton.makeMap(ButtonState.UP, ButtonState.DOWN, ButtonState.UP);
     EnumMap<MouseButton, ButtonState> downUp = MouseButton.makeMap(ButtonState.DOWN, ButtonState.UP, ButtonState.UP);
-    EnumMap<MouseButton, ButtonState> bothDown = MouseButton
-            .makeMap(ButtonState.DOWN, ButtonState.DOWN, ButtonState.UP);
+    EnumMap<MouseButton, ButtonState> bothDown = MouseButton.makeMap(ButtonState.DOWN, ButtonState.DOWN,
+            ButtonState.UP);
 
     @Test
     public void testKeyHeld1() throws Exception {
@@ -51,16 +49,16 @@ public class TestStandardConditions {
         is2 = new InputState(aDown, ms, cs);
         is3 = new InputState(bDown, ms, cs);
 
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is1)));
-        assertTrue("down", kh.apply(new TwoInputStates(is1, is2)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is3)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is2, is3)));
-        assertTrue("not down", kh.apply(new TwoInputStates(is2, is2)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is1)));
+        Assert.assertTrue("down", kh.apply(new TwoInputStates(is1, is2)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is3)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is2, is3)));
+        Assert.assertTrue("not down", kh.apply(new TwoInputStates(is2, is2)));
 
-        assertFalse("empty1", kh.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
-        assertFalse("empty2", kh.apply(new TwoInputStates(is1, InputState.EMPTY)));
-        assertFalse("empty3", kh.apply(new TwoInputStates(InputState.EMPTY, is1)));
-        assertTrue("empty4", kh.apply(new TwoInputStates(InputState.EMPTY, is2)));
+        Assert.assertFalse("empty1", kh.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
+        Assert.assertFalse("empty2", kh.apply(new TwoInputStates(is1, InputState.EMPTY)));
+        Assert.assertFalse("empty3", kh.apply(new TwoInputStates(InputState.EMPTY, is1)));
+        Assert.assertTrue("empty4", kh.apply(new TwoInputStates(InputState.EMPTY, is2)));
     }
 
     @Test(expected = NullPointerException.class)
@@ -76,16 +74,16 @@ public class TestStandardConditions {
         is2 = new InputState(aDown, ms, cs);
         is3 = new InputState(bDown, ms, cs);
 
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is1)));
-        assertTrue("down", kh.apply(new TwoInputStates(is1, is2)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is3)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is2, is3)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is2, is2)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is1)));
+        Assert.assertTrue("down", kh.apply(new TwoInputStates(is1, is2)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is3)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is2, is3)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is2, is2)));
 
-        assertFalse("empty1", kh.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
-        assertFalse("empty2", kh.apply(new TwoInputStates(is1, InputState.EMPTY)));
-        assertFalse("empty3", kh.apply(new TwoInputStates(InputState.EMPTY, is1)));
-        assertTrue("empty4", kh.apply(new TwoInputStates(InputState.EMPTY, is2)));
+        Assert.assertFalse("empty1", kh.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
+        Assert.assertFalse("empty2", kh.apply(new TwoInputStates(is1, InputState.EMPTY)));
+        Assert.assertFalse("empty3", kh.apply(new TwoInputStates(InputState.EMPTY, is1)));
+        Assert.assertTrue("empty4", kh.apply(new TwoInputStates(InputState.EMPTY, is2)));
     }
 
     @Test(expected = NullPointerException.class)
@@ -101,16 +99,16 @@ public class TestStandardConditions {
         is2 = new InputState(aDown, ms, cs);
         is3 = new InputState(bDown, ms, cs);
 
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is1)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is2)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is1, is3)));
-        assertTrue("not down", kh.apply(new TwoInputStates(is2, is3)));
-        assertFalse("not down", kh.apply(new TwoInputStates(is2, is2)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is1)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is2)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is1, is3)));
+        Assert.assertTrue("not down", kh.apply(new TwoInputStates(is2, is3)));
+        Assert.assertFalse("not down", kh.apply(new TwoInputStates(is2, is2)));
 
-        assertFalse("empty1", kh.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
-        assertFalse("empty2", kh.apply(new TwoInputStates(is1, InputState.EMPTY)));
-        assertFalse("empty3", kh.apply(new TwoInputStates(InputState.EMPTY, is1)));
-        assertFalse("empty4", kh.apply(new TwoInputStates(InputState.EMPTY, is2)));
+        Assert.assertFalse("empty1", kh.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
+        Assert.assertFalse("empty2", kh.apply(new TwoInputStates(is1, InputState.EMPTY)));
+        Assert.assertFalse("empty3", kh.apply(new TwoInputStates(InputState.EMPTY, is1)));
+        Assert.assertFalse("empty4", kh.apply(new TwoInputStates(InputState.EMPTY, is2)));
     }
 
     @Test(expected = NullPointerException.class)
@@ -133,17 +131,17 @@ public class TestStandardConditions {
         is4 = new InputState(ks, ms4, cs);
         is5 = new InputState(ks, ms5, cs);
 
-        assertFalse("mm1", mm.apply(new TwoInputStates(is1, is1)));
-        assertTrue("mm2", mm.apply(new TwoInputStates(is1, is2)));
-        assertFalse("mm3", mm.apply(new TwoInputStates(is2, is3)));
-        assertTrue("mm4", mm.apply(new TwoInputStates(is3, is4)));
-        assertTrue("mm5", mm.apply(new TwoInputStates(is4, is5)));
-        assertFalse("mm6", mm.apply(new TwoInputStates(is2, is2)));
+        Assert.assertFalse("mm1", mm.apply(new TwoInputStates(is1, is1)));
+        Assert.assertTrue("mm2", mm.apply(new TwoInputStates(is1, is2)));
+        Assert.assertFalse("mm3", mm.apply(new TwoInputStates(is2, is3)));
+        Assert.assertTrue("mm4", mm.apply(new TwoInputStates(is3, is4)));
+        Assert.assertTrue("mm5", mm.apply(new TwoInputStates(is4, is5)));
+        Assert.assertFalse("mm6", mm.apply(new TwoInputStates(is2, is2)));
 
-        assertFalse("empty1", mm.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
-        assertFalse("empty2", mm.apply(new TwoInputStates(is1, InputState.EMPTY)));
-        assertFalse("empty3", mm.apply(new TwoInputStates(InputState.EMPTY, is1)));
-        assertTrue("empty4", mm.apply(new TwoInputStates(InputState.EMPTY, is2)));
+        Assert.assertFalse("empty1", mm.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
+        Assert.assertFalse("empty2", mm.apply(new TwoInputStates(is1, InputState.EMPTY)));
+        Assert.assertFalse("empty3", mm.apply(new TwoInputStates(InputState.EMPTY, is1)));
+        Assert.assertTrue("empty4", mm.apply(new TwoInputStates(InputState.EMPTY, is2)));
     }
 
     @Test
@@ -161,16 +159,16 @@ public class TestStandardConditions {
         is4 = new InputState(ks, ms4, cs);
         is5 = new InputState(ks, ms5, cs);
 
-        assertFalse("mm1", mm.apply(new TwoInputStates(is1, is1)));
-        assertFalse("mm2", mm.apply(new TwoInputStates(is1, is2)));
-        assertTrue("mm3", mm.apply(new TwoInputStates(is2, is3)));
-        assertFalse("mm4", mm.apply(new TwoInputStates(is3, is4)));
-        assertTrue("mm5", mm.apply(new TwoInputStates(is4, is5)));
+        Assert.assertFalse("mm1", mm.apply(new TwoInputStates(is1, is1)));
+        Assert.assertFalse("mm2", mm.apply(new TwoInputStates(is1, is2)));
+        Assert.assertTrue("mm3", mm.apply(new TwoInputStates(is2, is3)));
+        Assert.assertFalse("mm4", mm.apply(new TwoInputStates(is3, is4)));
+        Assert.assertTrue("mm5", mm.apply(new TwoInputStates(is4, is5)));
 
-        assertFalse("empty1", mm.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
-        assertFalse("empty2", mm.apply(new TwoInputStates(is1, InputState.EMPTY)));
-        assertFalse("empty3", mm.apply(new TwoInputStates(InputState.EMPTY, is1)));
-        assertTrue("empty4", mm.apply(new TwoInputStates(InputState.EMPTY, is3)));
+        Assert.assertFalse("empty1", mm.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
+        Assert.assertFalse("empty2", mm.apply(new TwoInputStates(is1, InputState.EMPTY)));
+        Assert.assertFalse("empty3", mm.apply(new TwoInputStates(InputState.EMPTY, is1)));
+        Assert.assertTrue("empty4", mm.apply(new TwoInputStates(InputState.EMPTY, is3)));
     }
 
     @Test
@@ -188,15 +186,15 @@ public class TestStandardConditions {
         is4 = new InputState(ks, ms4, cs);
         is5 = new InputState(ks, ms5, cs);
 
-        assertFalse("mm1", mm.apply(new TwoInputStates(is1, is1)));
-        assertFalse("mm2", mm.apply(new TwoInputStates(is1, is2)));
-        assertTrue("mm3", mm.apply(new TwoInputStates(is2, is3)));
-        assertTrue("mm4", mm.apply(new TwoInputStates(is3, is4)));
-        assertFalse("mm5", mm.apply(new TwoInputStates(is4, is5)));
+        Assert.assertFalse("mm1", mm.apply(new TwoInputStates(is1, is1)));
+        Assert.assertFalse("mm2", mm.apply(new TwoInputStates(is1, is2)));
+        Assert.assertTrue("mm3", mm.apply(new TwoInputStates(is2, is3)));
+        Assert.assertTrue("mm4", mm.apply(new TwoInputStates(is3, is4)));
+        Assert.assertFalse("mm5", mm.apply(new TwoInputStates(is4, is5)));
 
-        assertFalse("empty1", mm.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
-        assertFalse("empty2", mm.apply(new TwoInputStates(is1, InputState.EMPTY)));
-        assertFalse("empty3", mm.apply(new TwoInputStates(InputState.EMPTY, is1)));
-        assertTrue("empty4", mm.apply(new TwoInputStates(InputState.EMPTY, is3)));
+        Assert.assertFalse("empty1", mm.apply(new TwoInputStates(InputState.EMPTY, InputState.EMPTY)));
+        Assert.assertFalse("empty2", mm.apply(new TwoInputStates(is1, InputState.EMPTY)));
+        Assert.assertFalse("empty3", mm.apply(new TwoInputStates(InputState.EMPTY, is1)));
+        Assert.assertTrue("empty4", mm.apply(new TwoInputStates(InputState.EMPTY, is3)));
     }
 }

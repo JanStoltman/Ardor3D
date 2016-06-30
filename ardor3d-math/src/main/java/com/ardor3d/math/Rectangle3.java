@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
 import com.ardor3d.math.type.ReadOnlyRectangle3;
 import com.ardor3d.math.type.ReadOnlyVector3;
@@ -43,7 +44,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Constructor creates a new Rectangle3 using the values of the provided source rectangle.
-     * 
+     *
      * @param source
      *            the rectangle to copy from
      */
@@ -53,7 +54,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Constructor creates a new Rectangle3 with defined A, B, and C points that define the area of the rectangle.
-     * 
+     *
      * @param a
      *            the first corner of the rectangle.
      * @param b
@@ -69,7 +70,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Copy the value of the given source Rectangle3 into this Rectangle3.
-     * 
+     *
      * @param source
      *            the source of the data to copy.
      * @return this rectangle for chaining
@@ -85,7 +86,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * getA returns the first point of the rectangle.
-     * 
+     *
      * @return the first point of the rectangle.
      */
     @Override
@@ -95,7 +96,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * setA sets the first point of the rectangle.
-     * 
+     *
      * @param a
      *            the first point of the rectangle.
      */
@@ -105,7 +106,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * getB returns the second point of the rectangle.
-     * 
+     *
      * @return the second point of the rectangle.
      */
     @Override
@@ -115,7 +116,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * setB sets the second point of the rectangle.
-     * 
+     *
      * @param b
      *            the second point of the rectangle.
      */
@@ -125,7 +126,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * getC returns the third point of the rectangle.
-     * 
+     *
      * @return the third point of the rectangle.
      */
     @Override
@@ -135,7 +136,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * setC sets the third point of the rectangle.
-     * 
+     *
      * @param c
      *            the third point of the rectangle.
      */
@@ -145,7 +146,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * random returns a random point within the plane defined by: A, B, C, and (B + C) - A.
-     * 
+     *
      * @param result
      *            Vector to store result in
      * @return a random point within the rectangle.
@@ -184,13 +185,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
      */
     @Override
     public int hashCode() {
-        int result = 17;
-
-        result += 31 * result + _a.hashCode();
-        result += 31 * result + _b.hashCode();
-        result += 31 * result + _c.hashCode();
-
-        return result;
+        return Objects.hash(getA(), getB(), getC());
     }
 
     /**
@@ -248,7 +243,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param in
      *            ObjectInput
      * @throws IOException
@@ -263,7 +258,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
 
     /**
      * Used with serialization. Not to be called manually.
-     * 
+     *
      * @param out
      *            ObjectOutput
      * @throws IOException
@@ -294,7 +289,7 @@ public class Rectangle3 implements Cloneable, Savable, Externalizable, ReadOnlyR
     /**
      * Releases a Rectangle3 back to be used by a future call to fetchTempInstance. TAKE CARE: this object should no
      * longer have other classes referencing it or "Bad Things" will happen.
-     * 
+     *
      * @param rectangle
      *            the Rectangle3 to release.
      */

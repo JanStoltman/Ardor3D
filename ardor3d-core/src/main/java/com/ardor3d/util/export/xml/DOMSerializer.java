@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
 /**
  * The DOMSerializer was based primarily off the DOMSerializer.java class from the "Java and XML" 3rd Edition book by
  * Brett McLaughlin, and Justin Edelson. Some modifications were made to support formatting of elements and attributes.
- * 
+ *
  */
 public class DOMSerializer {
 
@@ -51,7 +51,7 @@ public class DOMSerializer {
     }
 
     public void setIndent(final int numSpaces) {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < numSpaces; i++) {
             buffer.append('\t');
         }

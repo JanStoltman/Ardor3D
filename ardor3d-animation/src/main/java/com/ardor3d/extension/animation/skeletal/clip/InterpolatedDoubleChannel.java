@@ -92,8 +92,8 @@ public class InterpolatedDoubleChannel extends AbstractAnimationChannel {
         if (startTime > endTime) {
             throw new IllegalArgumentException("startTime > endTime");
         }
-        final List<Float> times = new ArrayList<Float>();
-        final List<Double> keys = new ArrayList<Double>();
+        final List<Float> times = new ArrayList<>();
+        final List<Double> keys = new ArrayList<>();
 
         final double[] data = new double[1];
 

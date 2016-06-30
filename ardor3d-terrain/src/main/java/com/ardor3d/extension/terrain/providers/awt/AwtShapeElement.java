@@ -40,7 +40,7 @@ public class AwtShapeElement extends AbstractAwtElement {
 
     protected Vector4 _margin = new Vector4(1, 1, 1, 1);
 
-    protected final Map<Integer, BasicStroke> _strokes = new HashMap<Integer, BasicStroke>();
+    protected final Map<Integer, BasicStroke> _strokes = new HashMap<>();
 
     public AwtShapeElement(final Shape shape) {
         this(shape, Transform.IDENTITY, null);

@@ -43,7 +43,7 @@ public class ArrayTextureSource implements TextureSource {
 
     @Override
     public TextureConfiguration getConfiguration() throws Exception {
-        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<Integer, TextureStoreFormat>();
+        final Map<Integer, TextureStoreFormat> textureStoreFormat = new HashMap<>();
         textureStoreFormat.put(0, TextureStoreFormat.Luminance8);
 
         return new TextureConfiguration(heightMaps.size(), textureStoreFormat, tileSize, 1f, true, false);
@@ -52,7 +52,7 @@ public class ArrayTextureSource implements TextureSource {
     @Override
     public Set<Tile> getValidTiles(final int clipmapLevel, final int tileX, final int tileY, final int numTilesX,
             final int numTilesY) throws Exception {
-        final Set<Tile> validTiles = new HashSet<Tile>();
+        final Set<Tile> validTiles = new HashSet<>();
 
         final int heightMapSize = heightMapSizes.get(clipmapLevel);
         for (int y = 0; y < numTilesY; y++) {

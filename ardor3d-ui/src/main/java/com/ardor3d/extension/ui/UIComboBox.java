@@ -40,7 +40,7 @@ public class UIComboBox extends UIPanel {
 
     protected int _selectedIndex = 0;
 
-    private final List<SelectionListener<UIComboBox>> _listeners = new ArrayList<SelectionListener<UIComboBox>>();
+    private final List<SelectionListener<UIComboBox>> _listeners = new ArrayList<>();
 
     private SkinningTask _itemSkinCallback;
 

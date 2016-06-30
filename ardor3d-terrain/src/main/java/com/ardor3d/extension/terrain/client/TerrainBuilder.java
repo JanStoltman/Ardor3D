@@ -51,7 +51,7 @@ public class TerrainBuilder {
 
     private boolean showDebugPanels = false;
 
-    private final List<TextureSource> extraTextureSources = new ArrayList<TextureSource>();
+    private final List<TextureSource> extraTextureSources = new ArrayList<>();
 
     public TerrainBuilder(final TerrainDataProvider terrainDataProvider, final Camera camera) {
         this.terrainDataProvider = terrainDataProvider;
@@ -112,7 +112,7 @@ public class TerrainBuilder {
 
         logger.info("server clipmapLevels: " + clipmapLevels);
 
-        final List<TerrainCache> cacheList = new ArrayList<TerrainCache>();
+        final List<TerrainCache> cacheList = new ArrayList<>();
         TerrainCache parentCache = null;
 
         final int baseLevel = Math.max(clipmapLevels - clipLevelCount, 0);
@@ -167,7 +167,7 @@ public class TerrainBuilder {
 
         logger.info("server clipmapLevels: " + clipmapLevels);
 
-        final List<TextureCache> cacheList = new ArrayList<TextureCache>();
+        final List<TextureCache> cacheList = new ArrayList<>();
         TextureCache parentCache = null;
         final int baseLevel = Math.max(clipmapLevels - textureClipLevelCount, 0);
         int level = textureClipLevelCount - 1;
