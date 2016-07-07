@@ -49,24 +49,20 @@ public class ObjImporter {
         return _loadTextures;
     }
 
-    public ObjImporter setLoadTextures(final boolean loadTextures) {
+    public void setLoadTextures(final boolean loadTextures) {
         _loadTextures = loadTextures;
-        return this;
     }
 
-    public ObjImporter setTextureLocator(final ResourceLocator locator) {
+    public void setTextureLocator(final ResourceLocator locator) {
         _textureLocator = locator;
-        return this;
     }
 
-    public ObjImporter setModelLocator(final ResourceLocator locator) {
+    public void setModelLocator(final ResourceLocator locator) {
         _modelLocator = locator;
-        return this;
     }
 
-    public ObjImporter setMaterialLocator(final ResourceLocator locator) {
+    public void setMaterialLocator(final ResourceLocator locator) {
         _materialLocator = locator;
-        return this;
     }
 
     public void setFlipTextureVertically(final boolean flipTextureVertically) {
@@ -157,11 +153,9 @@ public class ObjImporter {
      * @return an ObjGeometryStore data object containing the scene and other useful elements.
      */
     public ObjGeometryStore load(final ResourceSource resource, final GeometryTool geometryTool) {
-        try {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()))) {
             final ObjGeometryStore store = new ObjGeometryStore(geometryTool);
             long currentSmoothGroup = -1;
-
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()));
             String line;
             int lineNo = 0;
             while ((line = reader.readLine()) != null) {
@@ -393,8 +387,8 @@ public class ObjImporter {
             store.commitObjects();
             store.cleanup();
             return store;
-        } catch (final Exception e) {
-            throw new Error("Unable to load obj resource from URL: " + resource, e);
+        } catch (final Throwable t) {
+            throw new Error("Unable to load obj resource from URL: " + resource, t);
         }
     }
 
