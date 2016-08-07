@@ -1,5 +1,5 @@
 /**
- * Copyright  2008-2012 Ardor Labs, Inc.
+ * Copyright  2008-2014 Ardor Labs, Inc.
  *
  * This file is part of Ardor3D.
  *

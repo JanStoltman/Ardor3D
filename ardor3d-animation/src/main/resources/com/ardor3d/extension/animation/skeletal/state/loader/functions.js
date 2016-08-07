@@ -5,7 +5,7 @@ importPackage(Packages.com.ardor3d.extension.animation.skeletal.layer);
 importPackage(Packages.com.ardor3d.extension.animation.skeletal.state);
 
 /**
- * Copyright (c) 2008-2012 Ardor Labs, Inc.
+ * Copyright (c) 2008-2014 Ardor Labs, Inc.
  *
  * This file is part of Ardor3D.
  *
