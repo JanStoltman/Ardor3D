@@ -200,7 +200,7 @@ public class StlImporter {
                 // read object name if any
                 if (parser.ttype != StreamTokenizer.TT_WORD) {
                     StlImporter.LOGGER.log(Level.WARNING,
-                            "Format Warning: expecting the object name on line " + parser.lineno());
+                            "Format Warning: expecting the (optional) object name on line " + parser.lineno());
                 } else {
                     final String objectName = parser.sval;
                     store.setCurrentObjectName(objectName);
