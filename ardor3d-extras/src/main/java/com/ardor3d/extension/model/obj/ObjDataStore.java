@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -16,10 +16,18 @@ import java.util.List;
 import com.ardor3d.math.Vector3;
 
 public class ObjDataStore {
-    private final List<Vector3> _vertices = new ArrayList<>();
-    private final List<Vector3> _normals = new ArrayList<>();
-    private final List<Vector3> _generatedNormals = new ArrayList<>();
-    private final List<Vector3> _uvs = new ArrayList<>();
+    private final List<Vector3> _vertices;
+    private final List<Vector3> _normals;
+    private final List<Vector3> _generatedNormals;
+    private final List<Vector3> _uvs;
+
+    public ObjDataStore() {
+        super();
+        _vertices = new ArrayList<>();
+        _normals = new ArrayList<>();
+        _generatedNormals = new ArrayList<>();
+        _uvs = new ArrayList<>();
+    }
 
     public List<Vector3> getVertices() {
         return _vertices;

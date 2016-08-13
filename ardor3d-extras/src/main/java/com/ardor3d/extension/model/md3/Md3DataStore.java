@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -19,13 +19,15 @@ public class Md3DataStore {
 
     private final Node _mainNode;
 
-    private final List<String> _frameNames = new ArrayList<>();
+    private final List<String> _frameNames;
 
-    private final List<String> _skinNames = new ArrayList<>();
+    private final List<String> _skinNames;
 
     public Md3DataStore(final Node mainNode) {
         super();
         _mainNode = mainNode;
+        _frameNames = new ArrayList<>();
+        _skinNames = new ArrayList<>();
     }
 
     public Node getScene() {

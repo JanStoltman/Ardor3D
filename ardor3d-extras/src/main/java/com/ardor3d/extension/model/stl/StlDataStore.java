@@ -16,8 +16,14 @@ import java.util.List;
 import com.ardor3d.math.Vector3;
 
 public class StlDataStore {
-    private final List<Vector3> _vertices = new ArrayList<>();
-    private final List<Vector3> _normals = new ArrayList<>();
+    private final List<Vector3> _vertices;
+    private final List<Vector3> _normals;
+
+    public StlDataStore() {
+        super();
+        _vertices = new ArrayList<>();
+        _normals = new ArrayList<>();
+    }
 
     public List<Vector3> getVertices() {
         return _vertices;
