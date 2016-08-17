@@ -111,6 +111,16 @@ public class StlImporter {
     // logger
     private static final Logger LOGGER = Logger.getLogger(StlImporter.class.getName());
 
+    private static final String SOLID_KEYWORD = "solid";
+    private static final String[] END_SOLID_KEYWORD_PARTS = new String[] { "end", "solid" };
+    private static final String ENDSOLID_KEYWORD = "endsolid";
+    private static final String FACET_KEYWORD = "facet";
+    private static final String NORMAL_KEYWORD = "normal";
+    private static final String[] OUTER_LOOP_KEYWORD_PARTS = new String[] { "outer", "loop" };
+    private static final String VERTEX_KEYWORD = "vertex";
+    private static final String ENDLOOP_KEYWORD = "endloop";
+    private static final String ENDFACET_KEYWORD = "endfacet";
+
     private ResourceLocator _modelLocator;
 
     /**
@@ -185,306 +195,285 @@ public class StlImporter {
                 final StlFileParser parser = new StlFileParser(reader);
                 try {
                     parser.nextToken();
-                } catch (final IOException e) {
-                    StlImporter.LOGGER.log(Level.SEVERE, "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                }
-                // read "solid"
-                if (!parser.sval.equals("solid")) {
-                    StlImporter.LOGGER.log(Level.SEVERE, "Ascii file but no solid keyword");
-                }
-                try {
-                    parser.nextToken();
-                } catch (final IOException e) {
-                    StlImporter.LOGGER.log(Level.SEVERE, "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                }
-                // read object name if any
-                if (parser.ttype != StreamTokenizer.TT_WORD) {
-                    StlImporter.LOGGER.log(Level.WARNING,
-                            "Format Warning: expecting the (optional) object name on line " + parser.lineno());
-                } else {
-                    final String objectName = parser.sval;
-                    store.setCurrentObjectName(objectName);
-                    // Reads the EOL for verifying that the file has a correct format
-                    try {
-                        parser.nextToken();
-                    } catch (final IOException e) {
-                        StlImporter.LOGGER.log(Level.SEVERE,
-                                "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                    }
-                    if (parser.ttype != StreamTokenizer.TT_EOL) {
-                        StlImporter.LOGGER.log(Level.SEVERE,
-                                "Format Error: expecting End Of Line on line " + parser.lineno());
-                    }
-                }
-                // read the rest of the file
-                try {
-                    parser.nextToken();
-                } catch (final IOException e) {
-                    StlImporter.LOGGER.log(Level.SEVERE, "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                }
-                // read all the facets
-                while (parser.ttype != StreamTokenizer.TT_EOF && !parser.sval.equals("endsolid")) {
-                    // Reads "facet"
-                    if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("facet"))) {
-                        StlImporter.LOGGER.log(Level.SEVERE,
-                                "Format Error:expecting 'facet' on line " + parser.lineno());
+                    // read "solid"
+                    if (parser.sval != null && StlImporter.SOLID_KEYWORD.equals(parser.sval)) {
+                        StlImporter.LOGGER.log(Level.INFO, "solid keyword on line " + parser.lineno());
                     } else {
-                        try {
-                            parser.nextToken();
-                            // Reads a normal
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("normal"))) {
-                                StlImporter.LOGGER.log(Level.SEVERE,
-                                        "Format Error:expecting 'normal' on line " + parser.lineno());
-                            } else {
-                                if (parser.getNumber()) {
-                                    final Vector3 normal = new Vector3();
-                                    normal.setX(parser.nval);
-
-                                    if (parser.getNumber()) {
-                                        normal.setY(parser.nval);
-
-                                        if (parser.getNumber()) {
-                                            normal.setZ(parser.nval);
-
-                                            store.getDataStore().getNormals().add(normal);
-                                            // Reads the EOL for verifying that the file has a correct format
-                                            try {
-                                                parser.nextToken();
-                                            } catch (final IOException e) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                            }
-                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "Format Error: expecting End Of Line on line "
-                                                                + parser.lineno());
-                                            }
-                                        } else {
-                                            StlImporter.LOGGER.log(Level.SEVERE,
-                                                    "Format Error: expecting normal z-component on line "
-                                                            + parser.lineno());
-                                        }
-                                    } else {
-                                        StlImporter.LOGGER.log(Level.SEVERE,
-                                                "Format Error: expecting normal y-component on line "
-                                                        + parser.lineno());
-                                    }
-                                } else {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error: expecting normal x-component on line " + parser.lineno());
-                                }
-                            }
-
-                            parser.nextToken();
-                            // Reads "outer loop" then EOL
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("outer"))) {
-                                StlImporter.LOGGER.log(Level.SEVERE,
-                                        "Format Error: expecting 'outer' on line " + parser.lineno());
-                            } else {
-                                try {
-                                    parser.nextToken();
-                                } catch (final IOException e) {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "IO error on line " + parser.lineno() + ": " + e.getMessage());
-                                }
-                                if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("loop"))) {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error:expecting 'loop' on line " + parser.lineno());
-                                } else {
-                                    // Reads the EOL for verifying that the file has a correct format
-                                    try {
-                                        parser.nextToken();
-                                    } catch (final IOException e) {
-                                        StlImporter.LOGGER.log(Level.SEVERE,
-                                                "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                    }
-                                    if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                        StlImporter.LOGGER.log(Level.SEVERE,
-                                                "Format Error: expecting End Of Line on line " + parser.lineno());
-                                    }
-                                }
-                            }
-
-                            parser.nextToken();
-                            // Reads the first vertex
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("vertex"))) {
-                                System.err.println("Format Error:expecting 'vertex' on line " + parser.lineno());
-                            } else {
-                                if (parser.getNumber()) {
-                                    final Vector3 vertex = new Vector3();
-                                    vertex.setX(parser.nval);
-
-                                    if (parser.getNumber()) {
-                                        vertex.setY(parser.nval);
-
-                                        if (parser.getNumber()) {
-                                            vertex.setZ(parser.nval);
-
-                                            store.getDataStore().getVertices().add(vertex);
-                                            // Reads the EOL for verifying that the file has a correct format
-                                            try {
-                                                parser.nextToken();
-                                            } catch (final IOException e) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                            }
-                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "Format Error: expecting End Of Line on line "
-                                                                + parser.lineno());
-                                            }
-                                        } else {
-                                            StlImporter.LOGGER.log(Level.SEVERE,
-                                                    "Format Error: expecting vertex z-component on line "
-                                                            + parser.lineno());
-                                        }
-                                    } else {
-                                        StlImporter.LOGGER.log(Level.SEVERE,
-                                                "Format Error: expecting vertex y-component on line "
-                                                        + parser.lineno());
-                                    }
-                                } else {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error: expecting vertex x-component on line " + parser.lineno());
-                                }
-                            }
-
-                            parser.nextToken();
-                            // Reads the second vertex
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("vertex"))) {
-                                System.err.println("Format Error:expecting 'vertex' on line " + parser.lineno());
-                            } else {
-                                if (parser.getNumber()) {
-                                    final Vector3 vertex = new Vector3();
-                                    vertex.setX(parser.nval);
-
-                                    if (parser.getNumber()) {
-                                        vertex.setY(parser.nval);
-
-                                        if (parser.getNumber()) {
-                                            vertex.setZ(parser.nval);
-
-                                            store.getDataStore().getVertices().add(vertex);
-                                            // Reads the EOL for verifying that the file has a correct format
-                                            try {
-                                                parser.nextToken();
-                                            } catch (final IOException e) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                            }
-                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "Format Error: expecting End Of Line on line "
-                                                                + parser.lineno());
-                                            }
-                                        } else {
-                                            StlImporter.LOGGER.log(Level.SEVERE,
-                                                    "Format Error: expecting vertex z-component on line "
-                                                            + parser.lineno());
-                                        }
-                                    } else {
-                                        StlImporter.LOGGER.log(Level.SEVERE,
-                                                "Format Error: expecting vertex y-component on line "
-                                                        + parser.lineno());
-                                    }
-                                } else {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error: expecting vertex x-component on line " + parser.lineno());
-                                }
-                            }
-
-                            parser.nextToken();
-                            // Reads the third vertex
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("vertex"))) {
-                                System.err.println("Format Error:expecting 'vertex' on line " + parser.lineno());
-                            } else {
-                                if (parser.getNumber()) {
-                                    final Vector3 vertex = new Vector3();
-                                    vertex.setX(parser.nval);
-
-                                    if (parser.getNumber()) {
-                                        vertex.setY(parser.nval);
-
-                                        if (parser.getNumber()) {
-                                            vertex.setZ(parser.nval);
-
-                                            store.getDataStore().getVertices().add(vertex);
-                                            // Reads the EOL for verifying that the file has a correct format
-                                            try {
-                                                parser.nextToken();
-                                            } catch (final IOException e) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                            }
-                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                                StlImporter.LOGGER.log(Level.SEVERE,
-                                                        "Format Error: expecting End Of Line on line "
-                                                                + parser.lineno());
-                                            }
-                                        } else {
-                                            StlImporter.LOGGER.log(Level.SEVERE,
-                                                    "Format Error: expecting vertex z-component on line "
-                                                            + parser.lineno());
-                                        }
-                                    } else {
-                                        StlImporter.LOGGER.log(Level.SEVERE,
-                                                "Format Error: expecting vertex y-component on line "
-                                                        + parser.lineno());
-                                    }
-                                } else {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error: expecting vertex x-component on line " + parser.lineno());
-                                }
-                            }
-
-                            parser.nextToken();
-                            // Reads "endloop" then EOL
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("endloop"))) {
-                                StlImporter.LOGGER.log(Level.SEVERE,
-                                        "Format Error: expecting 'endloop' on line " + parser.lineno());
-                            } else {
-                                // Reads the EOL for verifying that the file has a correct format
-                                try {
-                                    parser.nextToken();
-                                } catch (final IOException e) {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                }
-                                if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error: expecting End Of Line on line " + parser.lineno());
-                                }
-                            }
-
-                            parser.nextToken();
-                            // Reads "endfacet" then EOL
-                            if (!(parser.ttype == StreamTokenizer.TT_WORD && parser.sval.equals("endfacet"))) {
-                                StlImporter.LOGGER.log(Level.SEVERE,
-                                        "Format Error:expecting 'endfacet' on line " + parser.lineno());
-                            } else {
-                                // Reads the EOL for verifying that the file has a correct format
-                                try {
-                                    parser.nextToken();
-                                } catch (final IOException e) {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "IO Error on line " + parser.lineno() + ": " + e.getMessage());
-                                }
-                                if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                    StlImporter.LOGGER.log(Level.SEVERE,
-                                            "Format Error: expecting End Of Line on line " + parser.lineno());
-                                }
-                            }
-                        } catch (final IOException e) {
+                        StlImporter.LOGGER.log(Level.SEVERE,
+                                "Ascii file but no solid keyword on line " + parser.lineno());
+                    }
+                    parser.nextToken();
+                    // read object name if any
+                    if (parser.ttype != StreamTokenizer.TT_WORD) {
+                        StlImporter.LOGGER.log(Level.WARNING,
+                                "Format Warning: expecting the (optional) object name on line " + parser.lineno());
+                    } else {
+                        final String objectName = parser.sval;
+                        store.setCurrentObjectName(objectName);
+                        // Reads the EOL for verifying that the file has a correct format
+                        parser.nextToken();
+                        if (parser.ttype != StreamTokenizer.TT_EOL) {
                             StlImporter.LOGGER.log(Level.SEVERE,
-                                    "IO Error on line " + parser.lineno() + ": " + e.getMessage());
+                                    "Format Error: expecting End Of Line on line " + parser.lineno());
                         }
                     }
-                    try {
+                    // read the rest of the file
+                    parser.nextToken();
+                    boolean endSolidFound = false;
+                    // read all the facets
+                    while (parser.ttype != StreamTokenizer.TT_EOF && !endSolidFound) {
+                        endSolidFound = false;
+                        // reads "endsolid"
+                        if (StlImporter.ENDSOLID_KEYWORD.equals(parser.sval)) {
+                            StlImporter.LOGGER.log(Level.INFO, "endsolid keyword on line " + parser.lineno());
+                            endSolidFound = true;
+                        } else {
+                            // reads "end solid"
+                            if (StlImporter.END_SOLID_KEYWORD_PARTS[0].equals(parser.sval)) {
+                                parser.nextToken();
+                                if (parser.ttype != StreamTokenizer.TT_WORD
+                                        || !StlImporter.END_SOLID_KEYWORD_PARTS[1].equals(parser.sval)) {
+                                    StlImporter.LOGGER.log(Level.SEVERE,
+                                            "Format Error:expecting 'end solid' on line " + parser.lineno());
+                                } else {
+                                    StlImporter.LOGGER.log(Level.INFO, "end solid keyword on line " + parser.lineno());
+                                    endSolidFound = true;
+                                }
+                            } else {
+                                // Reads "facet"
+                                if (parser.ttype != StreamTokenizer.TT_WORD
+                                        || (!StlImporter.FACET_KEYWORD.equals(parser.sval)
+                                                && !StlImporter.END_SOLID_KEYWORD_PARTS[0].equals(parser.sval))) {
+                                    StlImporter.LOGGER.log(Level.SEVERE,
+                                            "Format Error:expecting 'facet' on line " + parser.lineno());
+                                } else {
+                                    parser.nextToken();
+                                    // Reads a normal
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.NORMAL_KEYWORD.equals(parser.sval)) {
+                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                "Format Error:expecting 'normal' on line " + parser.lineno());
+                                    } else {
+                                        if (parser.getNumber()) {
+                                            final Vector3 normal = new Vector3();
+                                            normal.setX(parser.nval);
+
+                                            if (parser.getNumber()) {
+                                                normal.setY(parser.nval);
+
+                                                if (parser.getNumber()) {
+                                                    normal.setZ(parser.nval);
+
+                                                    store.getDataStore().getNormals().add(normal);
+                                                    // Reads the EOL for verifying that the file has a correct format
+                                                    parser.nextToken();
+                                                    if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                                "Format Error: expecting End Of Line on line "
+                                                                        + parser.lineno());
+                                                    }
+                                                } else {
+                                                    StlImporter.LOGGER.log(Level.SEVERE,
+                                                            "Format Error: expecting normal z-component on line "
+                                                                    + parser.lineno());
+                                                }
+                                            } else {
+                                                StlImporter.LOGGER.log(Level.SEVERE,
+                                                        "Format Error: expecting normal y-component on line "
+                                                                + parser.lineno());
+                                            }
+                                        } else {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error: expecting normal x-component on line "
+                                                            + parser.lineno());
+                                        }
+                                    }
+
+                                    parser.nextToken();
+                                    // Reads "outer loop" then EOL
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.OUTER_LOOP_KEYWORD_PARTS[0].equals(parser.sval)) {
+                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                "Format Error: expecting 'outer' on line " + parser.lineno());
+                                    } else {
+                                        parser.nextToken();
+                                        if (parser.ttype != StreamTokenizer.TT_WORD
+                                                || !StlImporter.OUTER_LOOP_KEYWORD_PARTS[1].equals(parser.sval)) {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error:expecting 'loop' on line " + parser.lineno());
+                                        } else {
+                                            // Reads the EOL for verifying that the file has a correct format
+                                            parser.nextToken();
+                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                StlImporter.LOGGER.log(Level.SEVERE,
+                                                        "Format Error: expecting End Of Line on line "
+                                                                + parser.lineno());
+                                            }
+                                        }
+                                    }
+
+                                    parser.nextToken();
+                                    // Reads the first vertex
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.VERTEX_KEYWORD.equals(parser.sval)) {
+                                        System.err
+                                                .println("Format Error:expecting 'vertex' on line " + parser.lineno());
+                                    } else {
+                                        if (parser.getNumber()) {
+                                            final Vector3 vertex = new Vector3();
+                                            vertex.setX(parser.nval);
+
+                                            if (parser.getNumber()) {
+                                                vertex.setY(parser.nval);
+
+                                                if (parser.getNumber()) {
+                                                    vertex.setZ(parser.nval);
+
+                                                    store.getDataStore().getVertices().add(vertex);
+                                                    // Reads the EOL for verifying that the file has a correct format
+                                                    parser.nextToken();
+                                                    if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                                "Format Error: expecting End Of Line on line "
+                                                                        + parser.lineno());
+                                                    }
+                                                } else {
+                                                    StlImporter.LOGGER.log(Level.SEVERE,
+                                                            "Format Error: expecting vertex z-component on line "
+                                                                    + parser.lineno());
+                                                }
+                                            } else {
+                                                StlImporter.LOGGER.log(Level.SEVERE,
+                                                        "Format Error: expecting vertex y-component on line "
+                                                                + parser.lineno());
+                                            }
+                                        } else {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error: expecting vertex x-component on line "
+                                                            + parser.lineno());
+                                        }
+                                    }
+
+                                    parser.nextToken();
+                                    // Reads the second vertex
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.VERTEX_KEYWORD.equals(parser.sval)) {
+                                        System.err
+                                                .println("Format Error:expecting 'vertex' on line " + parser.lineno());
+                                    } else {
+                                        if (parser.getNumber()) {
+                                            final Vector3 vertex = new Vector3();
+                                            vertex.setX(parser.nval);
+
+                                            if (parser.getNumber()) {
+                                                vertex.setY(parser.nval);
+
+                                                if (parser.getNumber()) {
+                                                    vertex.setZ(parser.nval);
+
+                                                    store.getDataStore().getVertices().add(vertex);
+                                                    // Reads the EOL for verifying that the file has a correct format
+                                                    parser.nextToken();
+                                                    if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                                "Format Error: expecting End Of Line on line "
+                                                                        + parser.lineno());
+                                                    }
+                                                } else {
+                                                    StlImporter.LOGGER.log(Level.SEVERE,
+                                                            "Format Error: expecting vertex z-component on line "
+                                                                    + parser.lineno());
+                                                }
+                                            } else {
+                                                StlImporter.LOGGER.log(Level.SEVERE,
+                                                        "Format Error: expecting vertex y-component on line "
+                                                                + parser.lineno());
+                                            }
+                                        } else {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error: expecting vertex x-component on line "
+                                                            + parser.lineno());
+                                        }
+                                    }
+
+                                    parser.nextToken();
+                                    // Reads the third vertex
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.VERTEX_KEYWORD.equals(parser.sval)) {
+                                        System.err
+                                                .println("Format Error:expecting 'vertex' on line " + parser.lineno());
+                                    } else {
+                                        if (parser.getNumber()) {
+                                            final Vector3 vertex = new Vector3();
+                                            vertex.setX(parser.nval);
+
+                                            if (parser.getNumber()) {
+                                                vertex.setY(parser.nval);
+
+                                                if (parser.getNumber()) {
+                                                    vertex.setZ(parser.nval);
+
+                                                    store.getDataStore().getVertices().add(vertex);
+                                                    // Reads the EOL for verifying that the file has a correct format
+                                                    parser.nextToken();
+                                                    if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                                "Format Error: expecting End Of Line on line "
+                                                                        + parser.lineno());
+                                                    }
+                                                } else {
+                                                    StlImporter.LOGGER.log(Level.SEVERE,
+                                                            "Format Error: expecting vertex z-component on line "
+                                                                    + parser.lineno());
+                                                }
+                                            } else {
+                                                StlImporter.LOGGER.log(Level.SEVERE,
+                                                        "Format Error: expecting vertex y-component on line "
+                                                                + parser.lineno());
+                                            }
+                                        } else {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error: expecting vertex x-component on line "
+                                                            + parser.lineno());
+                                        }
+                                    }
+
+                                    parser.nextToken();
+                                    // Reads "endloop" then EOL
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.ENDLOOP_KEYWORD.equals(parser.sval)) {
+                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                "Format Error: expecting 'endloop' on line " + parser.lineno());
+                                    } else {
+                                        // Reads the EOL for verifying that the file has a correct format
+                                        parser.nextToken();
+                                        if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error: expecting End Of Line on line " + parser.lineno());
+                                        }
+                                    }
+
+                                    parser.nextToken();
+                                    // Reads "endfacet" then EOL
+                                    if (parser.ttype != StreamTokenizer.TT_WORD
+                                            || !StlImporter.ENDFACET_KEYWORD.equals(parser.sval)) {
+                                        StlImporter.LOGGER.log(Level.SEVERE,
+                                                "Format Error:expecting 'endfacet' on line " + parser.lineno());
+                                    } else {
+                                        // Reads the EOL for verifying that the file has a correct format
+                                        parser.nextToken();
+                                        if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                            StlImporter.LOGGER.log(Level.SEVERE,
+                                                    "Format Error: expecting End Of Line on line " + parser.lineno());
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         parser.nextToken();
-                    } catch (final IOException e) {
-                        StlImporter.LOGGER.log(Level.SEVERE,
-                                "IO Error on line " + parser.lineno() + ": " + e.getMessage());
                     }
+                } catch (final IOException e) {
+                    StlImporter.LOGGER.log(Level.SEVERE, "IO Error on line " + parser.lineno() + ": " + e.getMessage());
                 }
             } catch (final Throwable t) {
                 throw new Error("Unable to load stl resource from URL: " + resource, t);
