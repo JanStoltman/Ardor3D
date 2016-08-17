@@ -17,7 +17,7 @@ import com.ardor3d.extension.model.stl.StlImporter;
 import com.ardor3d.math.Vector3;
 
 /**
- * Simplest example of loading a Wavefront STL model.
+ * Simplest example of loading a STL model.
  */
 @Purpose(htmlDescriptionKey = "com.ardor3d.example.pipeline.SimpleStlExample", //
         thumbnailPath = "com/ardor3d/example/media/thumbnails/pipeline_SimpleStlExample.jpg", //
