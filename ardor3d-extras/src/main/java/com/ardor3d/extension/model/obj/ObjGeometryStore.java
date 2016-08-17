@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -192,8 +192,8 @@ public class ObjGeometryStore {
             }
 
             final Point points = new Point(name, vertices, null, null, null);
-            final IndexBufferData<? extends Buffer> indexBuffer = BufferUtils.createIndexBufferData(_pointManager
-                    .getIndices().size(), vertices.length - 1);
+            final IndexBufferData<? extends Buffer> indexBuffer = BufferUtils
+                    .createIndexBufferData(_pointManager.getIndices().size(), vertices.length - 1);
             for (final int index : _pointManager.getIndices()) {
                 indexBuffer.put(index);
             }
@@ -233,8 +233,8 @@ public class ObjGeometryStore {
             }
 
             final Line line = new Line(name, vertices, null, null, hasUVs ? uvs : null);
-            final IndexBufferData<? extends Buffer> indexBuffer = BufferUtils.createIndexBufferData(_lineManager
-                    .getIndices().size(), vertices.length - 1);
+            final IndexBufferData<? extends Buffer> indexBuffer = BufferUtils
+                    .createIndexBufferData(_lineManager.getIndices().size(), vertices.length - 1);
             for (final int index : _lineManager.getIndices()) {
                 indexBuffer.put(index);
             }
@@ -309,8 +309,8 @@ public class ObjGeometryStore {
                 mesh.getMeshData().setTextureBuffer(uvs, 0);
             }
 
-            final IndexBufferData<? extends Buffer> indexBuffer = BufferUtils.createIndexBufferData(_meshManager
-                    .getIndices().size(), _meshManager.getStore().size() - 1);
+            final IndexBufferData<? extends Buffer> indexBuffer = BufferUtils
+                    .createIndexBufferData(_meshManager.getIndices().size(), _meshManager.getStore().size() - 1);
             for (final int index : _meshManager.getIndices()) {
                 indexBuffer.put(index);
             }
@@ -356,7 +356,7 @@ public class ObjGeometryStore {
             target.getSceneHints().setRenderBucketType(RenderBucketType.Transparent);
         }
 
-        if (_currentMaterial.illumType == 0) {
+        if (_currentMaterial.getIllumType() == 0) {
             target.getSceneHints().setLightCombineMode(LightCombineMode.Off);
         }
 

@@ -419,7 +419,7 @@ public class ObjImporter {
     }
 
     /**
-     * Load a .mtl resource
+     * Load a .mtl resource, see <a href="http://paulbourke.net/dataformats/mtl/">the format specification</a>
      *
      * @param resource
      *            the mtl file to load, as a ResourceSource
@@ -476,62 +476,98 @@ public class ObjImporter {
 
                 // if ambient value
                 if ("Ka".equals(keyword)) {
-                    currentMaterial.Ka = new float[] { Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]),
-                            Float.parseFloat(tokens[3]) };
+                    currentMaterial.setAmbientRed(Float.parseFloat(tokens[1]));
+                    currentMaterial.setAmbientGreen(Float.parseFloat(tokens[2]));
+                    currentMaterial.setAmbientBlue(Float.parseFloat(tokens[3]));
                 }
 
                 // if diffuse value
                 else if ("Kd".equals(keyword)) {
-                    currentMaterial.Kd = new float[] { Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]),
-                            Float.parseFloat(tokens[3]) };
+                    currentMaterial.setDiffuseRed(Float.parseFloat(tokens[1]));
+                    currentMaterial.setDiffuseGreen(Float.parseFloat(tokens[2]));
+                    currentMaterial.setDiffuseBlue(Float.parseFloat(tokens[3]));
                 }
 
                 // if specular value
                 else if ("Ks".equals(keyword)) {
-                    currentMaterial.Ks = new float[] { Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]),
-                            Float.parseFloat(tokens[3]) };
+                    currentMaterial.setSpecularRed(Float.parseFloat(tokens[1]));
+                    currentMaterial.setSpecularGreen(Float.parseFloat(tokens[2]));
+                    currentMaterial.setSpecularBlue(Float.parseFloat(tokens[3]));
                 }
-
+                // if transmission filter
+                else if ("Tf".equals(keyword)) {
+                    // TODO: Add support for Tf
+                }
+                // if sharpness value
+                else if ("sharpness".equals(keyword)) {
+                    // TODO: Add support for sharpness
+                }
+                // if optical density
+                else if ("Ni".equals(keyword)) {
+                    // TODO: Add support for Ni
+                }
+                // if disp
+                else if ("disp".equals(keyword)) {
+                    // TODO: Add support for disp
+                }
+                // if decal value
+                else if ("decal".equals(keyword)) {
+                    // TODO: Add support for decal
+                }
+                // if bump
+                else if ("bump".equals(keyword)) {
+                    // TODO: Add support for bump
+                }
                 // if illumination style
                 else if ("illum".equals(keyword)) {
-                    currentMaterial.illumType = Integer.parseInt(tokens[1]);
+                    currentMaterial.setIllumType(Integer.parseInt(tokens[1]));
                 }
 
                 // if "dissolve" (alpha) value
                 else if ("d".equals(keyword)) {
-                    currentMaterial.d = Float.parseFloat(tokens[1]);
+                    final float d;
+                    if ("-halo".equalsIgnoreCase(tokens[1])) {
+                        // TODO: Add support for halo
+                        d = Float.parseFloat(tokens[2]);
+                    } else {
+                        d = Float.parseFloat(tokens[1]);
+                    }
+                    currentMaterial.setAmbientAlpha(d);
+                    currentMaterial.setDiffuseAlpha(d);
+                    currentMaterial.setSpecularAlpha(d);
+                    currentMaterial.setEmissiveAlpha(d);
                 }
 
                 // if ambient value
                 else if ("Ns".equals(keyword)) {
                     final float Ns = Float.parseFloat(tokens[1]);
-                    currentMaterial.Ns = 128 * MathUtils.clamp(Ns, 0, _specularMax) / _specularMax;
+                    currentMaterial.setShininess(128 * MathUtils.clamp(Ns, 0, _specularMax) / _specularMax);
                 }
 
                 // if we mapped a texture to alpha
                 else if ("map_d".equals(keyword)) {
                     // force blending... probably also used texture in map_Kd, etc.
-                    currentMaterial.forceBlend = true;
+                    currentMaterial.setForceBlend(true);
                 }
 
                 // if texture
                 else if (isLoadTextures() && "map_Kd".equals(keyword)) {
                     // TODO: it's possible for map_Kd to have arguments, then filename.
                     final String textureName = line.substring("map_Kd".length()).trim();
-                    currentMaterial.textureName = textureName;
+                    currentMaterial.setTextureName(textureName);
                     if (_textureLocator == null) {
-                        currentMaterial.map_Kd = TextureManager
-                                .load(textureName, getMinificationFilter(),
+                        currentMaterial
+                                .setMap_Kd(TextureManager.load(textureName, getMinificationFilter(),
                                         isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
                                                 : TextureStoreFormat.GuessNoCompressedFormat,
-                                        isFlipTextureVertically());
+                                        isFlipTextureVertically()));
                     } else {
                         final ResourceSource source = _textureLocator.locateResource(textureName);
-                        currentMaterial.map_Kd = TextureManager
-                                .load(source, getMinificationFilter(),
+                        currentMaterial
+                                .setMap_Kd(TextureManager.load(source, getMinificationFilter(),
                                         isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
                                                 : TextureStoreFormat.GuessNoCompressedFormat,
-                                        isFlipTextureVertically());
+                                        isFlipTextureVertically()));
                     }
                 }
             }
