@@ -15,10 +15,13 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.ardor3d.image.Texture;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.renderer.IndexMode;
 import com.ardor3d.renderer.state.TextureState;
 import com.ardor3d.scenegraph.IndexBufferData;
 import com.ardor3d.scenegraph.Mesh;
@@ -28,6 +31,8 @@ import com.ardor3d.util.geom.GeometryTool;
 import com.ardor3d.util.geom.GeometryTool.MatchCondition;
 
 public class PlyGeometryStore {
+
+    private static final Logger LOGGER = Logger.getLogger(PlyGeometryStore.class.getName());
 
     private int _totalMeshes = 0;
 
@@ -141,24 +146,57 @@ public class PlyGeometryStore {
             // FIXME handle material indices if any
             final EnumSet<MatchCondition> matchConditions = EnumSet.noneOf(MatchCondition.class);
             int dummyVertexIndex = 0;
+            final List<IndexMode> indexModeList = new ArrayList<>();
+            final List<Integer> indexLengthList = new ArrayList<>();
             for (final PlyFaceInfo plyFaceInfo : _plyFaceInfoList) {
-                for (final Integer vertexIndex : plyFaceInfo.getVertexIndices()) {
-                    indices.put(dummyVertexIndex);
-                    dummyVertexIndex++;
-                    final Vector3 vertex = _dataStore.getVertices().get(vertexIndex.intValue());
-                    vertices.put(vertex.getXf()).put(vertex.getYf()).put(vertex.getZf());
-                    if (hasNormals) {
-                        final Vector3 normal = _dataStore.getNormals().get(vertexIndex.intValue());
-                        normals.put(normal.getXf()).put(normal.getYf()).put(normal.getZf());
+                final IndexMode previousIndexMode = indexModeList.isEmpty() ? null
+                        : indexModeList.get(indexModeList.size() - 1);
+                final IndexMode currentIndexMode;
+                switch (plyFaceInfo.getVertexIndices().size()) {
+                    case 3: {
+                        currentIndexMode = IndexMode.Triangles;
+                        break;
                     }
-                    if (hasColors) {
-                        final ColorRGBA color = _dataStore.getColors().get(vertexIndex.intValue());
-                        colors.put(color.getRed()).put(color.getGreen()).put(color.getBlue()).put(color.getAlpha());
+                    case 4: {
+                        currentIndexMode = IndexMode.Quads;
+                        break;
+                    }
+                    default: {
+                        currentIndexMode = null;
+                        break;
                     }
                 }
-                if (hasTexCoords) {
-                    for (final Float texCoord : plyFaceInfo.getTextureCoordinates()) {
-                        uvs.put(texCoord);
+                if (currentIndexMode == null) {
+                    PlyGeometryStore.LOGGER.log(Level.SEVERE,
+                            "The index mode cannot be determined for a face containing "
+                                    + plyFaceInfo.getVertexIndices().size() + " vertices");
+                } else {
+                    if (previousIndexMode == null || currentIndexMode != previousIndexMode) {
+                        indexModeList.add(currentIndexMode);
+                        indexLengthList.add(currentIndexMode.getVertexCount());
+                    } else {
+                        final int previousIndexLength = indexLengthList.get(indexLengthList.size() - 1).intValue();
+                        final int currentIndexLength = previousIndexLength + currentIndexMode.getVertexCount();
+                        indexLengthList.set(indexLengthList.size() - 1, Integer.valueOf(currentIndexLength));
+                    }
+                    for (final Integer vertexIndex : plyFaceInfo.getVertexIndices()) {
+                        indices.put(dummyVertexIndex);
+                        final Vector3 vertex = _dataStore.getVertices().get(vertexIndex.intValue());
+                        vertices.put(vertex.getXf()).put(vertex.getYf()).put(vertex.getZf());
+                        if (hasNormals) {
+                            final Vector3 normal = _dataStore.getNormals().get(vertexIndex.intValue());
+                            normals.put(normal.getXf()).put(normal.getYf()).put(normal.getZf());
+                        }
+                        if (hasColors) {
+                            final ColorRGBA color = _dataStore.getColors().get(vertexIndex.intValue());
+                            colors.put(color.getRed()).put(color.getGreen()).put(color.getBlue()).put(color.getAlpha());
+                        }
+                        dummyVertexIndex++;
+                    }
+                    if (hasTexCoords) {
+                        for (final Float texCoord : plyFaceInfo.getTextureCoordinates()) {
+                            uvs.put(texCoord);
+                        }
                     }
                 }
             }
@@ -167,6 +205,17 @@ public class PlyGeometryStore {
             mesh.getMeshData().setVertexBuffer(vertices);
             indices.rewind();
             mesh.getMeshData().setIndices(indices);
+            if (indexModeList.size() == 1) {
+                mesh.getMeshData().setIndexMode(indexModeList.get(0));
+                mesh.getMeshData().setIndexLengths(null);
+            } else {
+                mesh.getMeshData().setIndexModes(indexModeList.toArray(new IndexMode[indexModeList.size()]));
+                final int[] indexLengths = new int[indexLengthList.size()];
+                for (int indexLengthIndex = 0; indexLengthIndex < indexLengths.length; indexLengthIndex++) {
+                    indexLengths[indexLengthIndex] = indexLengthList.get(indexLengthIndex).intValue();
+                }
+                mesh.getMeshData().setIndexLengths(indexLengths);
+            }
             if (hasNormals) {
                 normals.rewind();
                 mesh.getMeshData().setNormalBuffer(normals);
@@ -183,7 +232,11 @@ public class PlyGeometryStore {
                 matchConditions.add(MatchCondition.UVs);
             }
 
-            _geometryTool.minimizeVerts(mesh, matchConditions);
+            if (indexModeList.size() == 1) {
+                _geometryTool.minimizeVerts(mesh, matchConditions);
+            } else {
+                // FIXME unsure about minimizeVerts preserving the index modes
+            }
             mesh.updateModelBound();
             _root.attachChild(mesh);
             _totalMeshes++;
