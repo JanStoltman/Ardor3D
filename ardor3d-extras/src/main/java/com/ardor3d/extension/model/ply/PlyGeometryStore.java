@@ -21,9 +21,11 @@ import java.util.logging.Logger;
 import com.ardor3d.image.Texture;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.math.type.ReadOnlyColorRGBA;
 import com.ardor3d.renderer.IndexMode;
 import com.ardor3d.renderer.state.TextureState;
 import com.ardor3d.scenegraph.IndexBufferData;
+import com.ardor3d.scenegraph.Line;
 import com.ardor3d.scenegraph.Mesh;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.util.geom.BufferUtils;
@@ -35,6 +37,8 @@ public class PlyGeometryStore {
     private static final Logger LOGGER = Logger.getLogger(PlyGeometryStore.class.getName());
 
     private int _totalMeshes = 0;
+
+    private int _totalLines = 0;
 
     private final PlyDataStore _dataStore;
 
@@ -118,7 +122,47 @@ public class PlyGeometryStore {
     @SuppressWarnings("null")
     void commitObjects() {
         if (_plyEdgeInfoList != null) {
-            // TODO
+            final String name = "ply_line" + _totalLines;
+            boolean hasColors = false;
+            final boolean hasNormals = _dataStore.getNormals() != null && !_dataStore.getNormals().isEmpty();
+            final int vertexCount = _plyEdgeInfoList.size() * 2;
+            final Vector3[] vertices = new Vector3[vertexCount];
+            final Vector3[] normals = hasNormals ? null : new Vector3[vertexCount];
+            ReadOnlyColorRGBA[] colors = null;
+            final IndexBufferData<? extends Buffer> indices = BufferUtils.createIndexBufferData(vertexCount,
+                    vertexCount - 1);
+            int edgeVertexIndex = 0;
+            for (final PlyEdgeInfo plyEdgeInfo : _plyEdgeInfoList) {
+                indices.put(edgeVertexIndex).put(edgeVertexIndex + 1);
+                vertices[edgeVertexIndex] = _dataStore.getVertices().get(plyEdgeInfo.getIndex1());
+                vertices[edgeVertexIndex + 1] = _dataStore.getVertices().get(plyEdgeInfo.getIndex2());
+                if (hasNormals) {
+                    normals[edgeVertexIndex] = _dataStore.getNormals().get(plyEdgeInfo.getIndex1());
+                    normals[edgeVertexIndex + 1] = _dataStore.getNormals().get(plyEdgeInfo.getIndex2());
+                }
+                if (plyEdgeInfo.getColor() != null) {
+                    if (colors == null) {
+                        colors = new ReadOnlyColorRGBA[vertexCount];
+                    }
+                    colors[edgeVertexIndex] = plyEdgeInfo.getColor();
+                    colors[edgeVertexIndex + 1] = plyEdgeInfo.getColor();
+                    hasColors = true;
+                }
+                edgeVertexIndex += 2;
+            }
+            final Line line = new Line(name, vertices, normals, colors, null);
+            indices.rewind();
+            line.getMeshData().setIndices(indices);
+            final EnumSet<MatchCondition> matchConditions = EnumSet.noneOf(MatchCondition.class);
+            if (hasNormals) {
+                matchConditions.add(MatchCondition.Normal);
+            }
+            if (hasColors) {
+                matchConditions.add(MatchCondition.Color);
+            }
+            _geometryTool.minimizeVerts(line, matchConditions);
+            line.updateModelBound();
+            _totalLines++;
             _plyEdgeInfoList = null;
         }
         if (_plyFaceInfoList != null) {
@@ -127,7 +171,6 @@ public class PlyGeometryStore {
             boolean hasTexCoords = false;
             final boolean hasNormals = _dataStore.getNormals() != null && !_dataStore.getNormals().isEmpty();
             final boolean hasColors = _dataStore.getColors() != null && !_dataStore.getColors().isEmpty();
-            // FIXME sort the faces by vertex count per face, puts them into distinct regions
             int vertexCount = 0;
             for (final PlyFaceInfo plyFaceInfo : _plyFaceInfoList) {
                 vertexCount += plyFaceInfo.getVertexIndices().size();
@@ -144,7 +187,6 @@ public class PlyGeometryStore {
             final FloatBuffer uvs = hasTexCoords ? BufferUtils.createFloatBuffer(vertexCount * 2) : null;
 
             // FIXME handle material indices if any
-            final EnumSet<MatchCondition> matchConditions = EnumSet.noneOf(MatchCondition.class);
             int dummyVertexIndex = 0;
             final List<IndexMode> indexModeList = new ArrayList<>();
             final List<Integer> indexLengthList = new ArrayList<>();
@@ -216,6 +258,7 @@ public class PlyGeometryStore {
                 }
                 mesh.getMeshData().setIndexLengths(indexLengths);
             }
+            final EnumSet<MatchCondition> matchConditions = EnumSet.noneOf(MatchCondition.class);
             if (hasNormals) {
                 normals.rewind();
                 mesh.getMeshData().setNormalBuffer(normals);
