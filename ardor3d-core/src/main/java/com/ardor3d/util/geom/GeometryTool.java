@@ -132,8 +132,8 @@ public class GeometryTool {
             long group;
             for (int x = 0, max = verts.length; x < max; x++) {
                 group = groupData.getGroupForVertex(x);
-                final VertKey vkey = new VertKey(verts[x], norms != null ? norms[x] : null, colors != null ? colors[x]
-                        : null, getTexs(tex, x), groupData.getGroupConditions(group), group);
+                final VertKey vkey = new VertKey(verts[x], norms != null ? norms[x] : null,
+                        colors != null ? colors[x] : null, getTexs(tex, x), groupData.getGroupConditions(group), group);
                 // if we've already seen it, swap it for the max, and decrease max.
                 if (store.containsKey(vkey)) {
                     final int newInd = store.get(vkey);
@@ -194,16 +194,17 @@ public class GeometryTool {
 
             for (int x = 0; x < tex.length; x++) {
                 if (tex[x] != null) {
-                    mesh.getMeshData().setTextureBuffer(
-                            nioBuffersAllocationOnHeapEnabled ? BufferUtils.createFloatBufferOnHeap(0, good, tex[x])
+                    mesh.getMeshData()
+                            .setTextureBuffer(nioBuffersAllocationOnHeapEnabled
+                                    ? BufferUtils.createFloatBufferOnHeap(0, good, tex[x])
                                     : BufferUtils.createFloatBuffer(0, good, tex[x]), x);
                 }
             }
 
             if (mesh.getMeshData().getIndices() == null || mesh.getMeshData().getIndices().getBufferCapacity() == 0) {
-                final IndexBufferData<?> indexBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                        .createIndexBufferDataOnHeap(oldCount, oldCount) : BufferUtils.createIndexBufferData(oldCount,
-                        oldCount);
+                final IndexBufferData<?> indexBuffer = nioBuffersAllocationOnHeapEnabled
+                        ? BufferUtils.createIndexBufferDataOnHeap(oldCount, oldCount)
+                        : BufferUtils.createIndexBufferData(oldCount, oldCount);
                 mesh.getMeshData().setIndices(indexBuffer);
                 for (int i = 0; i < oldCount; i++) {
                     if (indexRemap.containsKey(i)) {
@@ -259,7 +260,6 @@ public class GeometryTool {
     /**
      * Converts an indexed geometry into a non indexed geometry
      *
-     * TODO use BufferUtils, take nioBuffersAllocationOnHeapEnabled into account
      *
      * @param meshData
      *            mesh data
@@ -270,14 +270,14 @@ public class GeometryTool {
             final FloatBuffer previousVertexBuffer = meshData.getVertexBuffer();
             if (previousVertexBuffer != null) {
                 final int valuesPerVertexTuple = meshData.getVertexCoords().getValuesPerTuple();
-                final FloatBuffer nextVertexBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                        .createFloatBufferOnHeap(indices.capacity() * valuesPerVertexTuple) : BufferUtils
-                        .createFloatBuffer(indices.capacity() * valuesPerVertexTuple);
+                final FloatBuffer nextVertexBuffer = nioBuffersAllocationOnHeapEnabled
+                        ? BufferUtils.createFloatBufferOnHeap(indices.capacity() * valuesPerVertexTuple)
+                        : BufferUtils.createFloatBuffer(indices.capacity() * valuesPerVertexTuple);
                 for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
                     final int vertexIndex = indices.get(indexIndex);
                     for (int coordIndex = 0; coordIndex < valuesPerVertexTuple; coordIndex++) {
-                        final float vertexCoordValue = previousVertexBuffer.get((vertexIndex * valuesPerVertexTuple)
-                                + coordIndex);
+                        final float vertexCoordValue = previousVertexBuffer
+                                .get((vertexIndex * valuesPerVertexTuple) + coordIndex);
                         nextVertexBuffer.put((indexIndex * valuesPerVertexTuple) + coordIndex, vertexCoordValue);
                     }
                 }
@@ -286,14 +286,14 @@ public class GeometryTool {
             final FloatBuffer previousNormalBuffer = meshData.getNormalBuffer();
             if (previousNormalBuffer != null) {
                 final int valuesPerNormalTuple = meshData.getNormalCoords().getValuesPerTuple();
-                final FloatBuffer nextNormalBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                        .createFloatBufferOnHeap(indices.capacity() * valuesPerNormalTuple) : BufferUtils
-                        .createFloatBuffer(indices.capacity() * valuesPerNormalTuple);
+                final FloatBuffer nextNormalBuffer = nioBuffersAllocationOnHeapEnabled
+                        ? BufferUtils.createFloatBufferOnHeap(indices.capacity() * valuesPerNormalTuple)
+                        : BufferUtils.createFloatBuffer(indices.capacity() * valuesPerNormalTuple);
                 for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
                     final int vertexIndex = indices.get(indexIndex);
                     for (int coordIndex = 0; coordIndex < valuesPerNormalTuple; coordIndex++) {
-                        final float normalCoordValue = previousNormalBuffer.get((vertexIndex * valuesPerNormalTuple)
-                                + coordIndex);
+                        final float normalCoordValue = previousNormalBuffer
+                                .get((vertexIndex * valuesPerNormalTuple) + coordIndex);
                         nextNormalBuffer.put((indexIndex * valuesPerNormalTuple) + coordIndex, normalCoordValue);
                     }
                 }
@@ -302,14 +302,14 @@ public class GeometryTool {
             final FloatBuffer previousColorBuffer = meshData.getColorBuffer();
             if (previousColorBuffer != null) {
                 final int valuesPerColorTuple = meshData.getColorCoords().getValuesPerTuple();
-                final FloatBuffer nextColorBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                        .createFloatBufferOnHeap(indices.capacity() * valuesPerColorTuple) : BufferUtils
-                        .createFloatBuffer(indices.capacity() * valuesPerColorTuple);
+                final FloatBuffer nextColorBuffer = nioBuffersAllocationOnHeapEnabled
+                        ? BufferUtils.createFloatBufferOnHeap(indices.capacity() * valuesPerColorTuple)
+                        : BufferUtils.createFloatBuffer(indices.capacity() * valuesPerColorTuple);
                 for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
                     final int vertexIndex = indices.get(indexIndex);
                     for (int coordIndex = 0; coordIndex < valuesPerColorTuple; coordIndex++) {
-                        final float colorCoordValue = previousColorBuffer.get((vertexIndex * valuesPerColorTuple)
-                                + coordIndex);
+                        final float colorCoordValue = previousColorBuffer
+                                .get((vertexIndex * valuesPerColorTuple) + coordIndex);
                         nextColorBuffer.put((indexIndex * valuesPerColorTuple) + coordIndex, colorCoordValue);
                     }
                 }
@@ -318,14 +318,14 @@ public class GeometryTool {
             final FloatBuffer previousFogBuffer = meshData.getFogBuffer();
             if (previousFogBuffer != null) {
                 final int valuesPerFogTuple = meshData.getFogCoords().getValuesPerTuple();
-                final FloatBuffer nextFogBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                        .createFloatBufferOnHeap(indices.capacity() * valuesPerFogTuple) : BufferUtils
-                        .createFloatBuffer(indices.capacity() * valuesPerFogTuple);
+                final FloatBuffer nextFogBuffer = nioBuffersAllocationOnHeapEnabled
+                        ? BufferUtils.createFloatBufferOnHeap(indices.capacity() * valuesPerFogTuple)
+                        : BufferUtils.createFloatBuffer(indices.capacity() * valuesPerFogTuple);
                 for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
                     final int vertexIndex = indices.get(indexIndex);
                     for (int coordIndex = 0; coordIndex < valuesPerFogTuple; coordIndex++) {
-                        final float fogCoordValue = previousFogBuffer.get((vertexIndex * valuesPerFogTuple)
-                                + coordIndex);
+                        final float fogCoordValue = previousFogBuffer
+                                .get((vertexIndex * valuesPerFogTuple) + coordIndex);
                         nextFogBuffer.put((indexIndex * valuesPerFogTuple) + coordIndex, fogCoordValue);
                     }
                 }
@@ -334,14 +334,14 @@ public class GeometryTool {
             final FloatBuffer previousTangentBuffer = meshData.getTangentBuffer();
             if (previousTangentBuffer != null) {
                 final int valuesPerTangentTuple = meshData.getTangentCoords().getValuesPerTuple();
-                final FloatBuffer nextTangentBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                        .createFloatBufferOnHeap(indices.capacity() * valuesPerTangentTuple) : BufferUtils
-                        .createFloatBuffer(indices.capacity() * valuesPerTangentTuple);
+                final FloatBuffer nextTangentBuffer = nioBuffersAllocationOnHeapEnabled
+                        ? BufferUtils.createFloatBufferOnHeap(indices.capacity() * valuesPerTangentTuple)
+                        : BufferUtils.createFloatBuffer(indices.capacity() * valuesPerTangentTuple);
                 for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
                     final int vertexIndex = indices.get(indexIndex);
                     for (int coordIndex = 0; coordIndex < valuesPerTangentTuple; coordIndex++) {
-                        final float tangentCoordValue = previousTangentBuffer.get((vertexIndex * valuesPerTangentTuple)
-                                + coordIndex);
+                        final float tangentCoordValue = previousTangentBuffer
+                                .get((vertexIndex * valuesPerTangentTuple) + coordIndex);
                         nextTangentBuffer.put((indexIndex * valuesPerTangentTuple) + coordIndex, tangentCoordValue);
                     }
                 }
@@ -358,12 +358,12 @@ public class GeometryTool {
                     } else {
                         final FloatBuffer previousTextureBuffer = previousTextureCoords.getBuffer();
                         final int valuesPerTextureTuple = previousTextureCoords.getValuesPerTuple();
-                        final FloatBuffer nextTextureBuffer = nioBuffersAllocationOnHeapEnabled ? BufferUtils
-                                .createFloatBufferOnHeap(indices.capacity() * valuesPerTextureTuple) : BufferUtils
-                                .createFloatBuffer(indices.capacity() * valuesPerTextureTuple);
-                                for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
-                                    final int vertexIndex = indices.get(indexIndex);
-                                    for (int coordIndex = 0; coordIndex < valuesPerTextureTuple; coordIndex++) {
+                        final FloatBuffer nextTextureBuffer = nioBuffersAllocationOnHeapEnabled
+                                ? BufferUtils.createFloatBufferOnHeap(indices.capacity() * valuesPerTextureTuple)
+                                : BufferUtils.createFloatBuffer(indices.capacity() * valuesPerTextureTuple);
+                        for (int indexIndex = 0; indexIndex < indices.capacity(); indexIndex++) {
+                            final int vertexIndex = indices.get(indexIndex);
+                            for (int coordIndex = 0; coordIndex < valuesPerTextureTuple; coordIndex++) {
                                 final float textureCoordValue = previousTextureBuffer
                                         .get((vertexIndex * valuesPerTextureTuple) + coordIndex);
                                 nextTextureBuffer.put((indexIndex * valuesPerTextureTuple) + coordIndex,
