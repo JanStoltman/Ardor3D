@@ -11,10 +11,18 @@
 package com.ardor3d.extension.model.ply;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StreamTokenizer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +50,9 @@ import com.ardor3d.util.resource.ResourceSource;
 
 /**
  * PLY importer. See <a href="http://paulbourke.net/dataformats/ply/">the format spec</a>
+ *
+ * Note that the material indices are stored but not used to build the meshes as it's currently impossible to apply a
+ * material per vertex
  */
 public class PlyImporter {
 
@@ -368,6 +379,120 @@ public class PlyImporter {
         }
     }
 
+    public static interface PlyReader extends Closeable {
+        public double read(final Data data) throws IOException;
+    }
+
+    /**
+     * largely inspired of jPly's BinaryPlyInputStream, @see
+     * https://github.com/smurn/jPLY/blob/master/jply/src/main/java/org/smurn/jply/BinaryPlyInputStream.java
+     */
+    public static class BinaryPlyReader implements PlyReader {
+
+        private final ReadableByteChannel channel;
+
+        private final ByteBuffer buffer;
+
+        private static final int BUFFER_SIZE = 1024;
+
+        public BinaryPlyReader(final InputStream inputStream, final ByteOrder byteOrder) {
+            super();
+            channel = Channels.newChannel(inputStream);
+            buffer = ByteBuffer.allocate(BinaryPlyReader.BUFFER_SIZE);
+            buffer.order(byteOrder);
+            buffer.clear();
+            buffer.position(buffer.capacity());
+        }
+
+        @Override
+        public double read(final Data data) throws IOException {
+            switch (data) {
+                case CHAR:
+                    ensureAvailable(1);
+                    return buffer.get();
+                case UCHAR:
+                    ensureAvailable(1);
+                    return buffer.get() & 0x000000FF;
+                case SHORT:
+                    ensureAvailable(2);
+                    return buffer.getShort();
+                case USHORT:
+                    ensureAvailable(2);
+                    return buffer.getShort() & 0x0000FFFF;
+                case INT:
+                    ensureAvailable(4);
+                    return buffer.getInt();
+                case UINT:
+                    ensureAvailable(4);
+                    return ((long) buffer.getShort()) & 0x00000000FFFFFFFF;
+                case FLOAT:
+                    ensureAvailable(4);
+                    return buffer.getFloat();
+                case DOUBLE:
+                    ensureAvailable(8);
+                    return buffer.getDouble();
+                default:
+                    throw new IllegalArgumentException("Unsupported type: " + data);
+            }
+        }
+
+        /**
+         * Ensures that a certain amount of bytes are in the buffer, ready to be read.
+         *
+         * @param bytes
+         *            Minimal number of unread bytes required in the buffer.
+         * @see ByteBuffer#remaining()
+         * @throws IOException
+         *             if reading sufficient more data into the buffer fails.
+         */
+        protected void ensureAvailable(final int bytes) throws IOException {
+            while (buffer.remaining() < bytes) {
+                buffer.compact();
+                if (channel.read(buffer) < 0) {
+                    throw new EOFException();
+                }
+                buffer.flip();
+            }
+        }
+
+        @Override
+        public void close() throws IOException {
+            channel.close();
+        }
+    }
+
+    public static class AsciiPlyReader implements PlyReader {
+
+        private final PlyFileParser parser;
+
+        public AsciiPlyReader(final PlyFileParser parser) {
+            super();
+            this.parser = parser;
+        }
+
+        @Override
+        public double read(final Data data) throws IOException {
+            do {
+                parser.nextToken();
+            } while (parser.ttype != StreamTokenizer.TT_WORD && parser.ttype != StreamTokenizer.TT_EOF);
+            if (parser.ttype == StreamTokenizer.TT_WORD) {
+                try {
+                    parser.nval = Double.valueOf(parser.sval).doubleValue();
+                    return parser.nval;
+                } catch (final NumberFormatException nbe) {
+                    throw new IOException("Unparsable string " + parser.sval, nbe);
+                }
+            } else {
+                throw new IOException("No number to read, end of file reached");
+            }
+        }
+
+        @Override
+        public void close() throws IOException {
+
+        }
+    }
+
     private static final Logger LOGGER = Logger.getLogger(PlyImporter.class.getName());
 
     public static class PlyFileParser extends StreamTokenizer {
@@ -497,11 +622,14 @@ public class PlyImporter {
      *
      * @return a PlyGeometryStore data object containing the scene and other useful elements.
      */
+    @SuppressWarnings("resource")
     public PlyGeometryStore load(final ResourceSource resource, final GeometryTool geometryTool) {
         FormatWithVersionNumber formatWithVersionNumber = null;
         final PlyGeometryStore store = createGeometryStore(geometryTool);
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()))) {
+        try (final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(resource.openStream(), StandardCharsets.US_ASCII))) {
             final PlyFileParser parser = new PlyFileParser(reader);
+            final Map<ElementWithKeyword, Map.Entry<Integer, Set<AbstractPropertyWithKeyword<?>>>> elementMap = new LinkedHashMap<>();
             try {
                 // starts reading the header
                 parser.nextToken();
@@ -519,7 +647,6 @@ public class PlyImporter {
                 }
                 parser.nextToken();
                 // reads the rest of the header
-                final Map<ElementWithKeyword, Map.Entry<Integer, Set<AbstractPropertyWithKeyword<?>>>> elementMap = new LinkedHashMap<>();
                 while (parser.ttype != StreamTokenizer.TT_EOF && !"end_header".equals(parser.sval)) {
                     if (parser.ttype == StreamTokenizer.TT_WORD) {
                         final int currentLineNumber = parser.lineno();
@@ -807,143 +934,123 @@ public class PlyImporter {
                         parser.nextToken();
                     } while (parser.ttype != StreamTokenizer.TT_EOL);
                 }
-                if (formatWithVersionNumber == null || formatWithVersionNumber.getFormat() == null) {
-                    throw new Exception(
-                            "Missing or malformed format in the header, cannot read the body of the PLY file");
-                } else {
-                    // reads the lines after the header, the body
-                    switch (formatWithVersionNumber.getFormat()) {
-                        case ASCII: {
-                            final Iterator<Entry<ElementWithKeyword, Entry<Integer, Set<AbstractPropertyWithKeyword<?>>>>> elementMapEntryIterator = elementMap
-                                    .entrySet().iterator();
-                            Entry<ElementWithKeyword, Entry<Integer, Set<AbstractPropertyWithKeyword<?>>>> elementMapEntry;
-                            int currentReadableElementCount;
-                            ElementWithKeyword currentElementWithKeyword;
-                            Set<AbstractPropertyWithKeyword<?>> currentProperties;
-                            if (elementMapEntryIterator.hasNext()) {
-                                elementMapEntry = elementMapEntryIterator.next();
-                                currentReadableElementCount = elementMapEntry.getValue().getKey().intValue();
-                                currentElementWithKeyword = elementMapEntry.getKey();
-                                currentProperties = elementMapEntry.getValue().getValue();
-                                PlyImporter.LOGGER.log(Level.INFO,
-                                        "Reading of " + currentReadableElementCount + " elements ("
-                                                + currentElementWithKeyword + ") started on line " + parser.lineno());
-                            } else {
-                                elementMapEntry = null;
-                                currentReadableElementCount = 0;
-                                currentElementWithKeyword = null;
-                                currentProperties = null;
-                            }
-                            while (parser.ttype != StreamTokenizer.TT_EOF) {
-                                final int currentLineNumber = parser.lineno();
-                                // reads one line
-                                final List<Double> valueList = new ArrayList<>();
-                                do {
-                                    parser.nextToken();
-                                    if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                        try {
-                                            final Double value = Double.valueOf(parser.sval);
-                                            parser.nval = value.doubleValue();
-                                            valueList.add(value);
-                                        } catch (final NumberFormatException nfe) {
-                                            PlyImporter.LOGGER.log(Level.SEVERE, "Unparsable string '" + parser.sval
-                                                    + "', expected a number on line " + currentLineNumber);
-                                        }
-                                    }
-                                } while (parser.ttype != StreamTokenizer.TT_EOL
-                                        && parser.ttype != StreamTokenizer.TT_EOF);
-                                if (!valueList.isEmpty()) {
-                                    // stores the values into an array
-                                    final double[] values = new double[valueList.size()];
-                                    for (int valueIndex = 0; valueIndex < values.length; valueIndex++) {
-                                        values[valueIndex] = valueList.get(valueIndex).doubleValue();
-                                    }
-                                    // determines which kind of element is being parsed
-                                    if (currentReadableElementCount == 0) {
-                                        if (elementMapEntryIterator.hasNext()) {
-                                            elementMapEntry = elementMapEntryIterator.next();
-                                            currentReadableElementCount = elementMapEntry.getValue().getKey()
-                                                    .intValue();
-                                            currentElementWithKeyword = elementMapEntry.getKey();
-                                            currentProperties = elementMapEntry.getValue().getValue();
-                                            if (currentElementWithKeyword != null) {
-                                                PlyImporter.LOGGER.log(Level.INFO,
-                                                        "Reading of " + currentReadableElementCount + " elements ("
-                                                                + currentElementWithKeyword + ") started on line "
-                                                                + currentLineNumber);
-                                            }
-                                        } else {
-                                            elementMapEntry = null;
-                                            currentElementWithKeyword = null;
-                                            currentProperties = null;
-                                        }
-                                    }
-                                    if (currentElementWithKeyword == null) {
-                                        PlyImporter.LOGGER.log(Level.SEVERE,
-                                                "Element data beyond element ranges defined in the header on line "
-                                                        + currentLineNumber);
-                                    } else {
-                                        if (currentElementWithKeyword.getEnumKey() == Element.CUSTOM) {
-                                            processElementCustomData(formatWithVersionNumber, currentElementWithKeyword,
-                                                    currentProperties, values, currentLineNumber, store);
-                                        } else {
-                                            boolean hasBuildInProperties = false;
-                                            boolean hasCustomProperties = false;
-                                            if (currentProperties == null || currentProperties.isEmpty()) {
-                                                PlyImporter.LOGGER.log(Level.SEVERE,
-                                                        currentElementWithKeyword
-                                                                + " data with no property skipped on line "
-                                                                + currentLineNumber);
-                                            } else {
-                                                for (final AbstractPropertyWithKeyword<?> currentProperty : currentProperties) {
-                                                    final boolean isCustom = currentProperty
-                                                            .getEnumKey() == ScalarProperty.CUSTOM
-                                                            || currentProperty.getEnumKey() == ListProperty.CUSTOM;
-                                                    if (!hasCustomProperties && isCustom) {
-                                                        hasCustomProperties = true;
-                                                    }
-                                                    if (!hasBuildInProperties && !isCustom) {
-                                                        hasBuildInProperties = true;
-                                                    }
-                                                    if (hasBuildInProperties && hasCustomProperties) {
-                                                        break;
-                                                    }
-                                                }
-                                                if (hasBuildInProperties) {
-                                                    processElementBuildInData(formatWithVersionNumber,
-                                                            currentElementWithKeyword, currentProperties, values,
-                                                            currentLineNumber, store);
-                                                }
-                                                if (hasCustomProperties) {
-                                                    processElementCustomData(formatWithVersionNumber,
-                                                            currentElementWithKeyword, currentProperties, values,
-                                                            currentLineNumber, store);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if (currentReadableElementCount > 0) {
-                                        currentReadableElementCount--;
-                                    }
-                                }
-                                // goes to the next line if the end of file isn't reached
-                                while (parser.ttype != StreamTokenizer.TT_EOL
-                                        && parser.ttype != StreamTokenizer.TT_EOF) {
-                                    parser.nextToken();
-                                }
-                            }
-                            break;
-                        }
-                        case BINARY_LITTLE_ENDIAN:
-                        case BINARY_BIG_ENDIAN: {
-                            // TODO
-                            break;
-                        }
-                    }
-                }
             } catch (final IOException ioe) {
                 throw new Exception("IO Error on line " + parser.lineno(), ioe);
             }
+            if (formatWithVersionNumber == null || formatWithVersionNumber.getFormat() == null) {
+                throw new Exception("Missing or malformed format in the header, cannot read the body of the PLY file");
+            } else {
+                // stores the number of the first line of the body, after the header
+                int currentLineNumber = parser.lineno();
+                // restarts the reading of the file from the beginning
+                try (final InputStream stream = resource.openStream()) {
+                    // skips the lines of the header
+                    for (int lineIndex = 1; lineIndex < currentLineNumber; lineIndex++) {
+                        while (stream.read() != '\n') {
+                            ;
+                        }
+                    }
+                    // reads the lines after the header, the body
+                    final PlyReader plyReader;
+                    switch (formatWithVersionNumber.getFormat()) {
+                        case ASCII: {
+                            plyReader = new AsciiPlyReader(parser);
+                            break;
+                        }
+                        case BINARY_BIG_ENDIAN: {
+                            plyReader = new BinaryPlyReader(stream, ByteOrder.BIG_ENDIAN);
+                            break;
+                        }
+                        case BINARY_LITTLE_ENDIAN: {
+                            plyReader = new BinaryPlyReader(stream, ByteOrder.LITTLE_ENDIAN);
+                            break;
+                        }
+                        default: {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported format " + formatWithVersionNumber.getFormat());
+                        }
+                    }
+                    try {
+                        for (final Entry<ElementWithKeyword, Entry<Integer, Set<AbstractPropertyWithKeyword<?>>>> elementMapEntry : elementMap
+                                .entrySet()) {
+                            final ElementWithKeyword elementWithKeyword = elementMapEntry.getKey();
+                            final Set<AbstractPropertyWithKeyword<?>> propertiesWithKeywords = elementMapEntry
+                                    .getValue().getValue();
+                            final int elementCount = elementMapEntry.getValue().getKey().intValue();
+                            PlyImporter.LOGGER.log(Level.INFO, "Reading of " + elementCount + " elements ("
+                                    + elementWithKeyword + ") started on line " + currentLineNumber);
+                            if (propertiesWithKeywords == null || propertiesWithKeywords.isEmpty()) {
+                                PlyImporter.LOGGER.log(Level.SEVERE, elementWithKeyword
+                                        + " data with no property skipped on line " + currentLineNumber);
+                            } else {
+                                for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {
+                                    // reads one line
+                                    final List<Double> valueList = new ArrayList<>();
+                                    for (final AbstractPropertyWithKeyword<?> propertyWithKeyWord : propertiesWithKeywords) {
+                                        final Data scalarValueDataType = propertyWithKeyWord.getData();
+                                        if (propertyWithKeyWord instanceof ScalarPropertyWithKeyword) {
+                                            final double scalarValue = plyReader.read(scalarValueDataType);
+                                            valueList.add(Double.valueOf(scalarValue));
+                                        } else if (propertyWithKeyWord instanceof ListPropertyWithKeyword) {
+                                            final Data valueCountDataType = ((ListPropertyWithKeyword) propertyWithKeyWord)
+                                                    .getCountData();
+                                            final double rawValueCount = plyReader.read(valueCountDataType);
+                                            valueList.add(Double.valueOf(rawValueCount));
+                                            final long valueCount = (long) rawValueCount;
+                                            for (int valueIndex = 0; valueIndex < valueCount; valueIndex++) {
+                                                final double scalarValue = plyReader.read(scalarValueDataType);
+                                                valueList.add(Double.valueOf(scalarValue));
+                                            }
+                                        }
+                                    }
+                                    if (!valueList.isEmpty()) {
+                                        // stores the values into an array
+                                        final double[] values = new double[valueList.size()];
+                                        for (int valueIndex = 0; valueIndex < values.length; valueIndex++) {
+                                            values[valueIndex] = valueList.get(valueIndex).doubleValue();
+                                        }
+                                        if (elementWithKeyword.getEnumKey() == Element.CUSTOM) {
+                                            processElementCustomData(formatWithVersionNumber, elementWithKeyword,
+                                                    propertiesWithKeywords, values, currentLineNumber, store);
+                                        } else {
+                                            boolean hasBuildInProperties = false;
+                                            boolean hasCustomProperties = false;
+                                            for (final AbstractPropertyWithKeyword<?> currentProperty : propertiesWithKeywords) {
+                                                final boolean isCustom = currentProperty
+                                                        .getEnumKey() == ScalarProperty.CUSTOM
+                                                        || currentProperty.getEnumKey() == ListProperty.CUSTOM;
+                                                if (!hasCustomProperties && isCustom) {
+                                                    hasCustomProperties = true;
+                                                }
+                                                if (!hasBuildInProperties && !isCustom) {
+                                                    hasBuildInProperties = true;
+                                                }
+                                                if (hasBuildInProperties && hasCustomProperties) {
+                                                    break;
+                                                }
+                                            }
+                                            if (hasBuildInProperties) {
+                                                processElementBuildInData(formatWithVersionNumber, elementWithKeyword,
+                                                        propertiesWithKeywords, values, currentLineNumber, store);
+                                            }
+                                            if (hasCustomProperties) {
+                                                processElementCustomData(formatWithVersionNumber, elementWithKeyword,
+                                                        propertiesWithKeywords, values, currentLineNumber, store);
+                                            }
+                                        }
+                                    }
+                                    currentLineNumber++;
+                                }
+                            }
+                        }
+                    } finally {
+                        plyReader.close();
+                    }
+                } catch (final IOException ioe) {
+                    throw new Exception("IO Error on line " + currentLineNumber, ioe);
+                }
+            }
+
         } catch (final Throwable t) {
             throw new Error("Unable to load ply resource from URL: " + resource, t);
         }
