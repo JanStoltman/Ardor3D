@@ -161,6 +161,12 @@ public class PlyGeometryStore {
                 matchConditions.add(MatchCondition.Color);
             }
             _geometryTool.minimizeVerts(line, matchConditions);
+
+            final TextureState tState = getTextureState();
+            if (tState != null) {
+                line.setRenderState(tState);
+            }
+
             line.updateModelBound();
             _totalLines++;
             _plyEdgeInfoList = null;
@@ -186,7 +192,6 @@ public class PlyGeometryStore {
             final FloatBuffer colors = hasColors ? BufferUtils.createFloatBuffer(vertexCount * 4) : null;
             final FloatBuffer uvs = hasTexCoords ? BufferUtils.createFloatBuffer(vertexCount * 2) : null;
 
-            // FIXME handle material indices if any
             int dummyVertexIndex = 0;
             final List<IndexMode> indexModeList = new ArrayList<>();
             final List<Integer> indexLengthList = new ArrayList<>();
@@ -280,6 +285,12 @@ public class PlyGeometryStore {
             } else {
                 // FIXME unsure about minimizeVerts preserving the index modes
             }
+
+            final TextureState tState = getTextureState();
+            if (tState != null) {
+                mesh.setRenderState(tState);
+            }
+
             mesh.updateModelBound();
             _root.attachChild(mesh);
             _totalMeshes++;
