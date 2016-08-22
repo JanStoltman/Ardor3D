@@ -41,6 +41,7 @@ import com.ardor3d.image.Texture;
 import com.ardor3d.image.Texture.MinificationFilter;
 import com.ardor3d.image.TextureStoreFormat;
 import com.ardor3d.math.ColorRGBA;
+import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.util.TextureManager;
 import com.ardor3d.util.geom.GeometryTool;
@@ -131,6 +132,10 @@ public class PlyImporter {
         NY(Element.VERTEX, Element.CUSTOM),
         /** normal z vector coordinate */
         NZ(Element.VERTEX, Element.CUSTOM),
+        /** u texture coordinate */
+        S(Element.VERTEX, Element.CUSTOM),
+        /** v texture coordinate */
+        T(Element.VERTEX, Element.CUSTOM),
         /** first vertex */
         VERTEX1(Element.EDGE, Element.CUSTOM),
         /** second vertex */
@@ -1086,6 +1091,7 @@ public class PlyImporter {
         Vector3 vertex = null;
         Vector3 normal = null;
         ColorRGBA color = null;
+        Vector2 texCoords = null;
         PlyMaterial material = null;
         PlyEdgeInfo edgeInfo = null;
         PlyFaceInfo faceInfo = null;
@@ -1478,6 +1484,22 @@ public class PlyImporter {
                                             store.getDataStore().getNormals().add(normal);
                                         }
                                         normal.setZ(value);
+                                        break;
+                                    }
+                                    case S: {
+                                        if (texCoords == null) {
+                                            texCoords = new Vector2();
+                                            store.getDataStore().getTextureCoordinates().add(texCoords);
+                                        }
+                                        texCoords.setX(value);
+                                        break;
+                                    }
+                                    case T: {
+                                        if (texCoords == null) {
+                                            texCoords = new Vector2();
+                                            store.getDataStore().getTextureCoordinates().add(texCoords);
+                                        }
+                                        texCoords.setY(value);
                                         break;
                                     }
                                     case RED: {

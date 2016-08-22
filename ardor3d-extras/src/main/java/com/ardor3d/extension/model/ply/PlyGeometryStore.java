@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import com.ardor3d.image.Texture;
 import com.ardor3d.math.ColorRGBA;
+import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyColorRGBA;
 import com.ardor3d.renderer.IndexMode;
@@ -174,14 +175,16 @@ public class PlyGeometryStore {
         if (_plyFaceInfoList != null) {
             final String name = "ply_mesh" + _totalMeshes;
             final Mesh mesh = new Mesh(name);
-            boolean hasTexCoords = false;
+            boolean hasTexCoordsInFaces = false;
+            final boolean hasTexCoordsInVertices = _dataStore.getTextureCoordinates() != null
+                    && !_dataStore.getTextureCoordinates().isEmpty();
             final boolean hasNormals = _dataStore.getNormals() != null && !_dataStore.getNormals().isEmpty();
             final boolean hasColors = _dataStore.getColors() != null && !_dataStore.getColors().isEmpty();
             int vertexCount = 0;
             for (final PlyFaceInfo plyFaceInfo : _plyFaceInfoList) {
                 vertexCount += plyFaceInfo.getVertexIndices().size();
                 if (plyFaceInfo.getTextureCoordinates() != null && !plyFaceInfo.getTextureCoordinates().isEmpty()) {
-                    hasTexCoords = true;
+                    hasTexCoordsInFaces = true;
                 }
             }
             final FloatBuffer vertices = BufferUtils.createVector3Buffer(vertexCount);
@@ -190,7 +193,8 @@ public class PlyGeometryStore {
 
             final FloatBuffer normals = hasNormals ? BufferUtils.createFloatBuffer(vertices.capacity()) : null;
             final FloatBuffer colors = hasColors ? BufferUtils.createFloatBuffer(vertexCount * 4) : null;
-            final FloatBuffer uvs = hasTexCoords ? BufferUtils.createFloatBuffer(vertexCount * 2) : null;
+            final FloatBuffer uvs = hasTexCoordsInFaces || hasTexCoordsInVertices
+                    ? BufferUtils.createFloatBuffer(vertexCount * 2) : null;
 
             int dummyVertexIndex = 0;
             final List<IndexMode> indexModeList = new ArrayList<>();
@@ -238,9 +242,13 @@ public class PlyGeometryStore {
                             final ColorRGBA color = _dataStore.getColors().get(vertexIndex.intValue());
                             colors.put(color.getRed()).put(color.getGreen()).put(color.getBlue()).put(color.getAlpha());
                         }
+                        if (hasTexCoordsInVertices) {
+                            final Vector2 texCoords = _dataStore.getTextureCoordinates().get(vertexIndex.intValue());
+                            uvs.put(texCoords.getXf()).put(texCoords.getYf());
+                        }
                         dummyVertexIndex++;
                     }
-                    if (hasTexCoords) {
+                    if (hasTexCoordsInFaces) {
                         for (final Float texCoord : plyFaceInfo.getTextureCoordinates()) {
                             uvs.put(texCoord);
                         }
@@ -274,7 +282,7 @@ public class PlyGeometryStore {
                 mesh.getMeshData().setColorBuffer(colors);
                 matchConditions.add(MatchCondition.Color);
             }
-            if (hasTexCoords) {
+            if (hasTexCoordsInFaces || hasTexCoordsInVertices) {
                 uvs.rewind();
                 mesh.getMeshData().setTextureBuffer(uvs, 0);
                 matchConditions.add(MatchCondition.UVs);

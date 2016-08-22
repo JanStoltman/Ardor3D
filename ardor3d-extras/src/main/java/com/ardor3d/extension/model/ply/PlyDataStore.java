@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ardor3d.math.ColorRGBA;
+import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
 
 public class PlyDataStore {
@@ -21,12 +22,14 @@ public class PlyDataStore {
     private final List<Vector3> _vertices;
     private final List<Vector3> _normals;
     private final List<ColorRGBA> _colors;
+    private final List<Vector2> _textureCoordinates;
 
     public PlyDataStore() {
         super();
         _vertices = new ArrayList<>();
         _normals = new ArrayList<>();
         _colors = new ArrayList<>();
+        _textureCoordinates = new ArrayList<>();
     }
 
     public List<Vector3> getVertices() {
@@ -39,5 +42,9 @@ public class PlyDataStore {
 
     public List<ColorRGBA> getColors() {
         return _colors;
+    }
+
+    public List<Vector2> getTextureCoordinates() {
+        return _textureCoordinates;
     }
 }
