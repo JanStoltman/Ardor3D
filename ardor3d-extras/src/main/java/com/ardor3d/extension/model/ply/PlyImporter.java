@@ -469,10 +469,12 @@ public class PlyImporter {
     public static class AsciiPlyReader implements PlyReader {
 
         private final PlyFileParser parser;
+        private final BufferedReader reader;
 
-        public AsciiPlyReader(final PlyFileParser parser) {
+        public AsciiPlyReader(final InputStream stream) {
             super();
-            this.parser = parser;
+            reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.US_ASCII));
+            parser = new PlyFileParser(reader);
         }
 
         @Override
@@ -494,13 +496,15 @@ public class PlyImporter {
 
         @Override
         public void close() throws IOException {
-
+            reader.close();
         }
     }
 
     private static final Logger LOGGER = Logger.getLogger(PlyImporter.class.getName());
 
-    public static class PlyFileParser extends StreamTokenizer {
+    public static class PlyFileParser extends StreamTokenizer implements Closeable {
+
+        private final Reader reader;
 
         /**
          * Constructor.
@@ -510,6 +514,7 @@ public class PlyImporter {
          */
         public PlyFileParser(final Reader reader) {
             super(reader);
+            this.reader = reader;
             resetSyntax();
             eolIsSignificant(true);
             lowerCaseMode(true);
@@ -546,6 +551,10 @@ public class PlyImporter {
             return true;
         }
 
+        @Override
+        public void close() throws IOException {
+            reader.close();
+        }
     }
 
     private ResourceLocator _modelLocator;
@@ -629,324 +638,337 @@ public class PlyImporter {
      */
     @SuppressWarnings("resource")
     public PlyGeometryStore load(final ResourceSource resource, final GeometryTool geometryTool) {
-        FormatWithVersionNumber formatWithVersionNumber = null;
         final PlyGeometryStore store = createGeometryStore(geometryTool);
-        try (final BufferedReader reader = new BufferedReader(
-                new InputStreamReader(resource.openStream(), StandardCharsets.US_ASCII))) {
-            final PlyFileParser parser = new PlyFileParser(reader);
+        try {
+            FormatWithVersionNumber formatWithVersionNumber = null;
+            final int firstLineOfBody;
             final Map<ElementWithKeyword, Map.Entry<Integer, Set<AbstractPropertyWithKeyword<?>>>> elementMap = new LinkedHashMap<>();
-            try {
-                // starts reading the header
-                parser.nextToken();
-                // reads "ply"
-                if ("ply".equals(parser.sval)) {
-                    PlyImporter.LOGGER.log(Level.INFO, "ply keyword on line " + parser.lineno());
-                } else {
-                    PlyImporter.LOGGER.log(Level.SEVERE, "No ply keyword on line " + parser.lineno());
-                }
-                // reads the EOL for verifying that the file has a correct format
-                parser.nextToken();
-                if (parser.ttype != StreamTokenizer.TT_EOL) {
-                    PlyImporter.LOGGER.log(Level.SEVERE,
-                            "Format Error: expecting End Of Line on line " + parser.lineno());
-                }
-                parser.nextToken();
-                // reads the rest of the header
-                while (parser.ttype != StreamTokenizer.TT_EOF && !"end_header".equals(parser.sval)) {
-                    if (parser.ttype == StreamTokenizer.TT_WORD) {
-                        final int currentLineNumber = parser.lineno();
-                        switch (parser.sval) {
-                            case "comment": {
-                                parser.nextToken();
-                                if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                    if ("TextureFile".equals(parser.sval)) {
-                                        parser.nextToken();
-                                        if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                            final String textureName = parser.sval;
-                                            store.setTextureName(textureName);
-                                            final Texture texture;
-                                            if (_textureLocator == null) {
-                                                texture = TextureManager.load(textureName, getMinificationFilter(),
-                                                        isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
-                                                                : TextureStoreFormat.GuessNoCompressedFormat,
-                                                        isFlipTextureVertically());
-                                            } else {
-                                                final ResourceSource source = _textureLocator
-                                                        .locateResource(textureName);
-                                                texture = TextureManager.load(source, getMinificationFilter(),
-                                                        isUseCompression() ? TextureStoreFormat.GuessCompressedFormat
-                                                                : TextureStoreFormat.GuessNoCompressedFormat,
-                                                        isFlipTextureVertically());
-                                            }
-                                            store.setTexture(texture);
-                                        } else {
-                                            PlyImporter.LOGGER.log(Level.SEVERE,
-                                                    "'TextureFile' comment with no texture file on line "
-                                                            + currentLineNumber);
-                                        }
-                                    }
-                                }
-                                break;
-                            }
-                            case "format": {
-                                parser.nextToken();
-                                if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                    if (formatWithVersionNumber == null) {
-                                        Format format = null;
-                                        try {
-                                            format = Format.valueOf(parser.sval.toUpperCase());
-                                        } catch (final IllegalArgumentException iae) {
-                                            PlyImporter.LOGGER.log(Level.SEVERE, "Unknown format '" + parser.sval
-                                                    + "' on line " + currentLineNumber + ": " + iae.getMessage());
-                                        }
-                                        final double versionNumber;
-                                        if (parser.getNumber()) {
-                                            versionNumber = parser.nval;
-                                            if (Double.compare(versionNumber, 1.0d) != 0) {
-                                                PlyImporter.LOGGER.log(Level.WARNING,
-                                                        "Unsupported format version number '" + parser.nval
-                                                                + "' on line " + currentLineNumber
-                                                                + ". This importer supports only PLY 1.0");
-                                            }
-                                            parser.nextToken();
-                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                                PlyImporter.LOGGER.log(Level.SEVERE,
-                                                        "Format Error: expecting End Of Line on line "
-                                                                + currentLineNumber);
-                                            }
-                                        } else {
-                                            PlyImporter.LOGGER.log(Level.SEVERE,
-                                                    "Format version number missing on line " + currentLineNumber
-                                                            + "\n");
-                                            versionNumber = Double.NaN;
-                                        }
-                                        formatWithVersionNumber = new FormatWithVersionNumber(format, versionNumber);
-                                        PlyImporter.LOGGER.log(Level.INFO,
-                                                "Format '" + (format == null ? "null" : format.name())
-                                                        + "' version number '" + versionNumber + "' detected on line "
-                                                        + currentLineNumber);
-                                    } else {
-                                        PlyImporter.LOGGER.log(Level.WARNING,
-                                                "Format already defined, format declaration ignored on line "
-                                                        + currentLineNumber);
-                                    }
-                                } else {
-                                    PlyImporter.LOGGER.log(Level.SEVERE,
-                                            "Format type (ascii, binary_big_endian or binary_little_endian) missing on line "
-                                                    + currentLineNumber);
-                                }
-                                break;
-                            }
-                            case "element": {
-                                parser.nextToken();
-                                if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                    final String elementName = parser.sval;
-                                    final Element element = Element.get(elementName);
-                                    final ElementWithKeyword elementWithKeyword = new ElementWithKeyword(element,
-                                            elementName);
-                                    if (elementMap.containsKey(element)) {
-                                        PlyImporter.LOGGER.log(Level.WARNING,
-                                                elementWithKeyword
-                                                        + " already defined, element declaration ignored on line "
-                                                        + currentLineNumber);
-                                    } else {
-                                        final int elementCount;
-                                        if (parser.getNumber()) {
-                                            elementCount = (int) parser.nval;
-                                            if (elementCount < 0) {
-                                                PlyImporter.LOGGER.log(Level.SEVERE,
-                                                        elementWithKeyword + " count = " + elementCount
-                                                                + " whereas it should be >= 0 on line "
-                                                                + currentLineNumber);
-                                            }
-                                            parser.nextToken();
-                                            if (parser.ttype != StreamTokenizer.TT_EOL) {
-                                                PlyImporter.LOGGER.log(Level.SEVERE,
-                                                        "Format Error: expecting End Of Line on line "
-                                                                + currentLineNumber);
-                                            }
-                                        } else {
-                                            PlyImporter.LOGGER.log(Level.SEVERE,
-                                                    elementWithKeyword + " count missing on line " + currentLineNumber);
-                                            elementCount = 0;
-                                        }
-                                        elementMap.put(elementWithKeyword,
-                                                new AbstractMap.SimpleEntry<Integer, Set<AbstractPropertyWithKeyword<?>>>(
-                                                        Integer.valueOf(elementCount), null));
-                                        PlyImporter.LOGGER.log(Level.INFO,
-                                                elementWithKeyword + " detected on line " + currentLineNumber);
-                                    }
-                                } else {
-                                    PlyImporter.LOGGER.log(Level.SEVERE,
-                                            "Element type (vertex, face or edge) missing on line " + currentLineNumber);
-                                }
-                                break;
-                            }
-                            case "property": {
-                                ElementWithKeyword latestInsertedElementWithKeyword = null;
-                                for (final ElementWithKeyword elementWithKeyword : elementMap.keySet()) {
-                                    latestInsertedElementWithKeyword = elementWithKeyword;
-                                }
-                                if (latestInsertedElementWithKeyword == null) {
-                                    PlyImporter.LOGGER.log(Level.SEVERE,
-                                            "Property definition not preceded by an element definition on line "
-                                                    + currentLineNumber);
-                                } else {
+            try (final PlyFileParser parser = new PlyFileParser(
+                    new BufferedReader(new InputStreamReader(resource.openStream(), StandardCharsets.US_ASCII)))) {
+                try {
+                    // starts reading the header
+                    parser.nextToken();
+                    // reads "ply"
+                    if ("ply".equals(parser.sval)) {
+                        PlyImporter.LOGGER.log(Level.INFO, "ply keyword on line " + parser.lineno());
+                    } else {
+                        PlyImporter.LOGGER.log(Level.SEVERE, "No ply keyword on line " + parser.lineno());
+                    }
+                    // reads the EOL for verifying that the file has a correct format
+                    parser.nextToken();
+                    if (parser.ttype != StreamTokenizer.TT_EOL) {
+                        PlyImporter.LOGGER.log(Level.SEVERE,
+                                "Format Error: expecting End Of Line on line " + parser.lineno());
+                    }
+                    parser.nextToken();
+                    // reads the rest of the header
+                    while (parser.ttype != StreamTokenizer.TT_EOF && !"end_header".equals(parser.sval)) {
+                        if (parser.ttype == StreamTokenizer.TT_WORD) {
+                            final int currentLineNumber = parser.lineno();
+                            switch (parser.sval) {
+                                case "comment": {
                                     parser.nextToken();
                                     if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                        if ("list".equals(parser.sval)) {
-                                            // list property, for face elements (vertex indices, texture
-                                            // coordinates, ...)
+                                        if ("TextureFile".equals(parser.sval)) {
                                             parser.nextToken();
                                             if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                                Data countData = null;
-                                                try {
-                                                    countData = Data.get(parser.sval);
-                                                } catch (final IllegalArgumentException iae) {
-                                                    PlyImporter.LOGGER.log(Level.SEVERE, "Count data type '"
-                                                            + parser.sval + "' unknown on line " + currentLineNumber);
+                                                final String textureName = parser.sval;
+                                                store.setTextureName(textureName);
+                                                final Texture texture;
+                                                if (_textureLocator == null) {
+                                                    texture = TextureManager.load(textureName, getMinificationFilter(),
+                                                            isUseCompression()
+                                                                    ? TextureStoreFormat.GuessCompressedFormat
+                                                                    : TextureStoreFormat.GuessNoCompressedFormat,
+                                                            isFlipTextureVertically());
+                                                } else {
+                                                    final ResourceSource source = _textureLocator
+                                                            .locateResource(textureName);
+                                                    texture = TextureManager.load(source, getMinificationFilter(),
+                                                            isUseCompression()
+                                                                    ? TextureStoreFormat.GuessCompressedFormat
+                                                                    : TextureStoreFormat.GuessNoCompressedFormat,
+                                                            isFlipTextureVertically());
                                                 }
-                                                if (countData != null) {
-                                                    parser.nextToken();
-                                                    if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                                        Data data = null;
-                                                        try {
-                                                            data = Data.get(parser.sval);
-                                                        } catch (final IllegalArgumentException iae) {
-                                                            PlyImporter.LOGGER.log(Level.SEVERE,
-                                                                    "Data type '" + parser.sval + "' unknown on line "
-                                                                            + currentLineNumber);
-                                                        }
-                                                        if (data != null) {
-                                                            parser.nextToken();
-                                                            if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                                                final String listPropertyName = parser.sval;
-                                                                final ListProperty listProperty = ListProperty
-                                                                        .get(listPropertyName);
-                                                                final ListPropertyWithKeyword listPropertyWithKeyword = new ListPropertyWithKeyword(
-                                                                        listProperty, listPropertyName, countData,
-                                                                        data);
-                                                                if (Arrays.asList(listProperty.getElements())
-                                                                        .contains(latestInsertedElementWithKeyword
-                                                                                .getEnumKey())) {
-                                                                    final Entry<Integer, Set<AbstractPropertyWithKeyword<?>>> elementMapEntry = elementMap
-                                                                            .get(latestInsertedElementWithKeyword);
-                                                                    Set<AbstractPropertyWithKeyword<?>> propertySet = elementMapEntry
-                                                                            .getValue();
-                                                                    if (propertySet == null) {
-                                                                        propertySet = new LinkedHashSet<>();
-                                                                        elementMapEntry.setValue(propertySet);
-                                                                    }
-                                                                    propertySet.add(listPropertyWithKeyword);
-                                                                    PlyImporter.LOGGER.log(Level.INFO,
-                                                                            listPropertyWithKeyword
-                                                                                    + " detected on line "
-                                                                                    + currentLineNumber);
-                                                                } else {
-                                                                    PlyImporter.LOGGER.log(Level.SEVERE,
-                                                                            "Unexpected " + listPropertyWithKeyword
-                                                                                    + " on line " + currentLineNumber);
-                                                                }
-                                                            } else {
-                                                                PlyImporter.LOGGER.log(Level.SEVERE,
-                                                                        "List property keyword (vertex_indices, texcoord, ...) missing on line "
-                                                                                + currentLineNumber);
-                                                            }
-                                                        }
-                                                    } else {
-                                                        PlyImporter.LOGGER.log(Level.SEVERE,
-                                                                "Second data type (float32, int8, ...) missing on line "
-                                                                        + currentLineNumber);
-                                                    }
+                                                store.setTexture(texture);
+                                            } else {
+                                                PlyImporter.LOGGER.log(Level.SEVERE,
+                                                        "'TextureFile' comment with no texture file on line "
+                                                                + currentLineNumber);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                                case "format": {
+                                    parser.nextToken();
+                                    if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                        if (formatWithVersionNumber == null) {
+                                            Format format = null;
+                                            try {
+                                                format = Format.valueOf(parser.sval.toUpperCase());
+                                            } catch (final IllegalArgumentException iae) {
+                                                PlyImporter.LOGGER.log(Level.SEVERE, "Unknown format '" + parser.sval
+                                                        + "' on line " + currentLineNumber + ": " + iae.getMessage());
+                                            }
+                                            final double versionNumber;
+                                            if (parser.getNumber()) {
+                                                versionNumber = parser.nval;
+                                                if (Double.compare(versionNumber, 1.0d) != 0) {
+                                                    PlyImporter.LOGGER.log(Level.WARNING,
+                                                            "Unsupported format version number '" + parser.nval
+                                                                    + "' on line " + currentLineNumber
+                                                                    + ". This importer supports only PLY 1.0");
+                                                }
+                                                parser.nextToken();
+                                                if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                    PlyImporter.LOGGER.log(Level.SEVERE,
+                                                            "Format Error: expecting End Of Line on line "
+                                                                    + currentLineNumber);
                                                 }
                                             } else {
                                                 PlyImporter.LOGGER.log(Level.SEVERE,
-                                                        "First data type (float32, int8, ...) missing on line "
-                                                                + currentLineNumber);
+                                                        "Format version number missing on line " + currentLineNumber
+                                                                + "\n");
+                                                versionNumber = Double.NaN;
                                             }
+                                            formatWithVersionNumber = new FormatWithVersionNumber(format,
+                                                    versionNumber);
+                                            PlyImporter.LOGGER.log(Level.INFO,
+                                                    "Format '" + (format == null ? "null" : format.name())
+                                                            + "' version number '" + versionNumber
+                                                            + "' detected on line " + currentLineNumber);
                                         } else {
-                                            // scalar property (vertex coordinates, normal coordinates, ...)
-                                            Data data = null;
-                                            try {
-                                                data = Data.get(parser.sval);
-                                            } catch (final IllegalArgumentException iae) {
-                                                PlyImporter.LOGGER.log(Level.SEVERE, "Data type '" + parser.sval
-                                                        + "' unknown on line " + currentLineNumber);
-                                            }
-                                            if (data != null) {
-                                                parser.nextToken();
-                                                if (parser.ttype == StreamTokenizer.TT_WORD) {
-                                                    final String scalarPropertyName = parser.sval;
-                                                    final ScalarProperty scalarProperty = ScalarProperty
-                                                            .get(scalarPropertyName);
-                                                    final ScalarPropertyWithKeyword scalarPropertyWithKeyword = new ScalarPropertyWithKeyword(
-                                                            scalarProperty, scalarPropertyName, data);
-                                                    if (Arrays.asList(scalarProperty.getElements())
-                                                            .contains(latestInsertedElementWithKeyword.getEnumKey())) {
-                                                        final Entry<Integer, Set<AbstractPropertyWithKeyword<?>>> elementMapValue = elementMap
-                                                                .get(latestInsertedElementWithKeyword);
-                                                        Set<AbstractPropertyWithKeyword<?>> propertySet = elementMapValue
-                                                                .getValue();
-                                                        if (propertySet == null) {
-                                                            propertySet = new LinkedHashSet<>();
-                                                            elementMapValue.setValue(propertySet);
-                                                        }
-                                                        propertySet.add(scalarPropertyWithKeyword);
-                                                        PlyImporter.LOGGER.log(Level.INFO, scalarPropertyWithKeyword
-                                                                + " detected on line " + currentLineNumber);
-                                                    } else {
-                                                        PlyImporter.LOGGER.log(Level.SEVERE,
-                                                                "Unexpected " + scalarPropertyWithKeyword + " in a "
-                                                                        + latestInsertedElementWithKeyword + " on line "
-                                                                        + currentLineNumber);
-                                                    }
-                                                } else {
-                                                    PlyImporter.LOGGER.log(Level.SEVERE,
-                                                            "Scalar property keyword (x, nx, vertex1, red, ...) missing on line "
-                                                                    + currentLineNumber);
-                                                }
-                                            }
+                                            PlyImporter.LOGGER.log(Level.WARNING,
+                                                    "Format already defined, format declaration ignored on line "
+                                                            + currentLineNumber);
                                         }
                                     } else {
                                         PlyImporter.LOGGER.log(Level.SEVERE,
-                                                "Property type (list) or scalar data type (float32, int8, ...) missing on line "
+                                                "Format type (ascii, binary_big_endian or binary_little_endian) missing on line "
                                                         + currentLineNumber);
                                     }
+                                    break;
                                 }
-                                break;
+                                case "element": {
+                                    parser.nextToken();
+                                    if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                        final String elementName = parser.sval;
+                                        final Element element = Element.get(elementName);
+                                        final ElementWithKeyword elementWithKeyword = new ElementWithKeyword(element,
+                                                elementName);
+                                        if (elementMap.containsKey(element)) {
+                                            PlyImporter.LOGGER.log(Level.WARNING,
+                                                    elementWithKeyword
+                                                            + " already defined, element declaration ignored on line "
+                                                            + currentLineNumber);
+                                        } else {
+                                            final int elementCount;
+                                            if (parser.getNumber()) {
+                                                elementCount = (int) parser.nval;
+                                                if (elementCount < 0) {
+                                                    PlyImporter.LOGGER.log(Level.SEVERE,
+                                                            elementWithKeyword + " count = " + elementCount
+                                                                    + " whereas it should be >= 0 on line "
+                                                                    + currentLineNumber);
+                                                }
+                                                parser.nextToken();
+                                                if (parser.ttype != StreamTokenizer.TT_EOL) {
+                                                    PlyImporter.LOGGER.log(Level.SEVERE,
+                                                            "Format Error: expecting End Of Line on line "
+                                                                    + currentLineNumber);
+                                                }
+                                            } else {
+                                                PlyImporter.LOGGER.log(Level.SEVERE, elementWithKeyword
+                                                        + " count missing on line " + currentLineNumber);
+                                                elementCount = 0;
+                                            }
+                                            elementMap.put(elementWithKeyword,
+                                                    new AbstractMap.SimpleEntry<Integer, Set<AbstractPropertyWithKeyword<?>>>(
+                                                            Integer.valueOf(elementCount), null));
+                                            PlyImporter.LOGGER.log(Level.INFO,
+                                                    elementWithKeyword + " detected on line " + currentLineNumber);
+                                        }
+                                    } else {
+                                        PlyImporter.LOGGER.log(Level.SEVERE,
+                                                "Element type (vertex, face or edge) missing on line "
+                                                        + currentLineNumber);
+                                    }
+                                    break;
+                                }
+                                case "property": {
+                                    ElementWithKeyword latestInsertedElementWithKeyword = null;
+                                    for (final ElementWithKeyword elementWithKeyword : elementMap.keySet()) {
+                                        latestInsertedElementWithKeyword = elementWithKeyword;
+                                    }
+                                    if (latestInsertedElementWithKeyword == null) {
+                                        PlyImporter.LOGGER.log(Level.SEVERE,
+                                                "Property definition not preceded by an element definition on line "
+                                                        + currentLineNumber);
+                                    } else {
+                                        parser.nextToken();
+                                        if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                            if ("list".equals(parser.sval)) {
+                                                // list property, for face elements (vertex indices, texture
+                                                // coordinates, ...)
+                                                parser.nextToken();
+                                                if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                                    Data countData = null;
+                                                    try {
+                                                        countData = Data.get(parser.sval);
+                                                    } catch (final IllegalArgumentException iae) {
+                                                        PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                "Count data type '" + parser.sval + "' unknown on line "
+                                                                        + currentLineNumber);
+                                                    }
+                                                    if (countData != null) {
+                                                        parser.nextToken();
+                                                        if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                                            Data data = null;
+                                                            try {
+                                                                data = Data.get(parser.sval);
+                                                            } catch (final IllegalArgumentException iae) {
+                                                                PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                        "Data type '" + parser.sval
+                                                                                + "' unknown on line "
+                                                                                + currentLineNumber);
+                                                            }
+                                                            if (data != null) {
+                                                                parser.nextToken();
+                                                                if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                                                    final String listPropertyName = parser.sval;
+                                                                    final ListProperty listProperty = ListProperty
+                                                                            .get(listPropertyName);
+                                                                    final ListPropertyWithKeyword listPropertyWithKeyword = new ListPropertyWithKeyword(
+                                                                            listProperty, listPropertyName, countData,
+                                                                            data);
+                                                                    if (Arrays.asList(listProperty.getElements())
+                                                                            .contains(latestInsertedElementWithKeyword
+                                                                                    .getEnumKey())) {
+                                                                        final Entry<Integer, Set<AbstractPropertyWithKeyword<?>>> elementMapEntry = elementMap
+                                                                                .get(latestInsertedElementWithKeyword);
+                                                                        Set<AbstractPropertyWithKeyword<?>> propertySet = elementMapEntry
+                                                                                .getValue();
+                                                                        if (propertySet == null) {
+                                                                            propertySet = new LinkedHashSet<>();
+                                                                            elementMapEntry.setValue(propertySet);
+                                                                        }
+                                                                        propertySet.add(listPropertyWithKeyword);
+                                                                        PlyImporter.LOGGER.log(Level.INFO,
+                                                                                listPropertyWithKeyword
+                                                                                        + " detected on line "
+                                                                                        + currentLineNumber);
+                                                                    } else {
+                                                                        PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                                "Unexpected " + listPropertyWithKeyword
+                                                                                        + " on line "
+                                                                                        + currentLineNumber);
+                                                                    }
+                                                                } else {
+                                                                    PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                            "List property keyword (vertex_indices, texcoord, ...) missing on line "
+                                                                                    + currentLineNumber);
+                                                                }
+                                                            }
+                                                        } else {
+                                                            PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                    "Second data type (float32, int8, ...) missing on line "
+                                                                            + currentLineNumber);
+                                                        }
+                                                    }
+                                                } else {
+                                                    PlyImporter.LOGGER.log(Level.SEVERE,
+                                                            "First data type (float32, int8, ...) missing on line "
+                                                                    + currentLineNumber);
+                                                }
+                                            } else {
+                                                // scalar property (vertex coordinates, normal coordinates, ...)
+                                                Data data = null;
+                                                try {
+                                                    data = Data.get(parser.sval);
+                                                } catch (final IllegalArgumentException iae) {
+                                                    PlyImporter.LOGGER.log(Level.SEVERE, "Data type '" + parser.sval
+                                                            + "' unknown on line " + currentLineNumber);
+                                                }
+                                                if (data != null) {
+                                                    parser.nextToken();
+                                                    if (parser.ttype == StreamTokenizer.TT_WORD) {
+                                                        final String scalarPropertyName = parser.sval;
+                                                        final ScalarProperty scalarProperty = ScalarProperty
+                                                                .get(scalarPropertyName);
+                                                        final ScalarPropertyWithKeyword scalarPropertyWithKeyword = new ScalarPropertyWithKeyword(
+                                                                scalarProperty, scalarPropertyName, data);
+                                                        if (Arrays.asList(scalarProperty.getElements()).contains(
+                                                                latestInsertedElementWithKeyword.getEnumKey())) {
+                                                            final Entry<Integer, Set<AbstractPropertyWithKeyword<?>>> elementMapValue = elementMap
+                                                                    .get(latestInsertedElementWithKeyword);
+                                                            Set<AbstractPropertyWithKeyword<?>> propertySet = elementMapValue
+                                                                    .getValue();
+                                                            if (propertySet == null) {
+                                                                propertySet = new LinkedHashSet<>();
+                                                                elementMapValue.setValue(propertySet);
+                                                            }
+                                                            propertySet.add(scalarPropertyWithKeyword);
+                                                            PlyImporter.LOGGER.log(Level.INFO, scalarPropertyWithKeyword
+                                                                    + " detected on line " + currentLineNumber);
+                                                        } else {
+                                                            PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                    "Unexpected " + scalarPropertyWithKeyword + " in a "
+                                                                            + latestInsertedElementWithKeyword
+                                                                            + " on line " + currentLineNumber);
+                                                        }
+                                                    } else {
+                                                        PlyImporter.LOGGER.log(Level.SEVERE,
+                                                                "Scalar property keyword (x, nx, vertex1, red, ...) missing on line "
+                                                                        + currentLineNumber);
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            PlyImporter.LOGGER.log(Level.SEVERE,
+                                                    "Property type (list) or scalar data type (float32, int8, ...) missing on line "
+                                                            + currentLineNumber);
+                                        }
+                                    }
+                                    break;
+                                }
+                                default: {
+                                    PlyImporter.LOGGER.log(Level.SEVERE,
+                                            "Unknown command '" + parser.sval + "' on line " + currentLineNumber);
+                                    break;
+                                }
                             }
-                            default: {
-                                PlyImporter.LOGGER.log(Level.SEVERE,
-                                        "Unknown command '" + parser.sval + "' on line " + currentLineNumber);
-                                break;
-                            }
+                        } else {
+                            PlyImporter.LOGGER.log(Level.SEVERE,
+                                    "No word at the beginning of the line " + parser.lineno());
                         }
+                        // reads the whole line, doesn't look at the content
+                        while (parser.ttype != StreamTokenizer.TT_EOL) {
+                            parser.nextToken();
+                        }
+                        // if there is still something to read, reads the next token
+                        if (parser.ttype != StreamTokenizer.TT_EOF) {
+                            parser.nextToken();
+                        }
+                    }
+                    if ("end_header".equals(parser.sval)) {
+                        PlyImporter.LOGGER.log(Level.INFO, "End of header on line " + parser.lineno());
+                        do {
+                            parser.nextToken();
+                        } while (parser.ttype != StreamTokenizer.TT_EOL);
+                        firstLineOfBody = parser.lineno();
                     } else {
-                        PlyImporter.LOGGER.log(Level.SEVERE, "No word at the beginning of the line " + parser.lineno());
+                        throw new Exception("End of header not detected");
                     }
-                    // reads the whole line, doesn't look at the content
-                    while (parser.ttype != StreamTokenizer.TT_EOL) {
-                        parser.nextToken();
-                    }
-                    // if there is still something to read, reads the next token
-                    if (parser.ttype != StreamTokenizer.TT_EOF) {
-                        parser.nextToken();
-                    }
+                } catch (final IOException ioe) {
+                    throw new Exception("IO Error on line " + parser.lineno(), ioe);
                 }
-                if ("end_header".equals(parser.sval)) {
-                    PlyImporter.LOGGER.log(Level.INFO, "End of header on line " + parser.lineno());
-                    do {
-                        parser.nextToken();
-                    } while (parser.ttype != StreamTokenizer.TT_EOL);
-                }
-            } catch (final IOException ioe) {
-                throw new Exception("IO Error on line " + parser.lineno(), ioe);
             }
             if (formatWithVersionNumber == null || formatWithVersionNumber.getFormat() == null) {
                 throw new Exception("Missing or malformed format in the header, cannot read the body of the PLY file");
             } else {
                 // stores the number of the first line of the body, after the header
-                int currentLineNumber = parser.lineno();
+                int currentLineNumber = firstLineOfBody;
                 // restarts the reading of the file from the beginning
                 try (final InputStream stream = resource.openStream()) {
                     // skips the lines of the header
@@ -959,7 +981,7 @@ public class PlyImporter {
                     final PlyReader plyReader;
                     switch (formatWithVersionNumber.getFormat()) {
                         case ASCII: {
-                            plyReader = new AsciiPlyReader(parser);
+                            plyReader = new AsciiPlyReader(stream);
                             break;
                         }
                         case BINARY_BIG_ENDIAN: {
@@ -1055,7 +1077,6 @@ public class PlyImporter {
                     throw new Exception("IO Error on line " + currentLineNumber, ioe);
                 }
             }
-
         } catch (final Throwable t) {
             throw new Error("Unable to load ply resource from URL: " + resource, t);
         }
