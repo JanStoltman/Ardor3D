@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -42,7 +42,7 @@ public abstract class PickResults {
 
     /**
      * Places a new geometry (enclosed in PickData) into the results list.
-     * 
+     *
      * @param data
      *            the PickData to be placed in the results list.
      */
@@ -53,7 +53,7 @@ public abstract class PickResults {
 
     /**
      * <code>getNumber</code> retrieves the number of geometries that have been placed in the results.
-     * 
+     *
      * @return the number of Mesh objects in the list.
      */
     public int getNumber() {
@@ -62,7 +62,7 @@ public abstract class PickResults {
 
     /**
      * Retrieves a geometry (enclosed in PickData) from a specific index.
-     * 
+     *
      * @param i
      *            the index requested.
      * @return the data at the specified index.
@@ -87,7 +87,7 @@ public abstract class PickResults {
     /**
      * <code>addPick</code> generates an entry to be added to the list of picked objects. If checkDistance is true, the
      * implementing class should order the object.
-     * 
+     *
      * @param ray
      *            the ray that was cast for the pick calculation.
      * @param p
@@ -98,13 +98,13 @@ public abstract class PickResults {
     /**
      * Optional method that can be implemented by sub classes to define methods for handling picked objects. After
      * calculating all pick results this method is called.
-     * 
+     *
      */
     public void processPick() {}
 
     /**
      * Reports if these pick results will order the data by distance from the origin of the Ray.
-     * 
+     *
      * @return true if objects will be ordered by distance, false otherwise.
      */
     public boolean willCheckDistance() {
@@ -113,7 +113,7 @@ public abstract class PickResults {
 
     /**
      * Sets if these pick results will order the data by distance from the origin of the Ray.
-     * 
+     *
      * @param checkDistance
      *            true if objects will be ordered by distance, false otherwise.
      */
@@ -131,7 +131,10 @@ public abstract class PickResults {
 
         @Override
         public int compare(final PickData o1, final PickData o2) {
-            if (o1.getIntersectionRecord().getClosestDistance() <= o2.getIntersectionRecord().getClosestDistance()) {
+            if (o1.getIntersectionRecord().getClosestDistance() == o2.getIntersectionRecord().getClosestDistance()) {
+                return 0;
+            }
+            if (o1.getIntersectionRecord().getClosestDistance() < o2.getIntersectionRecord().getClosestDistance()) {
                 return -1;
             }
 
