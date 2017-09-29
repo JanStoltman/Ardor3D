@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -40,7 +40,7 @@ public class Box extends Mesh {
 
     /**
      * Constructs a new 1x1x1 <code>Box</code> with the given name.
-     * 
+     *
      * @param name
      *            the name to give this new box. This is required for identification and comparison purposes.
      */
@@ -52,7 +52,7 @@ public class Box extends Mesh {
     /**
      * Constructs a new <code>Box</code> object using the given two points as opposite corners of the box. These two
      * points may be in any order.
-     * 
+     *
      * @param name
      *            the name to give this new box. This is required for identification and comparison purposes.
      * @param pntA
@@ -68,7 +68,7 @@ public class Box extends Mesh {
     /**
      * Constructs a new <code>Box</code> object using the given center and extents. Since the extents represent the
      * distance from the center of the box to the edge, the full length of a side is actually 2 * extent.
-     * 
+     *
      * @param name
      *            the name to give this new box. This is required for identification and comparison purposes.
      * @param center
@@ -117,7 +117,7 @@ public class Box extends Mesh {
     /**
      * Updates the center point and extents of this box to match an axis-aligned box defined by the two given opposite
      * corners.
-     * 
+     *
      * @param pntA
      *            the first point
      * @param pntB
@@ -134,7 +134,7 @@ public class Box extends Mesh {
 
     /**
      * Updates the center point and extents of this box using the defined values.
-     * 
+     *
      * @param center
      *            The center of the box.
      * @param xExtent
@@ -144,7 +144,8 @@ public class Box extends Mesh {
      * @param zExtent
      *            z extent of the box
      */
-    public void setData(final ReadOnlyVector3 center, final double xExtent, final double yExtent, final double zExtent) {
+    public void setData(final ReadOnlyVector3 center, final double xExtent, final double yExtent,
+            final double zExtent) {
         if (center != null) {
             _center.set(center);
         }
@@ -244,12 +245,13 @@ public class Box extends Mesh {
             for (int i = 0; i < 4; i++) {
                 _meshData.getNormalBuffer().put(0).put(-1).put(0);
             }
+            _meshData.getNormalBuffer().rewind();
         }
     }
 
     /**
      * <code>setTextureData</code> sets the points that define the texture of the box. It's a one-to-one ratio, where
-     * each plane of the box has it's own copy of the texture. That is, the texture is repeated one time for each six
+     * each plane of the box has its own copy of the texture. That is, the texture is repeated one time for each six
      * faces.
      */
     private void setTextureData() {
@@ -263,6 +265,7 @@ public class Box extends Mesh {
                 tex.put(0).put(1);
                 tex.put(1).put(1);
             }
+            tex.rewind();
         }
     }
 
@@ -283,7 +286,7 @@ public class Box extends Mesh {
 
     /**
      * <code>clone</code> creates a new Box object containing the same data as this one.
-     * 
+     *
      * @return the new Box
      */
     @Override
