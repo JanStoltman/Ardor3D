@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,7 @@
 package com.ardor3d.extension.shadow.map;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,7 @@ import com.ardor3d.scenegraph.Line;
 import com.ardor3d.scenegraph.Mesh;
 import com.ardor3d.scenegraph.Renderable;
 import com.ardor3d.scenegraph.Spatial;
+import com.ardor3d.scenegraph.hint.CullHint;
 import com.ardor3d.scenegraph.hint.LightCombineMode;
 import com.ardor3d.scenegraph.shape.Sphere;
 import com.ardor3d.util.geom.BufferUtils;
@@ -98,7 +100,7 @@ public class ParallelSplitShadowMapPass extends Pass {
     /** The textures storing the shadow maps. */
     private Texture2D _shadowMapTexture[];
 
-    /** The list of occluding nodes. */
+    /** The list of occluding nodes - filled from ShadowCasterManager. */
     private final List<Spatial> _occluderNodes = new ArrayList<>();
 
     /** Extra bounds receivers, when rendering shadows other ways than through overlay */
@@ -123,6 +125,9 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /** The state applying the depth offset for the shadow. */
     private final OffsetState _shadowOffsetState;
+
+    /** Apply offset during render pass to avoid z fighting in shadow overlay */
+    private final OffsetState _shadowPassOffsetState;
 
     /**
      * The blending to both discard the fragments that have been determined to be free of shadows and to blend into the
@@ -231,7 +236,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Create a pssm shadow map pass casting shadows from a light with the direction given.
-     * 
+     *
      * @param shadowMapSize
      *            The size of the shadow map texture
      * @param numOfSplits
@@ -258,8 +263,14 @@ public class ParallelSplitShadowMapPass extends Pass {
         _shadowOffsetState = new OffsetState();
         _shadowOffsetState.setEnabled(true);
         _shadowOffsetState.setTypeEnabled(OffsetType.Fill, true);
-        _shadowOffsetState.setFactor(1.1f);
-        _shadowOffsetState.setUnits(4.0f);
+        _shadowOffsetState.setFactor(1.0f);
+        _shadowOffsetState.setUnits(1.0f);
+
+        _shadowPassOffsetState = new OffsetState();
+        _shadowPassOffsetState.setEnabled(true);
+        _shadowPassOffsetState.setTypeEnabled(OffsetType.Fill, true);
+        _shadowPassOffsetState.setFactor(-1.0f);
+        _shadowPassOffsetState.setUnits(4.0f);
 
         _flat = new ShadingState();
         _flat.setShadingMode(ShadingMode.Flat);
@@ -277,30 +288,8 @@ public class ParallelSplitShadowMapPass extends Pass {
     }
 
     /**
-     * Add a spatial that will occlude light and hence cast a shadow.
-     * 
-     * @param occluder
-     *            The spatial to add as an occluder
-     */
-    public void addOccluder(final Spatial occluder) {
-        if (!_occluderNodes.contains(occluder)) {
-            _occluderNodes.add(occluder);
-        }
-    }
-
-    /**
-     * Remove a spatial from the list of occluders.
-     * 
-     * @param occluder
-     *            The spatial to remove from the occluderlist
-     */
-    public void removeOccluder(final Spatial occluder) {
-        _occluderNodes.remove(occluder);
-    }
-
-    /**
      * Initialize the pass render states.
-     * 
+     *
      * @param r
      *            the r
      */
@@ -358,7 +347,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Reinit texture size. Sets up texture renderer.
-     * 
+     *
      * @param r
      *            the Renderer
      */
@@ -437,7 +426,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Render the pass.
-     * 
+     *
      * @param r
      *            the Renderer
      */
@@ -567,7 +556,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Calculate optimal light frustum perspective.
-     * 
+     *
      * @param frustumCorners
      *            the frustum corners
      * @param center
@@ -637,7 +626,7 @@ public class ParallelSplitShadowMapPass extends Pass {
     /**
      * Saving this around until we fully support a good solution for non-directional lights. Like dual paraboloid shadow
      * maps...
-     * 
+     *
      * @param frustumCorners
      * @param center
      */
@@ -720,7 +709,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Render the overlay scene with shadows.
-     * 
+     *
      * @param r
      *            The renderer to use
      */
@@ -734,6 +723,7 @@ public class ParallelSplitShadowMapPass extends Pass {
         _context.pushEnforcedStates();
         _context.enforceState(_shadowTextureState);
         _context.enforceState(_discardShadowFragments);
+        _context.enforceState(_shadowPassOffsetState);
 
         if (_pssmShader != null && _context.getCapabilities().isGLSLSupported()) {
             GLSLShaderObjectsState currentShader = _drawShaderDebug ? _pssmDebugShader : _pssmShader;
@@ -799,7 +789,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Update the shadow map.
-     * 
+     *
      * @param index
      *            shadow map texture index to update
      */
@@ -813,6 +803,13 @@ public class ParallelSplitShadowMapPass extends Pass {
         if (!_useSceneTexturing) {
             Mesh.RENDER_VERTEX_ONLY = true;
         }
+        _occluderNodes.clear();
+        for (final WeakReference<Spatial> ref : ShadowCasterManager.INSTANCE.getSpatialRefs()) {
+            final Spatial spat = ref.get();
+            if (spat != null) {
+                _occluderNodes.add(spat);
+            }
+        }
         _shadowMapRenderer.render(_occluderNodes, _shadowMapTexture[index], Renderer.BUFFER_COLOR_AND_DEPTH);
         if (!_useSceneTexturing) {
             Mesh.RENDER_VERTEX_ONLY = false;
@@ -822,7 +819,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Update texture matrix.
-     * 
+     *
      * @param index
      *            the index
      */
@@ -837,7 +834,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Checks if this pass is initialized.
-     * 
+     *
      * @return true, if is initialized
      */
     public boolean isInitialised() {
@@ -845,11 +842,19 @@ public class ParallelSplitShadowMapPass extends Pass {
     }
 
     /**
-     * 
+     *
      * @return the offset state used for drawing the shadow textures.
      */
     public OffsetState getShadowOffsetState() {
         return _shadowOffsetState;
+    }
+
+    /**
+     *
+     * @return the offset state used when drawing the shadow overlay pass.
+     */
+    public OffsetState getShadowPassOffsetState() {
+        return _shadowPassOffsetState;
     }
 
     /**
@@ -861,7 +866,8 @@ public class ParallelSplitShadowMapPass extends Pass {
 
         for (int i = 0, cSize = _boundsReceiver.size(); i < cSize; i++) {
             final Spatial child = _boundsReceiver.get(i);
-            if (child != null && child.getWorldBound() != null && boundIsValid(child.getWorldBound())) {
+            if (child != null && child.getSceneHints().getCullHint() != CullHint.Always && child.getWorldBound() != null
+                    && boundIsValid(child.getWorldBound())) {
                 if (firstRun) {
                     _receiverBounds.setCenter(child.getWorldBound().getCenter());
                     _receiverBounds.setXExtent(0);
@@ -876,7 +882,8 @@ public class ParallelSplitShadowMapPass extends Pass {
 
         for (int i = 0, cSize = _spatials.size(); i < cSize; i++) {
             final Spatial child = _spatials.get(i);
-            if (child != null && child.getWorldBound() != null && boundIsValid(child.getWorldBound())) {
+            if (child != null && child.getSceneHints().getCullHint() != CullHint.Always && child.getWorldBound() != null
+                    && boundIsValid(child.getWorldBound())) {
                 if (firstRun) {
                     _receiverBounds.setCenter(child.getWorldBound().getCenter());
                     _receiverBounds.setXExtent(0);
@@ -892,7 +899,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Checks if a bounding volume is valid.
-     * 
+     *
      * @param volume
      * @return
      */
@@ -925,10 +932,10 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Gets the shadow map texture.
-     * 
+     *
      * @param index
      *            the index
-     * 
+     *
      * @return the shadow map texture
      */
     public Texture2D getShadowMapTexture(final int index) {
@@ -937,7 +944,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Gets the number of splits.
-     * 
+     *
      * @return the number of splits
      */
     public int getNumOfSplits() {
@@ -947,7 +954,7 @@ public class ParallelSplitShadowMapPass extends Pass {
     /**
      * Sets the number of frustum splits and thus the number of shadow textures created by this pass. More splits
      * creates crisper shadows at the cost of increased texture memory.
-     * 
+     *
      * @param numOfSplits
      *            the new number of splits
      */
@@ -963,7 +970,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Gets the shadow map size.
-     * 
+     *
      * @return the shadow map size
      */
     public int getShadowMapSize() {
@@ -972,7 +979,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Sets the shadow map size.
-     * 
+     *
      * @param shadowMapSize
      *            the new shadow map size
      */
@@ -984,7 +991,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Gets the maximum distance for shadowing.
-     * 
+     *
      * @return max distance
      * @see com.ardor3d.extension.shadow.map.PSSMCamera#getMaxFarPlaneDistance()
      */
@@ -994,7 +1001,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Sets the maximum distance for shadowing.
-     * 
+     *
      * @param maxShadowDistance
      *            distance to set
      * @see com.ardor3d.extension.shadow.map.PSSMCamera#setMaxFarPlaneDistance(double)
@@ -1005,7 +1012,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Gets the minimum z distance for the light.
-     * 
+     *
      * @return the minimumLightDistance
      */
     public double getMinimumLightDistance() {
@@ -1014,7 +1021,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Sets the minimum z distance for the light.
-     * 
+     *
      * @param minimumLightDistance
      *            the minimumLightDistance to set
      */
@@ -1024,7 +1031,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Gets shadow color and transparency.
-     * 
+     *
      * @return the shadowColor
      */
     public ReadOnlyColorRGBA getShadowColor() {
@@ -1033,7 +1040,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Sets shadow color and transparency.
-     * 
+     *
      * @param shadowColor
      *            the shadowColor to set
      */
@@ -1051,7 +1058,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Clean up.
-     * 
+     *
      * @see com.ardor3d.renderer.pass.Pass#cleanUp()
      */
     @Override
@@ -1073,7 +1080,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Simple clamp.
-     * 
+     *
      * @param val
      *            value to clamp
      * @param from
@@ -1230,7 +1237,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Draw debug frustum.
-     * 
+     *
      * @param r
      *            the r
      * @param cam
@@ -1247,7 +1254,7 @@ public class ParallelSplitShadowMapPass extends Pass {
 
     /**
      * Draw debug frustum.
-     * 
+     *
      * @param r
      *            the r
      * @param cam
