@@ -3,15 +3,13 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.interact.widget;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ardor3d.extension.interact.InteractManager;
@@ -48,19 +46,18 @@ public abstract class AbstractInteractWidget {
 
     protected InteractMatrix _interactMatrix = InteractMatrix.World;
 
-    /**
-     * List of filters to modify state after applying input.
-     */
-    protected List<UpdateFilter> _filters = new ArrayList<>();
+    /** List of filters to modify state after applying input. */
+    protected IFilterList _filters;
 
-    public AbstractInteractWidget() {
+    public AbstractInteractWidget(final IFilterList filterList) {
         _results.setCheckDistance(true);
+        _filters = filterList;
     }
 
     /**
      * Use the given inputstates to determine if and how to activate this widget. If the widget uses the given input,
      * inputConsumed should be set to "true" and applyFilters should be called by this method.
-     * 
+     *
      * @param source
      *            the canvas that is our input source.
      * @param inputStates
@@ -73,38 +70,31 @@ public abstract class AbstractInteractWidget {
      *            our interact manager.
      */
     public void processInput(final Canvas source, final TwoInputStates inputStates, final AtomicBoolean inputConsumed,
-            final InteractManager manager) {}
+            final InteractManager manager) { /**/}
 
     protected void applyFilters(final InteractManager manager) {
-        // apply any filters to our state
-        for (final UpdateFilter filter : _filters) {
-            filter.applyFilter(manager);
-        }
+        _filters.applyFilters(manager);
     }
 
     public void beginDrag(final InteractManager manager) {
         _dragging = true;
-        for (final UpdateFilter filter : _filters) {
-            filter.beginDrag(manager);
-        }
+        _filters.beginDrag(manager);
     }
 
     public void endDrag(final InteractManager manager) {
         _dragging = false;
-        for (final UpdateFilter filter : _filters) {
-            filter.endDrag(manager);
-        }
+        _filters.endDrag(manager);
     }
 
     public void update(final ReadOnlyTimer timer, final InteractManager manager) {
         _handle.updateGeometricState(timer.getTimePerFrame());
     }
 
-    public void render(final Renderer renderer, final InteractManager manager) {}
+    public void render(final Renderer renderer, final InteractManager manager) { /**/}
 
-    public void targetChanged(final InteractManager manager) {}
+    public void targetChanged(final InteractManager manager) { /**/}
 
-    public void targetDataUpdated(final InteractManager manager) {}
+    public void targetDataUpdated(final InteractManager manager) { /**/}
 
     public void receivedControl(final InteractManager manager) {
         if (_dragging) {
@@ -112,7 +102,7 @@ public abstract class AbstractInteractWidget {
         }
     }
 
-    public void lostControl(final InteractManager manager) {}
+    public void lostControl(final InteractManager manager) { /**/}
 
     public boolean isActiveInputOnly() {
         return _activeInputOnly;
@@ -159,7 +149,8 @@ public abstract class AbstractInteractWidget {
     }
 
     protected Vector3 getLastPick() {
-        if (_results.getNumber() > 0 && _results.getPickData(0).getIntersectionRecord().getNumberOfIntersections() > 0) {
+        if (_results.getNumber() > 0
+                && _results.getPickData(0).getIntersectionRecord().getNumberOfIntersections() > 0) {
             return _results.getPickData(0).getIntersectionRecord().getIntersectionPoint(0);
         }
         return null;

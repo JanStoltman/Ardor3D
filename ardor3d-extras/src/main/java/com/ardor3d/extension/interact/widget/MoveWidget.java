@@ -49,7 +49,10 @@ public class MoveWidget extends AbstractInteractWidget {
     protected ColorRGBA _yColor = new ColorRGBA(0, 1, 0, .65f);
     protected ColorRGBA _zColor = new ColorRGBA(0, 0, 1, .65f);
 
-    public MoveWidget() {
+    protected InteractMatrix _interactMatrix = InteractMatrix.World;
+
+    public MoveWidget(final IFilterList filterList) {
+        super(filterList);
         _handle = new Node("moveHandle");
 
         final BlendState blend = new BlendState();
