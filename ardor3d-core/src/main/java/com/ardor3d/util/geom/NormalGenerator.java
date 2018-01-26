@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Ardor Labs, Inc.
+ * Copyright (c) 2008-2018 Ardor Labs, Inc.
  *
  * This file is part of Ardor3D.
  *
@@ -237,9 +237,7 @@ public class NormalGenerator {
         // Apply the buffers to the mesh
         mesh.getMeshData().setVertexBuffer(vertices);
         mesh.getMeshData().setNormalBuffer(normals);
-        if (colors != null) {
-            mesh.getMeshData().setColorBuffer(colors);
-        }
+        mesh.getMeshData().setColorBuffer(colors);
         mesh.getMeshData().getTextureCoords().clear();
         if (texCoords != null) {
             mesh.getMeshData().setTextureBuffer(texCoords, 0);
@@ -355,9 +353,7 @@ public class NormalGenerator {
             // Connect the triangle to the split mesh
             triIt.remove();
             _destTris.addLast(result);
-            borderEdge.connected = result;
             final Edge resultEdge = result.edges[connected];
-            resultEdge.connected = borderEdge.parent;
             edgeIt.remove();
             edgeIt.add(result.edges[(connected + 1) % 3]);
             edgeIt.add(result.edges[(connected + 2) % 3]);
@@ -671,8 +667,6 @@ public class NormalGenerator {
 
         public Vector3 normal = new Vector3(0, 0, 0);
 
-        // public Triangle() {}
-
         /**
          * Creates the triangle.
          *
@@ -704,28 +698,13 @@ public class NormalGenerator {
             normal.set(_compVect0.crossLocal(_compVect1)).normalizeLocal();
         }
 
-        /**
-         * @param edge
-         *            An Edge to get the index of
-         * @return The index of the edge in the triangle, or -1, if it is not contained in the triangle
-         */
-        @SuppressWarnings("unused")
-        public int indexOf(final Edge edge) {
-            for (int i = 0; i < 3; i++) {
-                if (edges[i] == edge) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         @Override
         public String toString() {
             final StringBuilder result = new StringBuilder("Triangle (");
             for (int i = 0; i < 3; i++) {
                 final Edge edge = edges[i];
                 if (edge == null) {
-                    result.append('?');
+                    result.append("?");
                 } else {
                     if (edge.newI0 > -1) {
                         result.append(edge.newI0);
@@ -737,7 +716,7 @@ public class NormalGenerator {
                     result.append(", ");
                 }
             }
-            result.append(')');
+            result.append(")");
             return result.toString();
         }
     }
@@ -760,12 +739,6 @@ public class NormalGenerator {
 
         // The Triangle containing this Edge
         public Triangle parent;
-
-        // A Triangle this Edge is connected to, or null, if it is not connected
-        @SuppressWarnings("unused")
-        public Triangle connected;
-
-        // public Edge() {}
 
         /**
          * Creates this edge.
