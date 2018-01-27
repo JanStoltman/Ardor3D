@@ -116,9 +116,9 @@ public class UIHud extends Node {
     private MouseManager _mouseManager;
 
     /**
-     * The list of currently displayed popup menus, with each entry being a submenu of the one previous.
+     * The list of currently displayed pop-overs, with each entry being a "child" of the one previous.
      */
-    private final List<UIPopupMenu> _popupMenus = new ArrayList<>();
+    private final List<IPopOver> _popovers = new ArrayList<>();
 
     /**
      * Construct a new UIHud
@@ -246,9 +246,11 @@ public class UIHud extends Node {
      */
     public UIComponent getUIComponent(final int x, final int y) {
         UIComponent found = null;
-        for (int i = _popupMenus.size(); --i >= 0;) {
-            final UIPopupMenu menu = _popupMenus.get(i);
-            found = menu.getUIComponent(x, y);
+
+        // check for a popover first
+        for (int i = _popovers.size(); --i >= 0;) {
+            final IPopOver popover = _popovers.get(i);
+            found = popover.getUIComponent(x, y);
             if (found != null) {
                 return found;
             }
@@ -338,9 +340,9 @@ public class UIHud extends Node {
                     child.onDraw(r);
                 }
             }
-            if (!_popupMenus.isEmpty()) {
-                for (i = 0, max = _popupMenus.size(); i < max; i++) {
-                    _popupMenus.get(i).onDraw(r);
+            if (!_popovers.isEmpty()) {
+                for (i = 0, max = _popovers.size(); i < max; i++) {
+                    _popovers.get(i).onDraw(r);
                 }
             }
             if (_ttip != null && _ttip.isVisible()) {
@@ -359,9 +361,9 @@ public class UIHud extends Node {
     @Override
     public void updateGeometricState(final double time, final boolean initiator) {
         super.updateGeometricState(time, initiator);
-        if (!_popupMenus.isEmpty()) {
-            for (int i = 0, max = _popupMenus.size(); i < max; i++) {
-                _popupMenus.get(i).updateGeometricState(time, true);
+        if (!_popovers.isEmpty()) {
+            for (int i = 0, max = _popovers.size(); i < max; i++) {
+                _popovers.get(i).updateGeometricState(time, true);
             }
         }
         if (_ttip != null && _ttip.isVisible()) {
@@ -681,7 +683,7 @@ public class UIHud extends Node {
 
         // bring any clicked components to front
         final UIComponent component = over.getTopLevelComponent();
-        if (component != null && !(component instanceof UIPopupMenu)) {
+        if (component != null && !(component instanceof IPopOver)) {
             bringToFront(component);
             closePopupMenus();
         }
@@ -859,10 +861,10 @@ public class UIHud extends Node {
     }
 
     public void closePopupMenus() {
-        for (final UIPopupMenu menu : _popupMenus) {
+        for (final IPopOver menu : _popovers) {
             menu.close();
         }
-        _popupMenus.clear();
+        _popovers.clear();
     }
 
     public void closePopupMenusAfter(final Object parent) {
@@ -872,8 +874,8 @@ public class UIHud extends Node {
         }
 
         boolean found = false;
-        for (final Iterator<UIPopupMenu> it = _popupMenus.iterator(); it.hasNext();) {
-            final UIPopupMenu pMenu = it.next();
+        for (final Iterator<IPopOver> it = _popovers.iterator(); it.hasNext();) {
+            final IPopOver pMenu = it.next();
             if (found) {
                 pMenu.close();
                 it.remove();
@@ -883,14 +885,14 @@ public class UIHud extends Node {
         }
     }
 
-    public void showPopupMenu(final UIPopupMenu menu) {
+    public void showPopOver(final IPopOver pop) {
         closePopupMenus();
-        _popupMenus.add(menu);
-        menu.setHud(this);
+        _popovers.add(pop);
+        pop.setHud(this);
     }
 
-    public void showSubPopupMenu(final UIPopupMenu menu) {
-        _popupMenus.add(menu);
-        menu.setHud(this);
+    public void showSubPopupMenu(final IPopOver pop) {
+        _popovers.add(pop);
+        pop.setHud(this);
     }
 }

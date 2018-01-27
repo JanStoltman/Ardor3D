@@ -34,6 +34,62 @@ public class ImageBorder extends UIBorder {
     private SubTex _bottomRightCorner = null;
 
     /**
+     * Construct this border as a 9-slice using the given subtex and its defined borders.
+     *
+     * @param subtex
+     */
+    public ImageBorder(final SubTex subtex) {
+        super(subtex.getBorderTop(), subtex.getBorderLeft(), subtex.getBorderBottom(), subtex.getBorderRight());
+        final int top = subtex.getBorderTop();
+        final int left = subtex.getBorderLeft();
+        final int bottom = subtex.getBorderBottom();
+        final int right = subtex.getBorderRight();
+
+        if (top > 0) {
+            _topEdge = new SubTex(subtex.getTexture(), subtex.getX() + left, subtex.getY(), subtex.getWidth() - left
+                    - right, top);
+            if (left > 0) {
+                _topLeftCorner = new SubTex(subtex.getTexture(), subtex.getX(), subtex.getY(), left, top);
+            }
+            if (right > 0) {
+                _topRightCorner = new SubTex(subtex.getTexture(), subtex.getX() + subtex.getWidth() - right,
+                        subtex.getY(), right, top);
+            }
+        } else {
+            _topEdge = new SubTex(subtex.getTexture(), 0, 0, 0, 0);
+        }
+
+        if (left > 0) {
+            _leftEdge = new SubTex(subtex.getTexture(), subtex.getX(), subtex.getY() + top, left, subtex.getHeight()
+                    - top - bottom);
+        } else {
+            _leftEdge = new SubTex(subtex.getTexture(), 0, 0, 0, 0);
+        }
+
+        if (right > 0) {
+            _rightEdge = new SubTex(subtex.getTexture(), subtex.getX() + subtex.getWidth() - right,
+                    subtex.getY() + top, right, subtex.getHeight() - top - bottom);
+        } else {
+            _rightEdge = new SubTex(subtex.getTexture(), 0, 0, 0, 0);
+        }
+
+        if (bottom > 0) {
+            final int botY = subtex.getY() + subtex.getHeight() - bottom;
+            _bottomEdge = new SubTex(subtex.getTexture(), subtex.getX() + left, botY, subtex.getWidth() - left - right,
+                    bottom);
+            if (left > 0) {
+                _bottomLeftCorner = new SubTex(subtex.getTexture(), subtex.getX(), botY, left, bottom);
+            }
+            if (right > 0) {
+                _bottomRightCorner = new SubTex(subtex.getTexture(), subtex.getX() + subtex.getWidth() - right, botY,
+                        right, bottom);
+            }
+        } else {
+            _bottomEdge = new SubTex(subtex.getTexture(), 0, 0, 0, 0);
+        }
+    }
+
+    /**
      * Construct this border using the given edge images. The corners will not be drawn.
      *
      * @param leftEdge
