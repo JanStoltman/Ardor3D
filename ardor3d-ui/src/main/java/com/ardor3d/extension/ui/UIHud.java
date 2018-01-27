@@ -499,7 +499,7 @@ public class UIHud extends Node {
                         if (!_keyInputConsumed) {
                             // nothing consumed
                             forwardTo.getApplier()
-                            .checkAndPerformTriggers(forwardTo.getTriggers(), source, states, tpf);
+                                    .checkAndPerformTriggers(forwardTo.getTriggers(), source, states, tpf);
                         } else {
                             // only key state consumed
                             final TwoInputStates forwardingState = new TwoInputStates(states.getPrevious(),
@@ -862,7 +862,9 @@ public class UIHud extends Node {
 
     public void closePopupMenus() {
         for (final IPopOver menu : _popovers) {
-            menu.close();
+            if (menu.isAttachedToHUD()) {
+                menu.close();
+            }
         }
         _popovers.clear();
     }
@@ -892,6 +894,7 @@ public class UIHud extends Node {
     }
 
     public void showSubPopupMenu(final IPopOver pop) {
+        _popovers.remove(pop);
         _popovers.add(pop);
         pop.setHud(this);
     }
