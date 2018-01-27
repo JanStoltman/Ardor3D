@@ -20,10 +20,12 @@ import com.ardor3d.extension.interact.filter.UpdateFilter;
 public class BasicFilterList implements IFilterList {
     final List<UpdateFilter> _filters = new ArrayList<>();
 
+    @Override
     public Iterator<UpdateFilter> iterator() {
         return _filters.iterator();
     }
 
+    @Override
     public void applyFilters(final InteractManager manager) {
         // apply any filters to our state
         for (final UpdateFilter filter : _filters) {
@@ -31,34 +33,41 @@ public class BasicFilterList implements IFilterList {
         }
     }
 
+    @Override
     public void beginDrag(final InteractManager manager) {
         for (final UpdateFilter filter : _filters) {
             filter.beginDrag(manager);
         }
     }
 
+    @Override
     public void endDrag(final InteractManager manager) {
         for (final UpdateFilter filter : _filters) {
             filter.endDrag(manager);
         }
     }
 
+    @Override
     public int size() {
         return _filters.size();
     }
 
+    @Override
     public UpdateFilter get(final int index) {
         return _filters.get(index);
     }
 
+    @Override
     public boolean add(final UpdateFilter filter) {
         return _filters.add(filter);
     }
 
+    @Override
     public boolean remove(final UpdateFilter filter) {
         return _filters.remove(filter);
     }
 
+    @Override
     public void clear() {
         _filters.clear();
     }

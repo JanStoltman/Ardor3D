@@ -37,6 +37,7 @@ public class UIPieMenuItem extends UIMenuItem {
     public UIPieMenuItem(final String text, final SubTex icon, final UIPieMenu subMenu, final int size) {
         super(text, icon, false, null);
         addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent event) {
                 showSubMenu(subMenu, size);
             }
