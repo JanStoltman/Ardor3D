@@ -76,14 +76,13 @@ import com.ardor3d.scenegraph.shape.Tube;
 import com.ardor3d.scenegraph.visitor.Visitor;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.ardor3d.util.TextureManager;
-import com.google.common.collect.Lists;
 
 /**
  * An example illustrating the use of the interact framework.
  */
 @Purpose(htmlDescriptionKey = "com.ardor3d.example.interact.InteractUIExample", //
-thumbnailPath = "com/ardor3d/example/media/thumbnails/interact_InteractUIExample.jpg", //
-maxHeapMemory = 64)
+        thumbnailPath = "com/ardor3d/example/media/thumbnails/interact_InteractUIExample.jpg", //
+        maxHeapMemory = 64)
 public class InteractUIExample extends ExampleBase {
 
     final UIHud hud = new UIHud();
@@ -155,7 +154,7 @@ public class InteractUIExample extends ExampleBase {
         _root.updateGeometricState(0);
     }
 
-    LinkedList<Spatial> path = Lists.newLinkedList();
+    LinkedList<Spatial> path = new LinkedList<>();
 
     private void initPath() {
         final Spatial marker1 = createMarker();
@@ -198,6 +197,7 @@ public class InteractUIExample extends ExampleBase {
         t.addController(new SpatialController<Spatial>() {
             private double _scaleTime = 0;
 
+            @Override
             public void update(final double time, final Spatial caller) {
                 // update our rotation
                 final double pulseSpeed = ((MarkerData) t.getUserData()).pulseSpeed;
@@ -289,43 +289,43 @@ public class InteractUIExample extends ExampleBase {
         manager.setActiveWidget(moveWidget);
 
         // add triggers to change which widget is active
-        manager.getLogicalLayer().registerTrigger(
-                new InputTrigger(new KeyReleasedCondition(Key.ONE), new TriggerAction() {
+        manager.getLogicalLayer()
+                .registerTrigger(new InputTrigger(new KeyReleasedCondition(Key.ONE), new TriggerAction() {
                     @Override
                     public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                         manager.setActiveWidget(moveWidget);
                     }
                 }));
-        manager.getLogicalLayer().registerTrigger(
-                new InputTrigger(new KeyReleasedCondition(Key.TWO), new TriggerAction() {
+        manager.getLogicalLayer()
+                .registerTrigger(new InputTrigger(new KeyReleasedCondition(Key.TWO), new TriggerAction() {
                     @Override
                     public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                         manager.setActiveWidget(insertWidget);
                     }
                 }));
-        manager.getLogicalLayer().registerTrigger(
-                new InputTrigger(new KeyReleasedCondition(Key.THREE), new TriggerAction() {
+        manager.getLogicalLayer()
+                .registerTrigger(new InputTrigger(new KeyReleasedCondition(Key.THREE), new TriggerAction() {
                     @Override
                     public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                         manager.setActiveWidget(colorWidget);
                     }
                 }));
-        manager.getLogicalLayer().registerTrigger(
-                new InputTrigger(new KeyReleasedCondition(Key.FOUR), new TriggerAction() {
+        manager.getLogicalLayer()
+                .registerTrigger(new InputTrigger(new KeyReleasedCondition(Key.FOUR), new TriggerAction() {
                     @Override
                     public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                         manager.setActiveWidget(pulseWidget);
                     }
                 }));
-        manager.getLogicalLayer().registerTrigger(
-                new InputTrigger(new KeyPressedCondition(Key.SPACE), new TriggerAction() {
+        manager.getLogicalLayer()
+                .registerTrigger(new InputTrigger(new KeyPressedCondition(Key.SPACE), new TriggerAction() {
                     @Override
                     public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                         showMenu();
                     }
                 }));
-        manager.getLogicalLayer().registerTrigger(
-                new InputTrigger(new KeyReleasedCondition(Key.SPACE), new TriggerAction() {
+        manager.getLogicalLayer()
+                .registerTrigger(new InputTrigger(new KeyReleasedCondition(Key.SPACE), new TriggerAction() {
                     @Override
                     public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                         hideMenu();
@@ -547,8 +547,8 @@ public class InteractUIExample extends ExampleBase {
             centerPanel.setBackdrop(new EmptyBackdrop());
             centerPanel.setLayoutData(BorderLayoutData.CENTER);
 
-            final UIComboBox combo = new UIComboBox(new DefaultComboBoxModel("White", "Black", "Red", "Green", "Blue",
-                    "Yellow", "Magenta", "Cyan"));
+            final UIComboBox combo = new UIComboBox(
+                    new DefaultComboBoxModel("White", "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan"));
             combo.setLocalComponentWidth(100);
             combo.addSelectionListener(new SelectionListener<UIComboBox>() {
                 @Override

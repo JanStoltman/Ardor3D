@@ -263,7 +263,7 @@ public class InteractManager {
 
     public void addUpdateLogic(final UpdateLogic logic) {
         if (_updateLogic == null) {
-            _updateLogic = new ArrayList<UpdateLogic>(1);
+            _updateLogic = new ArrayList<>(1);
         }
         _updateLogic.add(logic);
     }
@@ -290,14 +290,14 @@ public class InteractManager {
 
     public UpdateLogic getUpdateLogic(final int i) {
         if (_updateLogic == null) {
-            _updateLogic = new ArrayList<UpdateLogic>(1);
+            _updateLogic = new ArrayList<>(1);
         }
         return _updateLogic.get(i);
     }
 
     public List<UpdateLogic> getUpdateLogic() {
         if (_updateLogic == null) {
-            _updateLogic = new ArrayList<UpdateLogic>(1);
+            _updateLogic = new ArrayList<>(1);
         }
         return _updateLogic;
     }
