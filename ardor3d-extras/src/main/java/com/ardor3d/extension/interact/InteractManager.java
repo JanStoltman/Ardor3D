@@ -207,7 +207,13 @@ public class InteractManager {
     }
 
     public void setActiveWidget(final AbstractInteractWidget widget) {
+        if (_activeWidget != null) {
+            _activeWidget.lostControl(this);
+        }
         _activeWidget = widget;
+        if (_activeWidget != null) {
+            _activeWidget.receivedControl(this);
+        }
     }
 
     public AbstractInteractWidget getActiveWidget() {
