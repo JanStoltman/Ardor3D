@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,7 @@
 package com.ardor3d.extension.ui.border;
 
 import com.ardor3d.extension.ui.UIComponent;
+import com.ardor3d.extension.ui.util.Insets;
 import com.ardor3d.extension.ui.util.SubTex;
 import com.ardor3d.extension.ui.util.SubTexUtil;
 import com.ardor3d.renderer.Renderer;
@@ -34,7 +35,7 @@ public class ImageBorder extends UIBorder {
 
     /**
      * Construct this border using the given edge images. The corners will not be drawn.
-     * 
+     *
      * @param leftEdge
      * @param rightEdge
      * @param topEdge
@@ -51,7 +52,7 @@ public class ImageBorder extends UIBorder {
 
     /**
      * Construct this border using the given edge and side images.
-     * 
+     *
      * @param leftEdge
      * @param rightEdge
      * @param topEdge
@@ -148,8 +149,9 @@ public class ImageBorder extends UIBorder {
         final int borderHeight = UIBorder.getBorderHeight(comp);
 
         // Figure out our bottom left corner
-        final double dX = comp.getMargin().getLeft();
-        final double dY = comp.getMargin().getBottom();
+        final Insets margin = comp.getMargin() == null ? Insets.EMPTY : comp.getMargin();
+        final double dX = margin.getLeft();
+        final double dY = margin.getBottom();
 
         {
             // draw bottom - stretched to fit

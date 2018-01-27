@@ -18,6 +18,11 @@ import java.util.Objects;
  */
 public class Insets {
 
+    /**
+     * 0, 0, 0, 0
+     */
+    public final static Insets EMPTY = new Insets(0, 0, 0, 0);
+
     private int _top;
     private int _left;
     private int _bottom;

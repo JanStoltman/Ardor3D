@@ -132,7 +132,7 @@ public class InteractManager {
             @Override
             public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 if (_spatialTarget != null) {
-                    _state.getTransform().set(_spatialTarget.getTransform());
+                    _state.copyState(_spatialTarget);
                 }
                 _inputConsumed.set(false);
                 offerInputToWidgets(source, inputStates);
