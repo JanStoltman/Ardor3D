@@ -147,13 +147,18 @@ public class PlyImporter {
         /** blue color component */
         BLUE(Element.VERTEX, Element.EDGE, Element.CUSTOM),
         /** material (ambient light) components */
-        AMBIENT_RED(Element.MATERIAL, Element.CUSTOM), AMBIENT_GREEN(Element.MATERIAL, Element.CUSTOM), AMBIENT_BLUE(Element.MATERIAL, Element.CUSTOM), AMBIENT_COEFF(Element.MATERIAL, Element.CUSTOM),
+        AMBIENT_RED(Element.MATERIAL, Element.CUSTOM), AMBIENT_GREEN(Element.MATERIAL, Element.CUSTOM), AMBIENT_BLUE(
+                Element.MATERIAL, Element.CUSTOM), AMBIENT_COEFF(Element.MATERIAL, Element.CUSTOM),
         /** material (diffuse light) components */
-        DIFFUSE_RED(Element.MATERIAL, Element.CUSTOM), DIFFUSE_GREEN(Element.MATERIAL, Element.CUSTOM), DIFFUSE_BLUE(Element.MATERIAL, Element.CUSTOM), DIFFUSE_COEFF(Element.MATERIAL, Element.CUSTOM),
+        DIFFUSE_RED(Element.MATERIAL, Element.CUSTOM), DIFFUSE_GREEN(Element.MATERIAL, Element.CUSTOM), DIFFUSE_BLUE(
+                Element.MATERIAL, Element.CUSTOM), DIFFUSE_COEFF(Element.MATERIAL, Element.CUSTOM),
         /** material (emissive light) components */
-        EMISSIVE_RED(Element.MATERIAL, Element.CUSTOM), EMISSIVE_GREEN(Element.MATERIAL, Element.CUSTOM), EMISSIVE_BLUE(Element.MATERIAL, Element.CUSTOM), EMISSIVE_COEFF(Element.MATERIAL, Element.CUSTOM),
+        EMISSIVE_RED(Element.MATERIAL, Element.CUSTOM), EMISSIVE_GREEN(Element.MATERIAL, Element.CUSTOM), EMISSIVE_BLUE(
+                Element.MATERIAL, Element.CUSTOM), EMISSIVE_COEFF(Element.MATERIAL, Element.CUSTOM),
         /** material (specular light) components */
-        SPECULAR_RED(Element.MATERIAL, Element.CUSTOM), SPECULAR_GREEN(Element.MATERIAL, Element.CUSTOM), SPECULAR_BLUE(Element.MATERIAL, Element.CUSTOM), SPECULAR_COEFF(Element.MATERIAL, Element.CUSTOM), SPECULAR_POWER(Element.MATERIAL, Element.CUSTOM),
+        SPECULAR_RED(Element.MATERIAL, Element.CUSTOM), SPECULAR_GREEN(Element.MATERIAL, Element.CUSTOM), SPECULAR_BLUE(
+                Element.MATERIAL, Element.CUSTOM), SPECULAR_COEFF(Element.MATERIAL,
+                        Element.CUSTOM), SPECULAR_POWER(Element.MATERIAL, Element.CUSTOM),
         /** custom, i.e user-defined, not build-in, up to the developer to support it */
         CUSTOM(Element.CUSTOM);
         private final Element[] elements;
@@ -757,7 +762,7 @@ public class PlyImporter {
                                         final Element element = Element.get(elementName);
                                         final ElementWithKeyword elementWithKeyword = new ElementWithKeyword(element,
                                                 elementName);
-                                        if (elementMap.containsKey(element)) {
+                                        if (elementMap.containsKey(elementWithKeyword)) {
                                             PlyImporter.LOGGER.log(Level.WARNING,
                                                     elementWithKeyword
                                                             + " already defined, element declaration ignored on line "
