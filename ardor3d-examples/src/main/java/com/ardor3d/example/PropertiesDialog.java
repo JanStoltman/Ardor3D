@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -89,7 +89,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * Constructor for the <code>PropertiesDialog</code>. Creates a properties dialog initialized for the primary
      * display.
-     * 
+     *
      * @param source
      *            the <code>GameSettings</code> object to use for working with the properties file.
      * @param imageFile
@@ -105,7 +105,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * Constructor for the <code>PropertiesDialog</code>. Creates a properties dialog initialized for the primary
      * display.
-     * 
+     *
      * @param source
      *            the <code>GameSettings</code> object to use for working with the properties file.
      * @param imageFile
@@ -121,7 +121,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * Constructor for the <code>PropertiesDialog</code>. Creates a properties dialog initialized for the primary
      * display.
-     * 
+     *
      * @param source
      *            the <code>GameSettings</code> object to use for working with the properties file.
      * @param imageFile
@@ -138,7 +138,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * Constructor for the <code>PropertiesDialog</code>. Creates a properties dialog initialized for the primary
      * display.
-     * 
+     *
      * @param source
      *            the <code>GameSettings</code> object to use for working with the properties file.
      * @param imageFile
@@ -172,7 +172,7 @@ public final class PropertiesDialog extends JDialog {
 
     /**
      * <code>setImage</code> sets the background image of the dialog.
-     * 
+     *
      * @param image
      *            <code>String</code> representing the image file.
      */
@@ -188,7 +188,7 @@ public final class PropertiesDialog extends JDialog {
 
     /**
      * <code>setImage</code> sets the background image of this dialog.
-     * 
+     *
      * @param image
      *            <code>URL</code> pointing to the image file.
      */
@@ -269,6 +269,7 @@ public final class PropertiesDialog extends JDialog {
         colorDepthCombo = new JComboBox<>();
         colorDepthCombo.addKeyListener(aListener);
         displayFreqCombo = new JComboBox<>();
+
         displayFreqCombo.addKeyListener(aListener);
         fullscreenBox = new JCheckBox("Fullscreen?");
         fullscreenBox.setSelected(source.isFullscreen());
@@ -333,7 +334,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * <code>verifyAndSaveCurrentSelection</code> first verifies that the display mode is valid for this system, and
      * then saves the current selection as a properties.cfg file.
-     * 
+     *
      * @return if the selection is valid
      */
     private boolean verifyAndSaveCurrentSelection() {
@@ -408,7 +409,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * <code>setUpChooser</code> retrieves all available display modes and places them in a <code>JComboBox</code>. The
      * resolution specified by GameSettings is used as the default value.
-     * 
+     *
      * @return the combo box of display modes.
      */
     private JComboBox<String> setUpResolutionChooser() {
@@ -429,7 +430,7 @@ public final class PropertiesDialog extends JDialog {
     /**
      * <code>setUpRendererChooser</code> sets the list of available renderers. The renderer specified by GameSettings is
      * used as the default value.
-     * 
+     *
      * @return the list of renderers.
      */
     private JComboBox<String> setUpRendererChooser() {
@@ -506,7 +507,7 @@ public final class PropertiesDialog extends JDialog {
 
     /**
      * Utility method for converting a String denoting a file into a URL.
-     * 
+     *
      * @return a URL pointing to the file or null
      */
     private static URL getURL(final String file) {

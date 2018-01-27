@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -60,7 +60,7 @@ public class ColladaMaterialUtils {
 
     /**
      * Find and apply the given material to the given Mesh.
-     * 
+     *
      * @param materialName
      *            our material name
      * @param mesh
@@ -345,7 +345,7 @@ public class ColladaMaterialUtils {
 
     /**
      * Function to searches an xml node for <texture> elements and adds them to the texture state of the mesh.
-     * 
+     *
      * @param mesh
      *            the Ardor3D Mesh to add the Texture to.
      * @param element
@@ -370,7 +370,7 @@ public class ColladaMaterialUtils {
 
     /**
      * Convert a <texture> element to an Ardor3D representation and store in the given state.
-     * 
+     *
      * @param mesh
      *            the Ardor3D Mesh to add the Texture to.
      * @param daeTexture
