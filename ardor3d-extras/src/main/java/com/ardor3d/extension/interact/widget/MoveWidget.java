@@ -151,6 +151,9 @@ public class MoveWidget extends AbstractInteractWidget {
             _handle.setScale(1.0);
             _handle.setRotation(Matrix3.IDENTITY);
         } else {
+            _handle.setScale(Math.max(MoveWidget.MIN_SCALE, target.getWorldBound().getRadius()
+                    + target.getWorldTranslation().subtract(target.getWorldBound().getCenter(), _calcVec3A).length()));
+
             // update scale of widget using bounding radius
             target.updateGeometricState(0);
 
@@ -242,8 +245,8 @@ public class MoveWidget extends AbstractInteractWidget {
         _calcVec3B.set(_calcVec3A).addLocal(camera.getLeft());
         _calcVec3C.set( //
                 arrow == _xArrow ? Vector3.UNIT_X : //
-                        arrow == _yArrow ? Vector3.UNIT_Y : //
-                                Vector3.UNIT_Z);
+                    arrow == _yArrow ? Vector3.UNIT_Y : //
+                        Vector3.UNIT_Z);
 
         // rotate to arrow plane
         _handle.getRotation().applyPost(_calcVec3C, _calcVec3C);
