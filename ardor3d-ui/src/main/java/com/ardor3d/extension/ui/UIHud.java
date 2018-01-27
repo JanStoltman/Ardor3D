@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -59,7 +59,7 @@ public class UIHud extends Node {
     /**
      * The logical layer used by this UI to receive input events.
      */
-    private final LogicalLayer _logicalLayer = new LogicalLayer();
+    protected final LogicalLayer _logicalLayer = new LogicalLayer();
 
     /**
      * The single tooltip used by this hud - lazy inited
@@ -70,8 +70,8 @@ public class UIHud extends Node {
      * Internal flag indicating whether the last input event was consumed by the UI. This is used to decide if we will
      * forward the event to the next LogicalLayer.
      */
-    private boolean _mouseInputConsumed;
-    private boolean _keyInputConsumed;
+    protected boolean _mouseInputConsumed;
+    protected boolean _keyInputConsumed;
 
     /**
      * Flag used to determine if we should use mouse input when mouse is grabbed. Defaults to true.
@@ -165,7 +165,7 @@ public class UIHud extends Node {
 
     /**
      * Add the given component to this hud.
-     * 
+     *
      * @param component
      *            the component to add
      */
@@ -179,7 +179,7 @@ public class UIHud extends Node {
 
     /**
      * Remove the given component from the hud
-     * 
+     *
      * @param component
      *            the component to remove
      */
@@ -225,7 +225,7 @@ public class UIHud extends Node {
 
     /**
      * Reorder the components so that the given component is drawn last and is therefore "on top" of any others.
-     * 
+     *
      * @param component
      *            the component to bring to front
      */
@@ -237,7 +237,7 @@ public class UIHud extends Node {
     /**
      * Look for a UIComponent at the given screen coordinates. If no pickable component is at that location, null is
      * returned.
-     * 
+     *
      * @param x
      *            the x screen coordinate
      * @param y
@@ -371,7 +371,7 @@ public class UIHud extends Node {
 
     /**
      * Add the given drag listener to this hud. Expired WeakReferences are also cleaned.
-     * 
+     *
      * @param listener
      *            the listener to add
      */
@@ -388,7 +388,7 @@ public class UIHud extends Node {
 
     /**
      * Remove any matching drag listener from this hud. Expired WeakReferences are also cleaned.
-     * 
+     *
      * @param listener
      *            the listener to remove
      * @return true if at least one "equal" DragListener was found in the pool of listeners and removed.
@@ -409,7 +409,7 @@ public class UIHud extends Node {
 
     /**
      * Add the given hud listener to this hud.
-     * 
+     *
      * @param listener
      *            the listener to add
      */
@@ -419,7 +419,7 @@ public class UIHud extends Node {
 
     /**
      * Remove any matching hud listener from this hud.
-     * 
+     *
      * @param listener
      *            the listener to remove
      * @return true if at least one "equal" HudListener was found in the pool of listeners and removed.
@@ -472,7 +472,7 @@ public class UIHud extends Node {
     /**
      * Convenience method for setting up the UI's connection to the Ardor3D input system, along with a forwarding
      * address for input events that the UI does not care about.
-     * 
+     *
      * @param canvas
      *            the canvas to register with
      * @param physicalLayer
@@ -497,7 +497,7 @@ public class UIHud extends Node {
                         if (!_keyInputConsumed) {
                             // nothing consumed
                             forwardTo.getApplier()
-                                    .checkAndPerformTriggers(forwardTo.getTriggers(), source, states, tpf);
+                            .checkAndPerformTriggers(forwardTo.getTriggers(), source, states, tpf);
                         } else {
                             // only key state consumed
                             final TwoInputStates forwardingState = new TwoInputStates(states.getPrevious(),
@@ -529,7 +529,7 @@ public class UIHud extends Node {
     /**
      * Set up our logical layer with a trigger that hands input to the UI and saves whether it was "consumed".
      */
-    private void setupLogicalLayer() {
+    protected void setupLogicalLayer() {
         _logicalLayer.registerTrigger(new InputTrigger(new Predicate<TwoInputStates>() {
             @Override
             public boolean apply(final TwoInputStates arg0) {
@@ -545,7 +545,7 @@ public class UIHud extends Node {
         }));
     }
 
-    private boolean offerKeyInputToUI(final TwoInputStates inputStates) {
+    protected boolean offerKeyInputToUI(final TwoInputStates inputStates) {
         boolean consumed = false;
         final InputState current = inputStates.getCurrent();
 
@@ -588,12 +588,12 @@ public class UIHud extends Node {
 
     /**
      * Parse a given set of input states for UI events and pass these events to the UI components contained in this hud.
-     * 
+     *
      * @param inputStates
      *            our two InputState objects, detailing a before and after snapshot of the input system.
      * @return true if a UI element consumed the event described by inputStates.
      */
-    private boolean offerMouseInputToUI(final TwoInputStates inputStates) {
+    protected boolean offerMouseInputToUI(final TwoInputStates inputStates) {
         boolean consumed = false;
         final InputState current = inputStates.getCurrent();
 
@@ -640,7 +640,7 @@ public class UIHud extends Node {
 
     /**
      * Handle mouse presses.
-     * 
+     *
      * @param button
      *            the button that was pressed.
      * @param currentIS
@@ -690,7 +690,7 @@ public class UIHud extends Node {
 
     /**
      * Handle mouse releases.
-     * 
+     *
      * @param button
      *            the button that was release.
      * @param currentIS
@@ -725,7 +725,7 @@ public class UIHud extends Node {
 
     /**
      * Handle movement events.
-     * 
+     *
      * @param mouseX
      *            the new x position of the mouse
      * @param mouseY
@@ -772,7 +772,7 @@ public class UIHud extends Node {
 
     /**
      * Handle wheel events.
-     * 
+     *
      * @param wheelDx
      *            the change in wheel position.
      * @param currentIS
@@ -791,7 +791,7 @@ public class UIHud extends Node {
 
     /**
      * Handle key presses.
-     * 
+     *
      * @param key
      *            the pressed key
      * @param currentIS
@@ -808,7 +808,7 @@ public class UIHud extends Node {
 
     /**
      * Handle key held (pressed down over more than one input update cycle.)
-     * 
+     *
      * @param key
      *            the held key
      * @param currentIS
@@ -825,7 +825,7 @@ public class UIHud extends Node {
 
     /**
      * Handle key releases.
-     * 
+     *
      * @param key
      *            the released key
      * @param currentIS
