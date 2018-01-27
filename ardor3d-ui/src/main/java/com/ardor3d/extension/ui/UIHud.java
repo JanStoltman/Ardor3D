@@ -36,7 +36,6 @@ import com.ardor3d.input.logical.InputTrigger;
 import com.ardor3d.input.logical.LogicalLayer;
 import com.ardor3d.input.logical.TriggerAction;
 import com.ardor3d.input.logical.TwoInputStates;
-import com.ardor3d.renderer.Camera;
 import com.ardor3d.renderer.Renderer;
 import com.ardor3d.renderer.queue.RenderBucketType;
 import com.ardor3d.renderer.state.ZBufferState;
@@ -52,6 +51,7 @@ import com.google.common.base.Predicate;
  * are handled through this class.
  */
 public class UIHud extends Node {
+
     private static final Logger _logger = Logger.getLogger(UIHud.class.getName());
 
     public static int MOUSE_CLICK_SENSITIVITY = 5;
@@ -120,11 +120,18 @@ public class UIHud extends Node {
      */
     private final List<IPopOver> _popovers = new ArrayList<>();
 
+    private final Canvas _canvas;
+
+    private UIInputPostHook _postKeyboardHook;
+
+    private UIInputPostHook _postMouseHook;
+
     /**
-     * Construct a new UIHud
+     * Construct a new UIHud for a given canvas
      */
-    public UIHud() {
+    public UIHud(final Canvas canvas) {
         setName("UIHud");
+        _canvas = canvas;
 
         getSceneHints().setCullHint(CullHint.Never);
         getSceneHints().setRenderBucketType(RenderBucketType.Skip);
@@ -482,9 +489,9 @@ public class UIHud extends Node {
      * @param forwardTo
      *            a LogicalLayer to send unconsumed (by the UI) input events to.
      */
-    public void setupInput(final Canvas canvas, final PhysicalLayer physicalLayer, final LogicalLayer forwardTo) {
+    public void setupInput(final PhysicalLayer physicalLayer, final LogicalLayer forwardTo) {
         // Set up this logical layer to listen for events from the given canvas and PhysicalLayer
-        _logicalLayer.registerInput(canvas, physicalLayer);
+        _logicalLayer.registerInput(_canvas, physicalLayer);
 
         // Set up forwarding for events not consumed.
         if (forwardTo != null) {
@@ -495,6 +502,8 @@ public class UIHud extends Node {
                         final TwoInputStates states, final double tpf) {
                     super.checkAndPerformTriggers(triggers, source, states, tpf);
 
+                    final InputState prev = states.getPrevious();
+                    final InputState curr = states.getCurrent();
                     if (!_mouseInputConsumed) {
                         if (!_keyInputConsumed) {
                             // nothing consumed
@@ -502,18 +511,18 @@ public class UIHud extends Node {
                                     .checkAndPerformTriggers(forwardTo.getTriggers(), source, states, tpf);
                         } else {
                             // only key state consumed
-                            final TwoInputStates forwardingState = new TwoInputStates(states.getPrevious(),
-                                    new InputState(KeyboardState.NOTHING, states.getCurrent().getMouseState(), states
-                                            .getCurrent().getControllerState()));
+                            final TwoInputStates forwardingState = new TwoInputStates(
+                                    new InputState(KeyboardState.NOTHING, prev.getMouseState(), prev.getControllerState()),
+                                    new InputState(KeyboardState.NOTHING, curr.getMouseState(), curr.getControllerState()));
                             forwardTo.getApplier().checkAndPerformTriggers(forwardTo.getTriggers(), source,
                                     forwardingState, tpf);
                         }
                     } else {
                         if (!_keyInputConsumed) {
                             // only mouse consumed
-                            final TwoInputStates forwardingState = new TwoInputStates(states.getPrevious(),
-                                    new InputState(states.getCurrent().getKeyboardState(), MouseState.NOTHING, states
-                                            .getCurrent().getControllerState()));
+                            final TwoInputStates forwardingState = new TwoInputStates(
+                                    new InputState(prev.getKeyboardState(), MouseState.NOTHING, prev.getControllerState()),
+                                    new InputState(curr.getKeyboardState(), MouseState.NOTHING, curr.getControllerState()));
                             forwardTo.getApplier().checkAndPerformTriggers(forwardTo.getTriggers(), source,
                                     forwardingState, tpf);
                         } else {
@@ -584,6 +593,13 @@ public class UIHud extends Node {
             }
         }
 
+        // Post hook, if we have one
+        {
+            if (_postKeyboardHook != null) {
+                consumed |= _postKeyboardHook.process(consumed, this, inputStates);
+            }
+        }
+
         return consumed;
 
     }
@@ -605,7 +621,6 @@ public class UIHud extends Node {
             final MouseState previousMState = inputStates.getPrevious().getMouseState();
             final MouseState currentMState = current.getMouseState();
             if (previousMState != currentMState) {
-
                 // Check for presses.
                 if (currentMState.hasButtonState(ButtonState.DOWN)) {
                     final EnumSet<MouseButton> pressed = currentMState.getButtonsPressedSince(previousMState);
@@ -634,6 +649,13 @@ public class UIHud extends Node {
                 // Check for wheel change
                 if (currentMState.getDwheel() != 0) {
                     consumed |= fireMouseWheelMoved(currentMState.getDwheel(), current);
+                }
+            }
+
+            // Post hook, if we have one
+            {
+                if (_postMouseHook != null) {
+                    consumed |= _postMouseHook.process(consumed, this, inputStates);
                 }
             }
         }
@@ -843,21 +865,11 @@ public class UIHud extends Node {
     }
 
     public int getWidth() {
-        final Camera cam = Camera.getCurrentCamera();
-        if (cam != null) {
-            return cam.getWidth();
-        } else {
-            return 1;
-        }
+        return _canvas.getCanvasRenderer().getCamera().getWidth();
     }
 
     public int getHeight() {
-        final Camera cam = Camera.getCurrentCamera();
-        if (cam != null) {
-            return cam.getHeight();
-        } else {
-            return 1;
-        }
+        return _canvas.getCanvasRenderer().getCamera().getHeight();
     }
 
     public void closePopupMenus() {
@@ -897,5 +909,29 @@ public class UIHud extends Node {
         _popovers.remove(pop);
         _popovers.add(pop);
         pop.setHud(this);
+    }
+
+    public UIInputPostHook getPostKeyboardHook() {
+        return _postKeyboardHook;
+    }
+
+    public void setPostKeyboardHook(final UIInputPostHook postKeyboardHook) {
+        _postKeyboardHook = postKeyboardHook;
+    }
+
+    public UIInputPostHook getPostMouseHook() {
+        return _postMouseHook;
+    }
+
+    public void setPostMouseHook(final UIInputPostHook postMouseHook) {
+        _postMouseHook = postMouseHook;
+    }
+
+    public Canvas getCanvas() {
+        return _canvas;
+    }
+
+    public interface UIInputPostHook {
+        boolean process(boolean consumed, UIHud source, TwoInputStates inputStates);
     }
 }

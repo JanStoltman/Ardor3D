@@ -108,7 +108,7 @@ public class UITextField extends AbstractUITextEntryComponent {
     }
 
     /**
-     * Removes all of this button's listeners from notification list.
+     * Removes all of this field's listeners from notification list.
      */
     public void removeAllListeners() {
         _listeners.clear();
@@ -184,7 +184,7 @@ public class UITextField extends AbstractUITextEntryComponent {
         if (isEditable() && getCurrentState().equals(_writingState) && getCaret().isShowing()) {
             getCaret().draw(r, this,
                     _uiText != null ? _uiText.getLineHeight(getCaretPosition()) : UIComponent.getDefaultFontSize(), x,
-                    y);
+                            y);
         }
     }
 

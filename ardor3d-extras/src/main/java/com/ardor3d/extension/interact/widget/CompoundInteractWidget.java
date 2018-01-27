@@ -283,17 +283,23 @@ public class CompoundInteractWidget extends AbstractInteractWidget {
         // Make sure we are dragging.
         final MouseState current = inputStates.getCurrent().getMouseState();
         final MouseState previous = inputStates.getPrevious().getMouseState();
+        final Camera camera = source.getCanvasRenderer().getCamera();
 
         if (current.getButtonState(_dragButton) != ButtonState.DOWN) {
             if (_lastInputWidget != null) {
                 _lastInputWidget.processInput(source, inputStates, inputConsumed, manager);
                 _lastInputWidget = null;
+            } else {
+                // check all of the widgets for mouseover
+                for (final AbstractInteractWidget widget : _widgets.values()) {
+                    widget.checkMouseOver(source, current, manager);
+                }
             }
+            _lastInputWidget = null;
             return;
         }
 
         if (_lastInputWidget == null) {
-            final Camera camera = source.getCanvasRenderer().getCamera();
             final Vector2 oldMouse = new Vector2(previous.getX(), previous.getY());
             findPick(oldMouse, camera);
             if (_results.getNumber() <= 0) {

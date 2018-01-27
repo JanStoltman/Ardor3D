@@ -19,6 +19,7 @@ import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.NativeCanvas;
 import com.ardor3d.image.Image;
+import com.ardor3d.input.MouseManager;
 import com.jogamp.nativewindow.ScalableSurface;
 import com.jogamp.nativewindow.util.Dimension;
 import com.jogamp.nativewindow.util.DimensionImmutable;
@@ -105,7 +106,7 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
 
     /**
      * Applies all settings not related to OpenGL (screen resolution, screen size, etc...)
-     * */
+     */
     protected void applySettings() {
         _newtWindow.setUndecorated(_settings.isFullScreen());
         if (_settings.isFullScreen()) {
@@ -372,6 +373,18 @@ public class JoglNewtWindow implements NativeCanvas, NewtWindowContainer {
     @Override
     public JoglCanvasRenderer getCanvasRenderer() {
         return _canvasRenderer;
+    }
+
+    protected MouseManager _manager;
+
+    @Override
+    public MouseManager getMouseManager() {
+        return _manager;
+    }
+
+    @Override
+    public void setMouseManager(final MouseManager manager) {
+        _manager = manager;
     }
 
     @Override

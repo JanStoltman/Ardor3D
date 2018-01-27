@@ -135,6 +135,16 @@ public class JoglContextCapabilities extends ContextCapabilities {
         gl.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE, buf);
         _maxTextureSize = buf.get(0);
 
+        // max texture size.
+        gl.glGetIntegerv(GL.GL_MAX_RENDERBUFFER_SIZE, buf);
+        _maxRenderBufferSize = buf.get(0);
+
+        // max viewport size.
+        final IntBuffer twoIntBuf = directNioBuffersSet.getDualIntBuffer();
+        gl.glGetIntegerv(GL.GL_MAX_VIEWPORT_DIMS, twoIntBuf);
+        _maxViewportWidth = twoIntBuf.get(0);
+        _maxViewportHeight = twoIntBuf.get(1);
+
         // Check for support of multitextures.
         _supportsMultiTexture = gl.isExtensionAvailable("GL_ARB_multitexture");
 

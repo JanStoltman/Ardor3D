@@ -1,5 +1,6 @@
+
 /**
- * Copyright (c) 2008-2018 Ardor Labs, Inc.
+ * Copyright (c) 2008-2012 Ardor Labs, Inc.
  *
  * This file is part of Ardor3D.
  *
@@ -82,7 +83,9 @@ import com.ardor3d.util.resource.ResourceLocatorTool;
  * Example showing the Geometry Clipmap Terrain system with 'MegaTextures' where the terrain data is provided from a
  * float array populated from a heightmap generated from an Image. Requires GLSL support.
  */
-@Purpose(htmlDescriptionKey = "com.ardor3d.example.terrain.MountainShadowTerrainExample", //thumbnailPath = "com/ardor3d/example/media/thumbnails/terrain_MountainShadowTerrainExample.jpg", //        maxHeapMemory = 128)
+@Purpose(htmlDescriptionKey = "com.ardor3d.example.terrain.ImageMapTerrainExample", //
+        thumbnailPath = "com/ardor3d/example/media/thumbnails/terrain_ImageMapTerrainExample.jpg", //
+        maxHeapMemory = 128)
 public class MountainShadowTerrainExample extends ExampleBase {
 
     private final float farPlane = 8000.0f;
@@ -102,7 +105,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
     /** Pssm shadow map pass. */
     private ParallelSplitShadowMapPass _pssmPass;
 
-    private DirectionalLight directionalLight;
+    private DirectionalLight light;
+
     private double lightTime;
     private boolean moveLight = false;
 
@@ -127,7 +131,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
             }
         }
 
-        terrain.getGeometryClipmapShader().setUniform("lightDir", directionalLight.getDirection());
+        terrain.getGeometryClipmapShader().setUniform("lightDir", light.getDirection());
+
         for (int i = 0; i < _pssmPass.getNumOfSplits(); i++) {
             TextureState screen = (TextureState) _orthoQuad[i].getLocalRenderState(StateType.Texture);
             Texture copy;
@@ -196,7 +201,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
 
         if (moveLight) {
             lightTime += timer.getTimePerFrame();
-            directionalLight.setDirection(new Vector3(Math.sin(lightTime), -.8, Math.cos(lightTime)).normalizeLocal());        }
+            light.setDirection(new Vector3(Math.sin(lightTime), -.8, Math.cos(lightTime)).normalizeLocal());
+        }
     }
 
     /**
@@ -229,7 +235,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
         addUI();
 
         // Initialize PSSM shadows
-        _pssmPass = new ParallelSplitShadowMapPass(directionalLight, 2048, 4);        _pssmPass.setFiltering(Filter.None);
+        _pssmPass = new ParallelSplitShadowMapPass(light, 2048, 4);
+        _pssmPass.setFiltering(Filter.None);
         _pssmPass.setRenderShadowedScene(false);
         _pssmPass.setKeepMainShader(true);
         // _pssmPass.setMinimumLightDistance(500); // XXX: Tune this
@@ -290,7 +297,9 @@ public class MountainShadowTerrainExample extends ExampleBase {
                     .setShowDebugPanels(true);
 
             terrain = builder.build();
-            terrain.setPixelShader(new UrlInputSupplier(ResourceLocatorTool.getClassPathResource(                    ShadowedTerrainExample.class,                            "com/ardor3d/extension/terrain/shadowedGeometryClipmapShader_normalMap.frag")));
+            terrain.setPixelShader(
+                    new UrlInputSupplier(ResourceLocatorTool.getClassPathResource(ShadowedTerrainExample.class,
+                            "com/ardor3d/extension/terrain/shadowedGeometryClipmapShader_normalMap.frag")));
             terrain.reloadShader();
             terrain.getGeometryClipmapShader().setUniform("normalMap", 5);
             terrainNode.attachChild(terrain);
@@ -371,7 +380,14 @@ public class MountainShadowTerrainExample extends ExampleBase {
         terrainNode.setRenderState(new ZBufferState());
 
         _lightState.detachAll();
-        directionalLight = new DirectionalLight();        directionalLight.setEnabled(true);        directionalLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.5f, 1));        directionalLight.setDiffuse(new ColorRGBA(0.6f, 0.6f, 0.5f, 1));        directionalLight.setSpecular(new ColorRGBA(0.3f, 0.3f, 0.2f, 1));        directionalLight.setDirection(new Vector3(-1, -1, -1).normalizeLocal());        _lightState.attach(directionalLight);        _lightState.setEnabled(true);
+        light = new DirectionalLight();
+        light.setEnabled(true);
+        light.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.5f, 1));
+        light.setDiffuse(new ColorRGBA(0.6f, 0.6f, 0.5f, 1));
+        light.setSpecular(new ColorRGBA(0.3f, 0.3f, 0.2f, 1));
+        light.setDirection(new Vector3(-1, -1, -1).normalizeLocal());
+        _lightState.attach(light);
+        _lightState.setEnabled(true);
 
         final FogState fs = new FogState();
         fs.setStart(farPlane / 2.0f);
@@ -404,8 +420,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
 
     private void addUI() {
         // setup hud
-        hud = new UIHud();
-        hud.setupInput(_canvas, _physicalLayer, _logicalLayer);
+        hud = new UIHud(_canvas);
+        hud.setupInput(_physicalLayer, _logicalLayer);
         hud.setMouseManager(_mouseManager);
 
         final UIFrame frame = new UIFrame("Controls", EnumSet.noneOf(FrameButtons.class));
@@ -452,9 +468,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
 
         frame.setContentPanel(panel);
         frame.pack();
-        final Camera cam = _canvas.getCanvasRenderer().getCamera();
-        frame.setLocalXY(cam.getWidth() - frame.getLocalComponentWidth(),
-                cam.getHeight() - frame.getLocalComponentHeight());
+        frame.setLocalXY(hud.getWidth() - frame.getLocalComponentWidth(),
+                hud.getHeight() - frame.getLocalComponentHeight());
         hud.add(frame);
     }
 }

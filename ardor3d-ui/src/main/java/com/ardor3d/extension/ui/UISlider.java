@@ -165,9 +165,10 @@ public class UISlider extends UIContainer {
      */
     private void updateKnob() {
         if ((float) (_model.getMaxValue() - _model.getMinValue()) != 0) {
-            _knob.setPosition(_model.getCurrentValue() / (float) (_model.getMaxValue() - _model.getMinValue()));
+            _knob.setPosition((_model.getCurrentValue() - _model.getMinValue())
+                    / (float) (_model.getMaxValue() - _model.getMinValue()));
         } else {
-            _knob.setPosition(_model.getMinValue());
+            _knob.setPosition(0);
         }
     }
 
@@ -221,7 +222,8 @@ public class UISlider extends UIContainer {
      */
     void knobReleased() {
         if (_snapToValues) {
-            setValue(Math.round(_knob.getPosition() * (_model.getMaxValue() - _model.getMinValue())));
+            setValue(Math.round(_knob.getPosition() * (_model.getMaxValue() - _model.getMinValue()))
+                    + _model.getMinValue());
         }
     }
 

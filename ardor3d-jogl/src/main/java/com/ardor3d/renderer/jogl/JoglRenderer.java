@@ -828,16 +828,15 @@ public class JoglRenderer extends AbstractRenderer {
         final TextureState ts = (TextureState) context.getCurrentState(RenderState.StateType.Texture);
         int enabledTextures = rendRecord.getEnabledTextures();
         final boolean valid = rendRecord.isTexturesValid();
-        boolean isOn, wasOn;
+        boolean wasOn;
         if (ts != null) {
             final int max = caps.isMultitextureSupported() ? Math.min(caps.getNumberOfFragmentTexCoordUnits(),
                     TextureState.MAX_TEXTURES) : 1;
             for (int i = 0; i < max; i++) {
                 wasOn = (enabledTextures & (2 << i)) != 0;
-                isOn = textureCoords != null && i < textureCoords.size() && textureCoords.get(i) != null
-                        && textureCoords.get(i).getBuffer() != null;
 
-                if (!isOn) {
+                if (textureCoords == null || i >= textureCoords.size() || textureCoords.get(i) == null
+                        || textureCoords.get(i).getBuffer() == null) {
                     if (valid && !wasOn) {
                         continue;
                     } else {
@@ -866,7 +865,6 @@ public class JoglRenderer extends AbstractRenderer {
                         enabledTextures |= (2 << i);
                     }
 
-                    @SuppressWarnings("null")
                     final FloatBufferData textureBufferData = textureCoords.get(i);
                     final FloatBuffer textureBuffer = textureBufferData.getBuffer();
 
@@ -1146,15 +1144,14 @@ public class JoglRenderer extends AbstractRenderer {
         final TextureState ts = (TextureState) context.getCurrentState(RenderState.StateType.Texture);
         int enabledTextures = rendRecord.getEnabledTextures();
         final boolean valid = rendRecord.isTexturesValid();
-        boolean exists, wasOn;
+        boolean wasOn;
         if (ts != null) {
             final int max = caps.isMultitextureSupported() ? Math.min(caps.getNumberOfFragmentTexCoordUnits(),
                     TextureState.MAX_TEXTURES) : 1;
             for (int i = 0; i < max; i++) {
                 wasOn = (enabledTextures & (2 << i)) != 0;
-                exists = textureCoords != null && i < textureCoords.size();
 
-                if (!exists) {
+                if (textureCoords == null || i >= textureCoords.size()) {
                     if (valid && !wasOn) {
                         continue;
                     } else {
@@ -1174,7 +1171,6 @@ public class JoglRenderer extends AbstractRenderer {
                     checkAndSetTextureArrayUnit(i, gl, rendRecord, caps);
 
                     // grab a vboID and make sure it exists and is up to date.
-                    @SuppressWarnings("null")
                     final FloatBufferData data = textureCoords.get(i);
                     final int vboID = setupVBO(data, context);
 
@@ -1352,7 +1348,6 @@ public class JoglRenderer extends AbstractRenderer {
         }
     }
 
-    @SuppressWarnings("null")
     private void initializeInterleavedVBO(final RenderContext context, final FloatBufferData interleaved,
             final FloatBufferData vertexCoords, final FloatBufferData normalCoords, final FloatBufferData colorCoords,
             final List<FloatBufferData> textureCoords, final int bufferSize) {
@@ -1397,12 +1392,14 @@ public class JoglRenderer extends AbstractRenderer {
                     }
 
                     final FloatBufferData textureBufferData = textureCoords.get(i);
-                    final FloatBuffer textureBuffer = textureBufferData != null ? textureBufferData.getBuffer() : null;
-                    if (textureBuffer != null) {
-                        textureBuffer.rewind();
-                        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, offset, textureBufferData.getBufferLimit() * 4,
-                                textureBuffer);
-                        offset += textureBufferData.getBufferLimit() * 4;
+                    if (textureBufferData != null) {
+                        final FloatBuffer textureBuffer = textureBufferData.getBuffer();
+                        if (textureBuffer != null) {
+                            textureBuffer.rewind();
+                            gl.glBufferSubData(GL.GL_ARRAY_BUFFER, offset, textureBufferData.getBufferLimit() * 4,
+                                    textureBuffer);
+                            offset += textureBufferData.getBufferLimit() * 4;
+                        }
                     }
                 }
             }

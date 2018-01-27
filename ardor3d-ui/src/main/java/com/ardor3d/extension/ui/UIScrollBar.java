@@ -49,11 +49,8 @@ public class UIScrollBar extends UIPanel {
             btBottomRight.setLayoutData(BorderLayoutData.EAST);
         }
         applySkin();
+        pack();
 
-        updateMinimumSizeFromContents();
-        compact();
-
-        layout();
         final ActionListener al = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {

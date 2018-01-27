@@ -21,6 +21,7 @@ import com.ardor3d.framework.DisplaySettings;
 import com.ardor3d.framework.jogl.CapsUtil;
 import com.ardor3d.framework.jogl.JoglCanvasRenderer;
 import com.ardor3d.framework.jogl.JoglDrawerRunnable;
+import com.ardor3d.input.MouseManager;
 import com.jogamp.nativewindow.ScalableSurface;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLRunnable;
@@ -33,89 +34,101 @@ import com.jogamp.opengl.awt.GLJPanel;
  * when mixing heavyweight and lightweight components.
  */
 public class JoglSwingCanvas extends GLJPanel implements Canvas {
-	
-    private static final long serialVersionUID = 1L;
 
-    private final JoglCanvasRenderer _canvasRenderer;
-    private boolean _inited = false;
+	private static final long serialVersionUID = 1L;
 
-    private final DisplaySettings _settings;
+	private final JoglCanvasRenderer _canvasRenderer;
+	private boolean _inited = false;
 
-    private final JoglDrawerRunnable _drawerGLRunnable;
+	private final DisplaySettings _settings;
 
-    private final JoglSwingInitializerRunnable _initializerRunnable;
+	private final JoglDrawerRunnable _drawerGLRunnable;
 
-    public JoglSwingCanvas(final DisplaySettings settings, final JoglCanvasRenderer canvasRenderer) {
-        this(settings, canvasRenderer, new CapsUtil());
-    }
+	private final JoglSwingInitializerRunnable _initializerRunnable;
 
-    public JoglSwingCanvas(final DisplaySettings settings, final JoglCanvasRenderer canvasRenderer,
-            final CapsUtil capsUtil) {
-        super(capsUtil.getCapsForSettings(settings));
-        _drawerGLRunnable = new JoglDrawerRunnable(canvasRenderer);
-        _initializerRunnable = new JoglSwingInitializerRunnable(this, settings);
-        _settings = settings;
-        _canvasRenderer = canvasRenderer;
+	public JoglSwingCanvas(final DisplaySettings settings, final JoglCanvasRenderer canvasRenderer) {
+		this(settings, canvasRenderer, new CapsUtil());
+	}
 
-        setFocusable(true);
-        requestFocus();
-        setSize(_settings.getWidth(), _settings.getHeight());
-        setIgnoreRepaint(true);
-        setAutoSwapBufferMode(false);
-        // disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
+	public JoglSwingCanvas(final DisplaySettings settings, final JoglCanvasRenderer canvasRenderer,
+			final CapsUtil capsUtil) {
+		super(capsUtil.getCapsForSettings(settings));
+		_drawerGLRunnable = new JoglDrawerRunnable(canvasRenderer);
+		_initializerRunnable = new JoglSwingInitializerRunnable(this, settings);
+		_settings = settings;
+		_canvasRenderer = canvasRenderer;
+
+		setFocusable(true);
+		requestFocus();
+		setSize(_settings.getWidth(), _settings.getHeight());
+		setIgnoreRepaint(true);
+		setAutoSwapBufferMode(false);
+		// disables HiDPI, see https://github.com/gouessej/Ardor3D/issues/14
         setSurfaceScale(new float[] { ScalableSurface.IDENTITY_PIXELSCALE,
                 ScalableSurface.IDENTITY_PIXELSCALE });
-    }
+	}
 
-    @Override
-    @MainThread
-    public void init() {
-        if (_inited) {
-            return;
-        }
+	@Override
+	@MainThread
+	public void init() {
+		if (_inited) {
+			return;
+		}
 
         // Calling setVisible(true) on the GLCanvas not from the AWT-EDT can freeze the Intel GPU under Windows
-        if (!SwingUtilities.isEventDispatchThread()) {
-            try {
-                SwingUtilities.invokeAndWait(_initializerRunnable);
-            } catch (final InterruptedException ex) {
-                ex.printStackTrace();
-            } catch (final InvocationTargetException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            _initializerRunnable.run();
-        }
+		if (!SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(_initializerRunnable);
+			} catch (final InterruptedException ex) {
+				ex.printStackTrace();
+			} catch (final InvocationTargetException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			_initializerRunnable.run();
+		}
 
-        _inited = isRealized();
-    }
+		_inited = isRealized();
+	}
 
-    @Override
-    public void draw(final CountDownLatch latch) {
-        if (!_inited) {
-            init();
-        }
+	@Override
+	public void draw(final CountDownLatch latch) {
+		if (!_inited) {
+			init();
+		}
 
-        if (isShowing()) {
-            invoke(true, _drawerGLRunnable);
-        }
-        if (latch != null) {
-            latch.countDown();
-        }
-    }
+		if (isShowing()) {
+			invoke(true, _drawerGLRunnable);
+		}
+		if (latch != null) {
+			latch.countDown();
+		}
+	}
 
-    @Override
-    public JoglCanvasRenderer getCanvasRenderer() {
-        return _canvasRenderer;
-    }
+	@Override
+	public JoglCanvasRenderer getCanvasRenderer() {
+		return _canvasRenderer;
+	}
 
-    public void setVSyncEnabled(final boolean enabled) {
-        invoke(true, new GLRunnable() {
-            @Override
-            public boolean run(final GLAutoDrawable glAutoDrawable) {
-                glAutoDrawable.getGL().setSwapInterval(enabled ? 1 : 0);
-                return false;
-            }
-        });
-    }
+	protected MouseManager _manager;
+
+	@Override
+	public MouseManager getMouseManager() {
+		return _manager;
+	}
+
+	@Override
+	public void setMouseManager(final MouseManager manager) {
+		_manager = manager;
+	}
+
+	public void setVSyncEnabled(final boolean enabled) {
+		invoke(true, new GLRunnable() {
+			@Override
+			public boolean run(final GLAutoDrawable glAutoDrawable) {
+				glAutoDrawable.getGL().setSwapInterval(enabled ? 1 : 0);
+				return false;
+			}
+		});
+	}
 }

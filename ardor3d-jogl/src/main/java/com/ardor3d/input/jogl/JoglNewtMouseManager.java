@@ -44,6 +44,10 @@ public class JoglNewtMouseManager implements MouseManager {
     }
 
     private PointerIcon createJoglCursor(final MouseCursor cursor) {
+        if (cursor == MouseCursor.SYSTEM_DEFAULT || cursor == null) {
+            return null; // setting the cursor to null in JOGL means using the system default one
+        }
+
         final Image image = cursor.getImage();
         final DimensionImmutable size = new Dimension(image.getWidth(), image.getHeight());
         final ByteBuffer pixels = image.getData(0);

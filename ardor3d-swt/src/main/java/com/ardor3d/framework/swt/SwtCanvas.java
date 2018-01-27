@@ -21,6 +21,7 @@ import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.Canvas;
 import com.ardor3d.framework.CanvasRenderer;
 import com.ardor3d.framework.DisplaySettings;
+import com.ardor3d.input.MouseManager;
 
 /**
  * A canvas for embedding into SWT applications.
@@ -57,6 +58,18 @@ public class SwtCanvas extends GLCanvas implements Canvas {
 
     public void setCanvasRenderer(final CanvasRenderer renderer) {
         _canvasRenderer = renderer;
+    }
+
+    protected MouseManager _manager;
+
+    @Override
+    public MouseManager getMouseManager() {
+        return _manager;
+    }
+
+    @Override
+    public void setMouseManager(final MouseManager manager) {
+        _manager = manager;
     }
 
     @MainThread

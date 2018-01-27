@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ardor3d.extension.interact.InteractManager;
 import com.ardor3d.framework.Canvas;
-import com.ardor3d.input.ButtonState;
+import com.ardor3d.input.MouseCursor;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.logical.TwoInputStates;
 import com.ardor3d.intersection.PickData;
@@ -43,7 +43,11 @@ import com.ardor3d.scenegraph.shape.Box;
 import com.ardor3d.util.geom.BufferUtils;
 
 public class MoveMultiPlanarWidget extends AbstractInteractWidget {
-    public static double MIN_SCALE = 0.000001;
+
+    public static double DEFAULT_SCALE = 1.0;
+    public static double MOUSEOVER_SCALE = 1.1;
+
+    public static MouseCursor DEFAULT_CURSOR = null;
 
     public MoveMultiPlanarWidget(final IFilterList filterList) {
         this(filterList, 0.5);
@@ -65,6 +69,10 @@ public class MoveMultiPlanarWidget extends AbstractInteractWidget {
         _handle.updateGeometricState(0);
 
         createDefaultHandle(extent);
+
+        if (MoveMultiPlanarWidget.DEFAULT_CURSOR != null) {
+            setMouseOverCallback(new SetCursorCallback(MoveMultiPlanarWidget.DEFAULT_CURSOR));
+        }
     }
 
     protected void createDefaultHandle(final double extent) {
@@ -94,26 +102,11 @@ public class MoveMultiPlanarWidget extends AbstractInteractWidget {
     }
 
     @Override
-    public void targetChanged(final InteractManager manager) {
-        if (_dragging) {
-            endDrag(manager);
-        }
-        final Spatial target = manager.getSpatialTarget();
-        if (target != null) {
-            _handle.setScale(Math.max(MoveMultiPlanarWidget.MIN_SCALE, target.getWorldBound().getRadius()
-                    + target.getWorldTranslation().subtract(target.getWorldBound().getCenter(), _calcVec3A).length()));
-        }
-        targetDataUpdated(manager);
-    }
-
-    @Override
     public void targetDataUpdated(final InteractManager manager) {
         final Spatial target = manager.getSpatialTarget();
         if (target == null) {
-            _handle.setScale(1.0);
             _handle.setRotation(Matrix3.IDENTITY);
         } else {
-            // update scale of widget using bounding radius
             target.updateGeometricState(0);
 
             // update arrow rotations from target
@@ -123,6 +116,14 @@ public class MoveMultiPlanarWidget extends AbstractInteractWidget {
                 _handle.setRotation(Matrix3.IDENTITY);
             }
         }
+
+        _handle.setScale(calculateHandleScale(manager));
+    }
+
+    @Override
+    protected double calculateHandleScale(final InteractManager manager) {
+        return super.calculateHandleScale(manager)
+                * (_mouseOver ? MoveMultiPlanarWidget.MOUSEOVER_SCALE : MoveMultiPlanarWidget.DEFAULT_SCALE);
     }
 
     @Override
@@ -141,57 +142,30 @@ public class MoveMultiPlanarWidget extends AbstractInteractWidget {
     @Override
     public void processInput(final Canvas source, final TwoInputStates inputStates, final AtomicBoolean inputConsumed,
             final InteractManager manager) {
-        // Make sure we have something to modify
-        if (manager.getSpatialTarget() == null) {
-            return;
-        }
 
-        // Make sure we are dragging.
+        final Camera camera = source.getCanvasRenderer().getCamera();
         final MouseState current = inputStates.getCurrent().getMouseState();
         final MouseState previous = inputStates.getPrevious().getMouseState();
 
-        if (current.getButtonState(_dragButton) != ButtonState.DOWN) {
-            if (_dragging) {
-                endDrag(manager);
-            }
-            return;
-        }
-        // if we're already dragging, make sure we only act on drags that started with a positive pick.
-        else if (!current.getButtonsPressedSince(previous).contains(_dragButton) && !_dragging) {
-            return;
-        }
+        // first process mouse over state
+        checkMouseOver(source, current, manager);
 
-        final Camera camera = source.getCanvasRenderer().getCamera();
-        final Vector2 oldMouse = new Vector2(previous.getX(), previous.getY());
-        // Make sure we are dragging over the handle
-        if (!_dragging) {
-            findPick(oldMouse, camera);
-            final Vector3 lastPick = getLastPick();
-            if (lastPick == null) {
-                return;
-            } else {
-                beginDrag(manager);
-            }
-        }
-
-        // we've established that our mouse is being held down, and started over our arrow. So consume.
-        inputConsumed.set(true);
-
-        // check if we've moved at all
-        if (current == previous || current.getDx() == 0 && current.getDy() == 0) {
+        // Now check drag status
+        if (!checkShouldDrag(camera, current, previous, inputConsumed, manager)) {
             return;
         }
 
         // act on drag
-        final PickData pickData = _results.getPickData(0);
-        final Spatial picked = (Spatial) pickData.getTarget();
-        if (picked instanceof Mesh && pickData.getIntersectionRecord().getNumberOfIntersections() > 0) {
+        final PickData pickData = _results.getNumber() > 0 ? _results.getPickData(0) : null;
+        if (pickData != null && _lastDragSpatial instanceof Mesh
+                && pickData.getIntersectionRecord().getNumberOfIntersections() > 0) {
             final PrimitiveKey key = pickData.getIntersectionRecord().getIntersectionPrimitive(0);
-            ((Mesh) picked).getMeshData().getPrimitiveVertices(key.getPrimitiveIndex(), key.getSection(),
+            ((Mesh) _lastDragSpatial).getMeshData().getPrimitiveVertices(key.getPrimitiveIndex(), key.getSection(),
                     new Vector3[] { _calcVec3A, _calcVec3B, _calcVec3C });
-            picked.localToWorld(_calcVec3A, _calcVec3A);
-            picked.localToWorld(_calcVec3B, _calcVec3B);
-            picked.localToWorld(_calcVec3C, _calcVec3C);
+            _lastDragSpatial.localToWorld(_calcVec3A, _calcVec3A);
+            _lastDragSpatial.localToWorld(_calcVec3B, _calcVec3B);
+            _lastDragSpatial.localToWorld(_calcVec3C, _calcVec3C);
+            final Vector2 oldMouse = new Vector2(previous.getX(), previous.getY());
             final Vector3 loc = getNewOffset(oldMouse, current, camera, manager);
             final Transform transform = manager.getSpatialState().getTransform();
             transform.setTranslation(loc.addLocal(transform.getTranslation()));

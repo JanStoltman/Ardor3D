@@ -384,8 +384,10 @@ public abstract class ExampleBase implements Runnable, Updater, Scene {
         example._canvas = new JoglNewtWindow(canvasRenderer, settings);
         final JoglNewtWindow canvas = (JoglNewtWindow) example._canvas;
         example._mouseManager = new JoglNewtMouseManager(canvas);
-        example._physicalLayer = new PhysicalLayer(new JoglNewtKeyboardWrapper(canvas), new JoglNewtMouseWrapper(
-                canvas, example._mouseManager), DummyControllerWrapper.INSTANCE, new JoglNewtFocusWrapper(canvas));
+        example._canvas.setMouseManager(example._mouseManager);
+        example._physicalLayer = new PhysicalLayer(new JoglNewtKeyboardWrapper(canvas),
+                new JoglNewtMouseWrapper(canvas, example._mouseManager), DummyControllerWrapper.INSTANCE,
+                new JoglNewtFocusWrapper(canvas));
         TextureRendererFactory.INSTANCE.setProvider(new JoglTextureRendererProvider());
 
         example._logicalLayer.registerInput(example._canvas, example._physicalLayer);

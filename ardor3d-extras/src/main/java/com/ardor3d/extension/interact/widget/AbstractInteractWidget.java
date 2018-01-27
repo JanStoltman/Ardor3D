@@ -12,25 +12,34 @@ package com.ardor3d.extension.interact.widget;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.ardor3d.bounding.BoundingVolume;
 import com.ardor3d.extension.interact.InteractManager;
 import com.ardor3d.extension.interact.filter.UpdateFilter;
 import com.ardor3d.framework.Canvas;
+import com.ardor3d.input.ButtonState;
 import com.ardor3d.input.MouseButton;
+import com.ardor3d.input.MouseState;
 import com.ardor3d.input.logical.TwoInputStates;
+import com.ardor3d.intersection.PickData;
+import com.ardor3d.intersection.Pickable;
 import com.ardor3d.intersection.PickingUtil;
 import com.ardor3d.intersection.PrimitivePickResults;
 import com.ardor3d.math.Ray3;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.Camera;
 import com.ardor3d.renderer.Renderer;
 import com.ardor3d.scenegraph.Node;
+import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.ReadOnlyTimer;
 
 public abstract class AbstractInteractWidget {
 
+    public static double MIN_SCALE = 0.000001;
+
     protected Node _handle;
-    protected boolean _flipPickRay, _dragging = false;
+    protected boolean _flipPickRay, _dragging, _mouseOver = false;
     protected MouseButton _dragButton = MouseButton.LEFT;
 
     protected boolean _activeInputOnly = true;
@@ -44,10 +53,15 @@ public abstract class AbstractInteractWidget {
     protected final Vector3 _calcVec3D = new Vector3();
     protected PrimitivePickResults _results = new PrimitivePickResults();
 
+    protected Spatial _lastDragSpatial = null;
+    protected Spatial _lastMouseOverSpatial = null;
+
     protected InteractMatrix _interactMatrix = InteractMatrix.World;
 
     /** List of filters to modify state after applying input. */
     protected IFilterList _filters;
+
+    protected InteractMouseOverCallback _mouseOverCallback;
 
     public AbstractInteractWidget(final IFilterList filterList) {
         _results.setCheckDistance(true);
@@ -55,7 +69,7 @@ public abstract class AbstractInteractWidget {
     }
 
     /**
-     * Use the given inputstates to determine if and how to activate this widget. If the widget uses the given input,
+     * Use the given input states to determine if and how to activate this widget. If the widget uses the given input,
      * inputConsumed should be set to "true" and applyFilters should be called by this method.
      *
      * @param source
@@ -76,13 +90,121 @@ public abstract class AbstractInteractWidget {
         _filters.applyFilters(manager);
     }
 
+    public void checkMouseOver(final Canvas source, final MouseState current, final InteractManager manager) {
+        final Camera camera = source.getCanvasRenderer().getCamera();
+
+        // If we are dragging, we're in mouseOver state.
+        if (_dragging) {
+            if (!_mouseOver) {
+                mouseEntered(source, current, manager);
+            }
+            return;
+        }
+
+        // Make sure we have something to modify
+        if (manager.getSpatialTarget() == null) {
+            if (_mouseOver) {
+                mouseDeparted(source, current, manager);
+            }
+            return;
+        }
+
+        final Vector2 currMouse = new Vector2(current.getX(), current.getY());
+        findPick(currMouse, camera);
+        final Vector3 lastPick = getLastPick();
+        if (lastPick == null) {
+            if (_mouseOver) {
+                mouseDeparted(source, current, manager);
+                return;
+            }
+        } else {
+            if (!_mouseOver) {
+                mouseEntered(source, current, manager);
+            } else if (_results.getPickData(0).getTarget() != _lastMouseOverSpatial) {
+                mouseDeparted(source, current, manager);
+                mouseEntered(source, current, manager);
+            }
+        }
+    }
+
+    protected void mouseEntered(final Canvas source, final MouseState current, final InteractManager manager) {
+        final PickData pickData = _results.getPickData(0);
+        _lastMouseOverSpatial = (Spatial) pickData.getTarget();
+        _mouseOver = true;
+
+        if (_mouseOverCallback != null) {
+            _mouseOverCallback.mouseEntered(source, current, manager);
+        }
+
+        targetDataUpdated(manager);
+    }
+
+    protected void mouseDeparted(final Canvas source, final MouseState current, final InteractManager manager) {
+        _lastMouseOverSpatial = null;
+        _mouseOver = false;
+
+        if (_mouseOverCallback != null) {
+            _mouseOverCallback.mouseDeparted(source, current, manager);
+        }
+
+        targetDataUpdated(manager);
+    }
+
+    public boolean checkShouldDrag(final Camera camera, final MouseState current, final MouseState previous,
+            final AtomicBoolean inputConsumed, final InteractManager manager) {
+        // Make sure we have something to modify
+        if (manager.getSpatialTarget() == null) {
+            return false;
+        }
+
+        // Make sure we are dragging.
+        if (current.getButtonState(_dragButton) != ButtonState.DOWN) {
+            if (_dragging) {
+                endDrag(manager);
+            }
+            return false;
+        }
+        // if we're already dragging, make sure we only act on drags that started with a positive pick.
+        else if (!current.getButtonsPressedSince(previous).contains(_dragButton) && !_dragging) {
+            return false;
+        }
+
+        final Vector2 oldMouse = new Vector2(previous.getX(), previous.getY());
+        // Make sure we are dragging over the handle
+        if (!_dragging) {
+            findPick(oldMouse, camera);
+            final Vector3 lastPick = getLastPick();
+            if (lastPick == null) {
+                _lastDragSpatial = null;
+                return false;
+            } else {
+                beginDrag(manager);
+            }
+        }
+
+        // we've established that our mouse is being held down, and started over our arrow. So consume.
+        inputConsumed.set(true);
+
+        // check if we've moved at all
+        if (current == previous || current.getDx() == 0 && current.getDy() == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     public void beginDrag(final InteractManager manager) {
-        _dragging = true;
-        _filters.beginDrag(manager);
+        if (_results.getNumber() > 0) {
+            final PickData pickData = _results.getPickData(0);
+            _lastDragSpatial = (Spatial) pickData.getTarget();
+            _dragging = true;
+            _filters.beginDrag(manager);
+        }
     }
 
     public void endDrag(final InteractManager manager) {
         _dragging = false;
+        _lastDragSpatial = null;
         _filters.endDrag(manager);
     }
 
@@ -90,9 +212,29 @@ public abstract class AbstractInteractWidget {
         _handle.updateGeometricState(timer.getTimePerFrame());
     }
 
+    protected double calculateHandleScale(final InteractManager manager) {
+        final Spatial target = manager.getSpatialTarget();
+        if (target != null && target.getWorldBound() != null) {
+            final BoundingVolume bound = target.getWorldBound();
+            final ReadOnlyVector3 trans = target.getWorldTranslation();
+            return Math.max(AbstractInteractWidget.MIN_SCALE,
+                    bound.getRadius() + trans.subtract(bound.getCenter(), _calcVec3A).length());
+        }
+
+        return 1.0;
+    }
+
     public void render(final Renderer renderer, final InteractManager manager) { /**/}
 
-    public void targetChanged(final InteractManager manager) { /**/}
+    public void targetChanged(final InteractManager manager) {
+        if (_dragging) {
+            endDrag(manager);
+        }
+        if (_mouseOver) {
+            mouseDeparted(null, null, manager);
+        }
+        targetDataUpdated(manager);
+    }
 
     public void targetDataUpdated(final InteractManager manager) { /**/}
 
@@ -102,7 +244,11 @@ public abstract class AbstractInteractWidget {
         }
     }
 
-    public void lostControl(final InteractManager manager) { /**/}
+    public void lostControl(final InteractManager manager) {
+        if (_mouseOver) {
+            mouseDeparted(null, null, manager);
+        }
+    }
 
     public boolean isActiveInputOnly() {
         return _activeInputOnly;
@@ -156,6 +302,13 @@ public abstract class AbstractInteractWidget {
         return null;
     }
 
+    protected Pickable getLastPickable() {
+        if (_results.getNumber() > 0) {
+            return _results.getPickData(0).getTarget();
+        }
+        return null;
+    }
+
     protected void findPick(final Vector2 mouseLoc, final Camera camera) {
         getPickRay(mouseLoc, camera);
         _results.clear();
@@ -184,5 +337,13 @@ public abstract class AbstractInteractWidget {
 
     public void clearFilters() {
         _filters.clear();
+    }
+
+    public void setMouseOverCallback(final InteractMouseOverCallback callback) {
+        _mouseOverCallback = callback;
+    }
+
+    public InteractMouseOverCallback getMouseOverCallback() {
+        return _mouseOverCallback;
     }
 }

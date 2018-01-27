@@ -110,8 +110,8 @@ public class GenericSkin extends Skin {
         final int topE = component.getPlacement() != TabPlacement.SOUTH ? 4 : 0;
         final int bottomE = component.getPlacement() != TabPlacement.NORTH ? 4 : 0;
 
-        final SubTex defaultTex = new SubTex(_sharedTex, 51 - leftE, 11 - topE, 26 + leftE + rightE, 10 + topE
-                + bottomE);
+        final SubTex defaultTex = new SubTex(_sharedTex, 51 - leftE, 11 - topE, 26 + leftE + rightE,
+                10 + topE + bottomE);
         defaultTex.setBorders(topE, leftE, bottomE, rightE);
         final UIBorder defaultBorder = new ImageBorder(defaultTex);
 
@@ -119,8 +119,8 @@ public class GenericSkin extends Skin {
         overTex.setBorders(topE, leftE, bottomE, rightE);
         final UIBorder overBorder = new ImageBorder(overTex);
 
-        final SubTex pressedTex = new SubTex(_sharedTex, 51 - leftE, 55 - topE, 26 + leftE + rightE, 10 + topE
-                + bottomE);
+        final SubTex pressedTex = new SubTex(_sharedTex, 51 - leftE, 55 - topE, 26 + leftE + rightE,
+                10 + topE + bottomE);
         pressedTex.setBorders(topE, leftE, bottomE, rightE);
         final UIBorder pressedBorder = new ImageBorder(pressedTex);
 
@@ -314,10 +314,9 @@ public class GenericSkin extends Skin {
                             state.setMargin(new Insets(1, 1, 1, 1));
                         }
                         closeButton.refreshState();
-                        closeButton.updateMinimumSizeFromContents();
-                        closeButton.compact();
-                        closeButton
-                                .setMaximumContentSize(closeButton.getContentWidth(), closeButton.getContentHeight());
+                        closeButton.pack();
+                        closeButton.setMaximumContentSize(closeButton.getContentWidth(),
+                                closeButton.getContentHeight());
                     }
                 }
 
@@ -335,10 +334,9 @@ public class GenericSkin extends Skin {
                             state.setMargin(new Insets(1, 1, 1, 1));
                         }
                         minimizeButton.refreshState();
-                        minimizeButton.updateMinimumSizeFromContents();
-                        minimizeButton.compact();
-                        minimizeButton.setMaximumContentSize(minimizeButton.getContentWidth(), minimizeButton
-                                .getContentHeight());
+                        minimizeButton.pack();
+                        minimizeButton.setMaximumContentSize(minimizeButton.getContentWidth(),
+                                minimizeButton.getContentHeight());
                     }
                 }
 
@@ -356,10 +354,9 @@ public class GenericSkin extends Skin {
                             state.setMargin(new Insets(1, 1, 1, 1));
                         }
                         expandButton.refreshState();
-                        expandButton.updateMinimumSizeFromContents();
-                        expandButton.compact();
-                        expandButton.setMaximumContentSize(expandButton.getContentWidth(), expandButton
-                                .getContentHeight());
+                        expandButton.pack();
+                        expandButton.setMaximumContentSize(expandButton.getContentWidth(),
+                                expandButton.getContentHeight());
                     }
                 }
 
@@ -377,8 +374,7 @@ public class GenericSkin extends Skin {
                             state.setMargin(new Insets(1, 1, 1, 1));
                         }
                         helpButton.refreshState();
-                        helpButton.updateMinimumSizeFromContents();
-                        helpButton.compact();
+                        helpButton.pack();
                         helpButton.setMaximumContentSize(helpButton.getContentWidth(), helpButton.getContentHeight());
                     }
                 }
@@ -618,9 +614,18 @@ public class GenericSkin extends Skin {
 
     @Override
     protected void applyToPopupMenu(final UIPopupMenu component) {
-        component.getTitleBar().removeFromParent();
-        component.getStatusBar().removeFromParent();
-        applyToFrame(component);
+        component.setOpacity(1.0f);
+
+        component.setMargin(new Insets(0, 0, 0, 0));
+        component.setPadding(new Insets(0, 0, 0, 0));
+
+        final SubTex borderTex = new SubTex(_sharedTex, 4, 17, 32, 36, 0, 6, 7, 6);
+        final UIBorder border = new ImageBorder(borderTex);
+        component.setBorder(border);
+        final ColorRGBA top = new ColorRGBA(210 / 255f, 210 / 255f, 210 / 255f, 1);
+        final ColorRGBA bottom = new ColorRGBA(244 / 255f, 244 / 255f, 244 / 255f, 1);
+        final GradientBackdrop grad = new GradientBackdrop(top, top, bottom, bottom);
+        component.setBackdrop(grad);
     }
 
     @Override

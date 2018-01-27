@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -28,9 +28,9 @@ import com.ardor3d.extension.ui.UIRadioButton;
 import com.ardor3d.extension.ui.UIScrollPanel;
 import com.ardor3d.extension.ui.UISlider;
 import com.ardor3d.extension.ui.UITabbedPane;
+import com.ardor3d.extension.ui.UITabbedPane.TabPlacement;
 import com.ardor3d.extension.ui.UITextArea;
 import com.ardor3d.extension.ui.UITextField;
-import com.ardor3d.extension.ui.UITabbedPane.TabPlacement;
 import com.ardor3d.extension.ui.backdrop.MultiImageBackdrop;
 import com.ardor3d.extension.ui.event.ActionEvent;
 import com.ardor3d.extension.ui.event.ActionListener;
@@ -126,13 +126,10 @@ public class SimpleUIExample extends ExampleBase {
 
         frame = new UIFrame("UI Sample");
         frame.setContentPanel(pane);
-        frame.updateMinimumSizeFromContents();
-        frame.layout();
         frame.pack();
 
         frame.setUseStandin(true);
         frame.setOpacity(1f);
-        frame.setLocationRelativeTo(_canvas.getCanvasRenderer().getCamera());
         frame.setName("sample");
 
         // Uncomment #1...
@@ -153,10 +150,12 @@ public class SimpleUIExample extends ExampleBase {
         // }
         // });
 
-        hud = new UIHud();
+        hud = new UIHud(_canvas);
         hud.add(frame);
-        hud.setupInput(_canvas, _physicalLayer, _logicalLayer);
+        hud.setupInput(_physicalLayer, _logicalLayer);
         hud.setMouseManager(_mouseManager);
+
+        frame.centerOn(hud);
     }
 
     private UIPanel makeLoginPanel() {
@@ -206,7 +205,7 @@ public class SimpleUIExample extends ExampleBase {
         final ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
-                applyChat(historyArea, chatField);
+                applyChat(historyArea, chatField, scrollArea);
             }
         };
         chatButton.addActionListener(actionListener);
@@ -221,11 +220,12 @@ public class SimpleUIExample extends ExampleBase {
         return chatPanel;
     }
 
-    private void applyChat(final UITextArea historyArea, final UITextField chatField) {
+    private void applyChat(final UITextArea historyArea, final UITextField chatField, final UIScrollPanel scrollArea) {
         final String text = chatField.getText();
         if (text.length() > 0) {
             historyArea.setText(historyArea.getText() + "\n" + text);
             chatField.setText("");
+            scrollArea.layout();
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ardor3d.extension.interact.InteractManager;
 import com.ardor3d.framework.Canvas;
-import com.ardor3d.input.ButtonState;
+import com.ardor3d.input.MouseCursor;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.logical.TwoInputStates;
 import com.ardor3d.math.MathUtils;
@@ -35,9 +35,13 @@ import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.shape.Cylinder;
 
 public class MovePlanarWidget extends AbstractInteractWidget {
-    public static double MIN_SCALE = 0.000001;
+
+    public static double DEFAULT_SCALE = 1.0;
+    public static double MOUSEOVER_SCALE = 1.1;
 
     protected MovePlane _plane = MovePlane.XZ;
+
+    public static MouseCursor DEFAULT_CURSOR = null;
 
     public enum MovePlane {
         XY, XZ, YZ
@@ -57,6 +61,10 @@ public class MovePlanarWidget extends AbstractInteractWidget {
 
         _handle.getSceneHints().setRenderBucketType(RenderBucketType.Transparent);
         _handle.updateGeometricState(0);
+
+        if (MovePlanarWidget.DEFAULT_CURSOR != null) {
+            setMouseOverCallback(new SetCursorCallback(MovePlanarWidget.DEFAULT_CURSOR));
+        }
     }
 
     public MovePlanarWidget withDefaultHandle(final double radius, final double height, final ReadOnlyColorRGBA color) {
@@ -89,29 +97,11 @@ public class MovePlanarWidget extends AbstractInteractWidget {
     }
 
     @Override
-    public void targetChanged(final InteractManager manager) {
-        if (_dragging) {
-            endDrag(manager);
-        }
-        final Spatial target = manager.getSpatialTarget();
-        if (target != null) {
-            _handle.setScale(Math.max(MovePlanarWidget.MIN_SCALE, target.getWorldBound().getRadius()
-                    + target.getWorldTranslation().subtract(target.getWorldBound().getCenter(), _calcVec3A).length()));
-        }
-        targetDataUpdated(manager);
-    }
-
-    @Override
     public void targetDataUpdated(final InteractManager manager) {
         final Spatial target = manager.getSpatialTarget();
         if (target == null) {
-            _handle.setScale(1.0);
             _handle.setRotation(Matrix3.IDENTITY);
         } else {
-            _handle.setScale(Math.max(MoveWidget.MIN_SCALE, target.getWorldBound().getRadius()
-                    + target.getWorldTranslation().subtract(target.getWorldBound().getCenter(), _calcVec3A).length()));
-
-            // update scale of widget using bounding radius
             target.updateGeometricState(0);
 
             // update arrow rotations from target
@@ -121,6 +111,14 @@ public class MovePlanarWidget extends AbstractInteractWidget {
                 _handle.setRotation(Matrix3.IDENTITY);
             }
         }
+
+        _handle.setScale(calculateHandleScale(manager));
+    }
+
+    @Override
+    protected double calculateHandleScale(final InteractManager manager) {
+        return super.calculateHandleScale(manager)
+                * (_mouseOver ? MovePlanarWidget.MOUSEOVER_SCALE : MovePlanarWidget.DEFAULT_SCALE);
     }
 
     @Override
@@ -139,57 +137,27 @@ public class MovePlanarWidget extends AbstractInteractWidget {
     @Override
     public void processInput(final Canvas source, final TwoInputStates inputStates, final AtomicBoolean inputConsumed,
             final InteractManager manager) {
-        // Make sure we have something to modify
-        if (manager.getSpatialTarget() == null) {
-            return;
-        }
 
-        // Make sure we are dragging.
+        final Camera camera = source.getCanvasRenderer().getCamera();
         final MouseState current = inputStates.getCurrent().getMouseState();
         final MouseState previous = inputStates.getPrevious().getMouseState();
 
-        if (current.getButtonState(_dragButton) != ButtonState.DOWN) {
-            if (_dragging) {
-                endDrag(manager);
-            }
-            return;
-        }
-        // if we're already dragging, make sure we only act on drags that started with a positive pick.
-        else if (!current.getButtonsPressedSince(previous).contains(_dragButton) && !_dragging) {
-            return;
-        }
+        // first process mouse over state
+        checkMouseOver(source, current, manager);
 
-        final Camera camera = source.getCanvasRenderer().getCamera();
-        final Vector2 oldMouse = new Vector2(previous.getX(), previous.getY());
-        // Make sure we are dragging over the handle
-        if (!_dragging) {
-            findPick(oldMouse, camera);
-            final Vector3 lastPick = getLastPick();
-            if (lastPick == null) {
-                return;
-            } else {
-                beginDrag(manager);
-            }
-        }
-
-        // we've established that our mouse is being held down, and started over our arrow. So consume.
-        inputConsumed.set(true);
-
-        // check if we've moved at all
-        if (current == previous || current.getDx() == 0 && current.getDy() == 0) {
+        // Now check drag status
+        if (!checkShouldDrag(camera, current, previous, inputConsumed, manager)) {
             return;
         }
 
         // act on drag
-        final Spatial picked = (Spatial) _results.getPickData(0).getTarget();
-        if (picked != null) {
-            final Vector3 loc = getNewOffset(oldMouse, current, camera, manager);
-            final Transform transform = manager.getSpatialState().getTransform();
-            transform.setTranslation(loc.addLocal(transform.getTranslation()));
+        final Vector2 oldMouse = new Vector2(previous.getX(), previous.getY());
+        final Vector3 loc = getNewOffset(oldMouse, current, camera, manager);
+        final Transform transform = manager.getSpatialState().getTransform();
+        transform.setTranslation(loc.addLocal(transform.getTranslation()));
 
-            // apply our filters, if any, now that we've made updates.
-            applyFilters(manager);
-        }
+        // apply our filters, if any, now that we've made updates.
+        applyFilters(manager);
     }
 
     protected Vector3 getNewOffset(final Vector2 oldMouse, final MouseState current, final Camera camera,

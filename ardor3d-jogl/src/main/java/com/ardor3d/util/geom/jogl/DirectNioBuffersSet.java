@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -43,6 +43,8 @@ public final class DirectNioBuffersSet {
 
     private final IntBuffer singleIntBuffer;
 
+    private final IntBuffer dualIntBuffer;
+
     private final FloatBuffer singleFloatBuffer;
 
     private final FloatBuffer transformBuffer;
@@ -59,28 +61,34 @@ public final class DirectNioBuffersSet {
         slicedByteBuffer = BufferUtils.createByteBuffer(slicedByteBufferMaxSize);
         slicedByteBuffer.position(0).limit(slicedByteBuffer.position() + Buffers.SIZEOF_INT);
         singleIntBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asIntBuffer();
+        slicedByteBuffer.position(slicedByteBuffer.limit()).limit(slicedByteBuffer.position() + Buffers.SIZEOF_INT * 2);
+        dualIntBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asIntBuffer();
         slicedByteBuffer.position(slicedByteBuffer.limit()).limit(slicedByteBuffer.position() + Buffers.SIZEOF_FLOAT);
         singleFloatBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asFloatBuffer();
-        slicedByteBuffer.position(slicedByteBuffer.limit()).limit(
-                slicedByteBuffer.position() + (Buffers.SIZEOF_FLOAT * transformBufferMaxSize));
+        slicedByteBuffer.position(slicedByteBuffer.limit())
+                .limit(slicedByteBuffer.position() + (Buffers.SIZEOF_FLOAT * transformBufferMaxSize));
         transformBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asFloatBuffer();
-        slicedByteBuffer.position(slicedByteBuffer.limit()).limit(
-                slicedByteBuffer.position() + (Buffers.SIZEOF_INT * fboColorAttachmentBufferMaxSize));
+        slicedByteBuffer.position(slicedByteBuffer.limit())
+                .limit(slicedByteBuffer.position() + (Buffers.SIZEOF_INT * fboColorAttachmentBufferMaxSize));
         fboColorAttachmentBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asIntBuffer();
-        slicedByteBuffer.position(slicedByteBuffer.limit()).limit(
-                slicedByteBuffer.position() + (Buffers.SIZEOF_BYTE * infoLogBufferMaxSize));
+        slicedByteBuffer.position(slicedByteBuffer.limit())
+                .limit(slicedByteBuffer.position() + (Buffers.SIZEOF_BYTE * infoLogBufferMaxSize));
         infoLogBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder());
-        slicedByteBuffer.position(slicedByteBuffer.limit()).limit(
-                slicedByteBuffer.position() + (Buffers.SIZEOF_INT * textureIdsBufferMaxSize));
+        slicedByteBuffer.position(slicedByteBuffer.limit())
+                .limit(slicedByteBuffer.position() + (Buffers.SIZEOF_INT * textureIdsBufferMaxSize));
         textureIdsBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asIntBuffer();
-        slicedByteBuffer.position(slicedByteBuffer.limit()).limit(
-                slicedByteBuffer.position() + (Buffers.SIZEOF_INT * vboIdsBufferMaxSize));
+        slicedByteBuffer.position(slicedByteBuffer.limit())
+                .limit(slicedByteBuffer.position() + (Buffers.SIZEOF_INT * vboIdsBufferMaxSize));
         vboIdsBuffer = slicedByteBuffer.slice().order(ByteOrder.nativeOrder()).asIntBuffer();
         slicedByteBuffer.clear();
     }
 
     public IntBuffer getSingleIntBuffer() {
         return singleIntBuffer;
+    }
+
+    public IntBuffer getDualIntBuffer() {
+        return dualIntBuffer;
     }
 
     public FloatBuffer getSingleFloatBuffer() {

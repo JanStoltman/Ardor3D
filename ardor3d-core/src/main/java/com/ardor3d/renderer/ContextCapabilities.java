@@ -77,6 +77,15 @@ public class ContextCapabilities {
     /** The max side of a texture supported. */
     protected int _maxTextureSize = -1;
 
+    /** The max width of a viewport supported. */
+    protected int _maxViewportWidth = -1;
+
+    /** The max height of a viewport supported. */
+    protected int _maxViewportHeight = -1;
+
+    /** The max height of a viewport supported. */
+    protected int _maxRenderBufferSize = -1;
+
     protected float _maxAnisotropic = -1.0f;
 
     /** True if multitexturing is supported. */
@@ -161,6 +170,9 @@ public class ContextCapabilities {
         _maxGLSLVertexAttribs = source._maxGLSLVertexAttribs;
         _maxTextureLodBias = source._maxTextureLodBias;
         _maxTextureSize = source._maxTextureSize;
+        _maxViewportWidth = source._maxViewportWidth;
+        _maxViewportHeight = source._maxViewportHeight;
+        _maxRenderBufferSize = source._maxRenderBufferSize;
         _maxUserClipPlanes = source._maxUserClipPlanes;
         _numAuxDrawBuffers = source._numAuxDrawBuffers;
         _numFixedTexUnits = source._numFixedTexUnits;
@@ -462,6 +474,27 @@ public class ContextCapabilities {
      */
     public int getMaxTextureSize() {
         return _maxTextureSize;
+    }
+
+    /**
+     * @return the max width of viewport that this context supports.
+     */
+    public int getMaxViewportWidth() {
+        return _maxViewportWidth;
+    }
+
+    /**
+     * @return the max height of viewport that this context supports.
+     */
+    public int getMaxViewportHeight() {
+        return _maxViewportHeight;
+    }
+
+    /**
+     * @return the max size (in terms of # pixels) of renderbuffer that this context supports.
+     */
+    public int getMaxRenderBufferSize() {
+        return _maxRenderBufferSize;
     }
 
     /**
