@@ -13,13 +13,13 @@ package com.ardor3d.extension.animation.skeletal.clip;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ardor3d.annotation.SavableFactory;
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.export.Savable;
-import com.google.common.collect.ImmutableList;
 
 /**
  * AnimationClip manages a set of animation channels as a single clip entity.
@@ -129,8 +129,8 @@ public class AnimationClip implements Savable {
     /**
      * @return an immutable copy of the channels in this clip.
      */
-    public ImmutableList<AbstractAnimationChannel> getChannels() {
-        return ImmutableList.copyOf(_channels);
+    public List<AbstractAnimationChannel> getChannels() {
+        return Collections.unmodifiableList(new ArrayList<>(_channels));
     }
 
     /**

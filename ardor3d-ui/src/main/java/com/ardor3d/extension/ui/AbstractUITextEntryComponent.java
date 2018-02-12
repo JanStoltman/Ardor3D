@@ -10,7 +10,11 @@
 
 package com.ardor3d.extension.ui;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.ardor3d.extension.ui.text.RenderedText;
 import com.ardor3d.extension.ui.text.RenderedText.RenderedTextData;
@@ -22,7 +26,6 @@ import com.ardor3d.extension.ui.text.UIKeyHandler;
 import com.ardor3d.extension.ui.util.Alignment;
 import com.ardor3d.input.InputState;
 import com.ardor3d.input.MouseButton;
-import com.google.common.collect.ImmutableSet;
 
 public abstract class AbstractUITextEntryComponent extends StateBasedUIComponent implements Textable {
 
@@ -221,8 +224,9 @@ public abstract class AbstractUITextEntryComponent extends StateBasedUIComponent
     }
 
     @Override
-    public ImmutableSet<UIState> getStates() {
-        return ImmutableSet.of(_defaultState, _disabledState, _writingState);
+    public Set<UIState> getStates() {
+        return Collections
+                .unmodifiableSet(new LinkedHashSet<>(Arrays.asList(_defaultState, _disabledState, _writingState)));
     }
 
     protected class DefaultTextEntryState extends UIState {

@@ -3,18 +3,19 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.ui;
 
+import java.util.Set;
+
 import com.ardor3d.input.InputState;
 import com.ardor3d.input.Key;
 import com.ardor3d.input.MouseButton;
 import com.ardor3d.math.type.ReadOnlyColorRGBA;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * StateBasedUIComponent describes a component that acts as a state machine, containing multiple states, one of which is
@@ -60,7 +61,7 @@ public abstract class StateBasedUIComponent extends UIComponent {
 
     /**
      * Set our current active state.
-     * 
+     *
      * @param nextState
      *            the state to set as active for this component. If null, this is a no-op.
      */
@@ -91,7 +92,7 @@ public abstract class StateBasedUIComponent extends UIComponent {
 
     /**
      * Sets the text color on this component and (optionally) all contained states.
-     * 
+     *
      * @param color
      *            the new foreground color
      * @param allStates
@@ -170,5 +171,5 @@ public abstract class StateBasedUIComponent extends UIComponent {
     /**
      * @return an ImmutableSet of possible states for this component.
      */
-    public abstract ImmutableSet<UIState> getStates();
+    public abstract Set<UIState> getStates();
 }

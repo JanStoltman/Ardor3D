@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,7 @@
 package com.ardor3d.extension.animation.skeletal.blendtree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,6 @@ import java.util.Map;
 import com.ardor3d.extension.animation.skeletal.AnimationManager;
 import com.ardor3d.extension.animation.skeletal.clip.AnimationClip;
 import com.ardor3d.extension.animation.skeletal.clip.JointChannel;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Similar to a ClipSource, this class samples and returns values from the channels of an AnimationClip.
@@ -37,7 +37,7 @@ public class InclusiveClipSource extends ClipSource {
 
     /**
      * Construct a new source using the given clip and manager.
-     * 
+     *
      * @param clip
      *            our source clip.
      * @param manager
@@ -83,8 +83,8 @@ public class InclusiveClipSource extends ClipSource {
     /**
      * @return a COPY of the enabled channel list.
      */
-    public ImmutableList<String> getEnabledChannels() {
-        return ImmutableList.copyOf(_enabledChannels);
+    public List<String> getEnabledChannels() {
+        return Collections.unmodifiableList(new ArrayList<>(_enabledChannels));
     }
 
     @Override

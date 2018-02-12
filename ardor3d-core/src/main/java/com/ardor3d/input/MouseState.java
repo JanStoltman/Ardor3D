@@ -3,19 +3,20 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.input;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Map;
 
 import com.ardor3d.annotation.Immutable;
 import com.google.common.collect.EnumMultiset;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.ImmutableMultiset.Builder;
 import com.google.common.collect.Multiset;
@@ -33,12 +34,12 @@ public class MouseState {
     private final int _dx;
     private final int _dy;
     private final int _dwheel;
-    private final ImmutableMap<MouseButton, ButtonState> _buttonStates;
+    private final Map<MouseButton, ButtonState> _buttonStates;
     private final ImmutableMultiset<MouseButton> _clickCounts;
 
     /**
      * Constructs a new MouseState instance.
-     * 
+     *
      * @param x
      *            the mouse's x position
      * @param y
@@ -62,11 +63,9 @@ public class MouseState {
         _dy = dy;
         _dwheel = dwheel;
         if (buttonStates != null) {
-            final com.google.common.collect.ImmutableMap.Builder<MouseButton, ButtonState> builder = ImmutableMap
-                    .builder();
-            _buttonStates = builder.putAll(buttonStates).build();
+            _buttonStates = Collections.unmodifiableMap(new EnumMap<>(buttonStates));
         } else {
-            _buttonStates = ImmutableMap.of();
+            _buttonStates = Collections.emptyMap();
         }
         if (clicks != null) {
             final Builder<MouseButton> builder = ImmutableMultiset.builder();
@@ -97,7 +96,7 @@ public class MouseState {
     }
 
     /**
-     * 
+     *
      * @param state
      *            the button state to look for
      * @return true if at least one mouse button is in the given button state.
@@ -107,7 +106,7 @@ public class MouseState {
     }
 
     /**
-     * 
+     *
      * @param state
      *            the button to look for
      * @return true if the given mouse button is currently mapped to a state.
@@ -119,7 +118,7 @@ public class MouseState {
     /**
      * Returns all the buttons' states. It could be easier for most classes to use the
      * {@link #getButtonState(MouseButton)} methods, and that also results in less object creation.
-     * 
+     *
      * @return a defensive copy of the states of all the buttons at this point in time.
      */
     public EnumMap<MouseButton, ButtonState> getButtonStates() {
@@ -129,7 +128,7 @@ public class MouseState {
     /**
      * Returns all the buttons' states. It could be easier for most classes to use the
      * {@link #getButtonState(MouseButton)} methods, and that also results in less object creation.
-     * 
+     *
      * @param store
      *            a map to store the states in... any values in store are cleared first. If store is null, a new map is
      *            created.
@@ -147,7 +146,7 @@ public class MouseState {
 
     /**
      * Returns the current state for the supplied button, or UP if no state for that button is registered.
-     * 
+     *
      * @param button
      *            the mouse button to check
      * @return the button's state, or {@link ButtonState#UP} if no button state registered.
@@ -189,7 +188,7 @@ public class MouseState {
     /**
      * Returns all the buttons' states. It could be easier for most classes to use the
      * {@link #getClickCount(MouseButton)} method, and that also results in less object creation.
-     * 
+     *
      * @return a defensive copy of the click counts of all the buttons at this point in time.
      */
     public Multiset<MouseButton> getClickCounts() {
@@ -226,11 +225,11 @@ public class MouseState {
      * <li>Frame 6, mouse button down - click count == 0</li>
      * <li>Frame 7, mouse button released - click count == 2</li>
      * </nl>
-     * 
+     *
      * Whether or not a mouse press/release sequence counts as a click (or double-click) depends on the time passed
      * between them. See {@link #CLICK_TIME_MS}.
-     * 
-     * 
+     *
+     *
      * @param button
      *            the button to check for clicks
      * @return the click count in this frame
@@ -241,7 +240,7 @@ public class MouseState {
 
     /**
      * Returns a new EnumSet of all buttons that were clicked this frame.
-     * 
+     *
      * @return every mouse button whose click count this frame is > 0
      */
     public EnumSet<MouseButton> getButtonsClicked() {

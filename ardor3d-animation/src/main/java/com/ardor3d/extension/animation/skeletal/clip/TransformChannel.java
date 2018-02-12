@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -13,6 +13,8 @@ package com.ardor3d.extension.animation.skeletal.clip;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -25,7 +27,6 @@ import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.util.export.CapsuleUtils;
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
-import com.google.common.collect.ImmutableList;
 
 /**
  * An animation channel consisting of a series of transforms interpolated over time.
@@ -53,7 +54,7 @@ public class TransformChannel extends AbstractAnimationChannel {
 
     /**
      * Construct a new TransformChannel.
-     * 
+     *
      * @param channelName
      *            our name.
      * @param times
@@ -93,7 +94,7 @@ public class TransformChannel extends AbstractAnimationChannel {
 
     /**
      * Construct a new TransformChannel.
-     * 
+     *
      * @param channelName
      *            our name.
      * @param times
@@ -152,7 +153,7 @@ public class TransformChannel extends AbstractAnimationChannel {
 
     /**
      * Apply a specific index of this channel to a TransformData object.
-     * 
+     *
      * @param index
      *            the index to grab.
      * @param store
@@ -243,16 +244,16 @@ public class TransformChannel extends AbstractAnimationChannel {
                 scales.toArray(new ReadOnlyVector3[scales.size()]));
     }
 
-    public ImmutableList<ReadOnlyVector3> getTranslations() {
-        return ImmutableList.copyOf(_translations);
+    public List<ReadOnlyVector3> getTranslations() {
+        return Collections.unmodifiableList(Arrays.asList(_translations));
     }
 
-    public ImmutableList<ReadOnlyVector3> getScales() {
-        return ImmutableList.copyOf(_scales);
+    public List<ReadOnlyVector3> getScales() {
+        return Collections.unmodifiableList(Arrays.asList(_scales));
     }
 
-    public ImmutableList<ReadOnlyQuaternion> getRotations() {
-        return ImmutableList.copyOf(_rotations);
+    public List<ReadOnlyQuaternion> getRotations() {
+        return Collections.unmodifiableList(Arrays.asList(_rotations));
     }
 
     protected TransformChannel newChannel(final String name, final float[] times, final ReadOnlyQuaternion[] rotations,

@@ -19,7 +19,6 @@ import java.util.WeakHashMap;
 import com.ardor3d.scenegraph.Mesh;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
-import com.google.common.collect.ImmutableList;
 
 /**
  * CollisionTreeManager is an automated system for handling the creation and deletion of CollisionTrees. The manager
@@ -405,6 +404,6 @@ public enum CollisionTreeManager {
      * @return an immutable copy of the list of protected meshes.
      */
     public List<Mesh> getProtectedMeshes() {
-        return ImmutableList.copyOf(_protectedList);
+        return Collections.unmodifiableList(new ArrayList<>(_protectedList));
     }
 }

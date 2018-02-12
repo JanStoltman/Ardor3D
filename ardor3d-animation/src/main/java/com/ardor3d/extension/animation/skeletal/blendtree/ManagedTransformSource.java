@@ -3,13 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.animation.skeletal.blendtree;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,6 @@ import com.ardor3d.extension.animation.skeletal.clip.JointChannel;
 import com.ardor3d.extension.animation.skeletal.clip.JointData;
 import com.ardor3d.math.type.ReadOnlyQuaternion;
 import com.ardor3d.math.type.ReadOnlyVector3;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * This tree source maintains its own source data, which can be modified directly using setJointXXX. This source is
@@ -36,7 +36,7 @@ public class ManagedTransformSource implements BlendTreeSource {
 
     /**
      * Set the local source transform data for a given joint index.
-     * 
+     *
      * @param jointIndex
      *            our joint index value.
      * @param jointData
@@ -55,7 +55,7 @@ public class ManagedTransformSource implements BlendTreeSource {
 
     /**
      * Sets a translation to the local transformdata for a given joint index.
-     * 
+     *
      * @param jointIndex
      *            our joint index value.
      * @param translation
@@ -74,7 +74,7 @@ public class ManagedTransformSource implements BlendTreeSource {
 
     /**
      * Sets a scale to the local transformdata for a given joint index.
-     * 
+     *
      * @param jointIndex
      *            our joint index value.
      * @param scale
@@ -93,7 +93,7 @@ public class ManagedTransformSource implements BlendTreeSource {
 
     /**
      * Sets a rotation to the local transformdata for a given joint index.
-     * 
+     *
      * @param jointIndex
      *            our joint index value.
      * @param rotation
@@ -115,7 +115,7 @@ public class ManagedTransformSource implements BlendTreeSource {
      */
     @Override
     public Map<String, JointData> getSourceData(final AnimationManager manager) {
-        return ImmutableMap.copyOf(data);
+        return Collections.unmodifiableMap(new HashMap<>(data));
     }
 
     /**
@@ -145,7 +145,7 @@ public class ManagedTransformSource implements BlendTreeSource {
     /**
      * Setup transform data on this source, using the first frame from a specific clip and jointNames from a specific
      * pose.
-     * 
+     *
      * @param pose
      *            the pose to sample joints from
      * @param clip
@@ -156,14 +156,15 @@ public class ManagedTransformSource implements BlendTreeSource {
     public void initJointsByName(final SkeletonPose pose, final AnimationClip clip, final String... jointNames) {
         for (final String name : jointNames) {
             final int jointIndex = pose.getSkeleton().findJointByName(name);
-            setJointTransformData(jointIndex, ((JointChannel) clip.findChannelByName(JointChannel.JOINT_CHANNEL_NAME
-                    + jointIndex)).getJointData(0, new JointData(jointIndex)));
+            setJointTransformData(jointIndex,
+                    ((JointChannel) clip.findChannelByName(JointChannel.JOINT_CHANNEL_NAME + jointIndex))
+                            .getJointData(0, new JointData(jointIndex)));
         }
     }
 
     /**
      * Setup transform data for specific joints on this source, using the first frame from a given clip.
-     * 
+     *
      * @param clip
      *            the animation clip to pull data from
      * @param jointIndices
@@ -171,8 +172,9 @@ public class ManagedTransformSource implements BlendTreeSource {
      */
     public void initJointsById(final AnimationClip clip, final int... jointIndices) {
         for (final int jointIndex : jointIndices) {
-            setJointTransformData(jointIndex, ((JointChannel) clip.findChannelByName(JointChannel.JOINT_CHANNEL_NAME
-                    + jointIndex)).getJointData(0, new JointData(jointIndex)));
+            setJointTransformData(jointIndex,
+                    ((JointChannel) clip.findChannelByName(JointChannel.JOINT_CHANNEL_NAME + jointIndex))
+                            .getJointData(0, new JointData(jointIndex)));
         }
     }
 

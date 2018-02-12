@@ -3,19 +3,20 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.util;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
-
-import com.google.common.collect.MapMaker;
 
 /**
  * <code>GameTaskQueueManager</code> is just a simple Singleton class allowing easy access to task queues.
@@ -23,7 +24,8 @@ import com.google.common.collect.MapMaker;
 public final class GameTaskQueueManager {
 
     private static final Object MAP_LOCK = new Object();
-    private static final ConcurrentMap<Object, GameTaskQueueManager> _managers = new MapMaker().weakKeys().makeMap();
+    private static final Map<Object, GameTaskQueueManager> _managers = Collections
+            .synchronizedMap(new WeakHashMap<Object, GameTaskQueueManager>());
 
     private final ConcurrentMap<String, GameTaskQueue> _managedQueues = new ConcurrentHashMap<>(2);
 
@@ -77,7 +79,7 @@ public final class GameTaskQueueManager {
     /**
      * This method adds <code>callable</code> to the queue to be invoked in the update() method in the OpenGL thread.
      * The Future returned may be utilized to cancel the task or wait for the return object.
-     * 
+     *
      * @param callable
      * @return Future<V>
      */
@@ -89,7 +91,7 @@ public final class GameTaskQueueManager {
     /**
      * This method adds <code>callable</code> to the queue to be invoked in the render() method in the OpenGL thread.
      * The Future returned may be utilized to cancel the task or wait for the return object.
-     * 
+     *
      * @param callable
      * @return Future<V>
      */

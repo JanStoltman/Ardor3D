@@ -3,15 +3,19 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.extension.ui;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import com.ardor3d.extension.ui.util.SubTex;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Basic implementation of {@link AbstractLabelUIComponent}.
@@ -30,7 +34,7 @@ public class UILabel extends AbstractLabelUIComponent {
     }
 
     /**
-     * 
+     *
      * @param text
      *            the text value of this label.
      * @param icon
@@ -55,7 +59,7 @@ public class UILabel extends AbstractLabelUIComponent {
     }
 
     @Override
-    public ImmutableSet<UIState> getStates() {
-        return ImmutableSet.of((UIState) _defaultState, _disabledState);
+    public Set<UIState> getStates() {
+        return Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList((UIState) _defaultState, _disabledState)));
     }
 }

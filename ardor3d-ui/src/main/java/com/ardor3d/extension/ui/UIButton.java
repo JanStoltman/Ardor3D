@@ -11,7 +11,11 @@
 package com.ardor3d.extension.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ardor3d.extension.ui.event.ActionEvent;
 import com.ardor3d.extension.ui.event.ActionListener;
@@ -19,7 +23,6 @@ import com.ardor3d.extension.ui.util.ButtonGroup;
 import com.ardor3d.extension.ui.util.SubTex;
 import com.ardor3d.input.InputState;
 import com.ardor3d.input.MouseButton;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * A state based component that can be interacted with via the mouse to trigger actions.
@@ -443,8 +446,8 @@ public class UIButton extends AbstractLabelUIComponent {
     }
 
     @Override
-    public ImmutableSet<UIState> getStates() {
-        return ImmutableSet.of((UIState) _defaultState, _disabledState, _pressedState, _selectedState,
-                _disabledSelectedState, _mouseOverState, _mouseOverSelectedState);
+    public Set<UIState> getStates() {
+        return Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList((UIState) _defaultState, _disabledState,
+                _pressedState, _selectedState, _disabledSelectedState, _mouseOverState, _mouseOverSelectedState)));
     }
 }

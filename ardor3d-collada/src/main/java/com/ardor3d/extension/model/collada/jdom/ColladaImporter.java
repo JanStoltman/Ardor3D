@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,6 @@ import com.ardor3d.util.resource.ResourceLocator;
 import com.ardor3d.util.resource.ResourceLocatorTool;
 import com.ardor3d.util.resource.ResourceSource;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
 /**
@@ -158,7 +158,7 @@ public class ColladaImporter {
     }
 
     public Set<MatchCondition> getOptimizeSettings() {
-        return ImmutableSet.copyOf(_optimizeSettings);
+        return Collections.unmodifiableSet(EnumSet.copyOf(_optimizeSettings));
     }
 
     public void setOptimizeSettings(final MatchCondition... optimizeSettings) {
@@ -170,7 +170,7 @@ public class ColladaImporter {
 
     /**
      * Reads a Collada file from the given resource and returns it as a ColladaStorage object.
-     * 
+     *
      * @param resource
      *            the name of the resource to find. ResourceLocatorTool will be used with TYPE_MODEL to find the
      *            resource.
@@ -184,7 +184,7 @@ public class ColladaImporter {
 
     /**
      * Reads a Collada file from the given resource and returns it as a ColladaStorage object.
-     * 
+     *
      * @param resource
      *            the name of the resource to find. ResourceLocatorTool will be used with TYPE_MODEL to find the
      *            resource.
@@ -211,7 +211,7 @@ public class ColladaImporter {
 
     /**
      * Reads a Collada file from the given resource and returns it as a ColladaStorage object.
-     * 
+     *
      * @param resource
      *            the name of the resource to find.
      * @return a ColladaStorage data object containing the Collada scene and other useful elements.
@@ -224,7 +224,7 @@ public class ColladaImporter {
 
     /**
      * Reads a Collada file from the given resource and returns it as a ColladaStorage object.
-     * 
+     *
      * @param resource
      *            the name of the resource to find.
      * @param geometryTool
@@ -315,7 +315,7 @@ public class ColladaImporter {
     /**
      * Reads the whole Collada DOM tree from the given resource and returns its root element. Exceptions may be thrown
      * by underlying tools; these will be wrapped in a RuntimeException and rethrown.
-     * 
+     *
      * @param resource
      *            the ResourceSource to read the resource from
      * @return the Collada root element
@@ -441,8 +441,8 @@ public class ColladaImporter {
                         break;
                 }
             } catch (final NoSuchElementException e) {
-                throw new ColladaException("Number of values in collada array does not match its count attribute: "
-                        + count, e);
+                throw new ColladaException(
+                        "Number of values in collada array does not match its count attribute: " + count, e);
             }
             return new Text(Text.normalizeString(text));
         }
@@ -475,7 +475,8 @@ public class ColladaImporter {
         }
 
         @Override
-        public Element element(final int line, final int col, final String name, final String prefix, final String uri) {
+        public Element element(final int line, final int col, final String name, final String prefix,
+                final String uri) {
             currentElement = super.element(line, col, name);
             handleTypes(name);
             return currentElement;
@@ -512,7 +513,7 @@ public class ColladaImporter {
 
     /**
      * Parse a numeric value. Commas are replaced by dot automaticly. Also handle special values : INF, -INF, NaN
-     * 
+     *
      * @param number
      *            string
      * @return float

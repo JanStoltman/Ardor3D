@@ -11,12 +11,12 @@
 package com.ardor3d.extension.animation.skeletal.clip;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.ardor3d.extension.animation.skeletal.AnimationListener;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Maintains state information about an instance of a specific animation clip, such as time scaling applied, active
@@ -81,9 +81,9 @@ public class AnimationClipInstance {
      */
     public List<AnimationListener> getAnimationListeners() {
         if (animationListeners == null) {
-            return ImmutableList.of();
+            return Collections.emptyList();
         }
-        return ImmutableList.copyOf(animationListeners);
+        return Collections.unmodifiableList(new ArrayList<>(animationListeners));
     }
 
     public boolean isActive() {

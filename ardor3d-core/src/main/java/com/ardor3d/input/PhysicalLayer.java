@@ -3,13 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.input;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.logging.Logger;
 
 import com.ardor3d.input.logical.DummyControllerWrapper;
 import com.ardor3d.input.logical.DummyFocusWrapper;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.PeekingIterator;
 
 /**
@@ -45,7 +45,7 @@ public class PhysicalLayer {
     private boolean _inited = false;
 
     private static final long MAX_INPUT_POLL_TIME = TimeUnit.SECONDS.toNanos(2);
-    private static final List<InputState> EMPTY_LIST = ImmutableList.of();
+    private static final List<InputState> EMPTY_LIST = Collections.emptyList();
 
     public PhysicalLayer(final KeyboardWrapper keyboardWrapper, final MouseWrapper mouseWrapper) {
         this(keyboardWrapper, mouseWrapper, DummyControllerWrapper.INSTANCE, DummyFocusWrapper.INSTANCE);
@@ -77,7 +77,7 @@ public class PhysicalLayer {
     /**
      * Causes a poll of the input devices to happen, making any updates to input states available via the
      * {@link #drainAvailableStates()} method.
-     * 
+     *
      * @throws IllegalStateException
      *             if too many state changes have happened since the last call to this method
      */
@@ -178,7 +178,7 @@ public class PhysicalLayer {
     /**
      * Fetches any new <code>InputState</code>s since the last call to this method. If no input system changes have been
      * made since the last call (no mouse movements, no keys pressed or released), an empty list is returned.
-     * 
+     *
      * @return the list of new <code>InputState</code>, or an empty list if there have been no changes in input
      */
     public List<InputState> drainAvailableStates() {
