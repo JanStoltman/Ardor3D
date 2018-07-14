@@ -10,8 +10,6 @@
 
 package com.ardor3d.input;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.Objects;
 
 import com.ardor3d.annotation.Immutable;
@@ -58,10 +56,14 @@ public class MouseCursor {
         _hotspotX = hotspotX;
         _hotspotY = hotspotY;
 
-        checkArgument(hotspotX >= 0 && hotspotX < image.getWidth(),
-                "hotspot X is out of bounds: 0 <= %s  < " + image.getWidth(), hotspotX);
-        checkArgument(hotspotY >= 0 && hotspotY < image.getHeight(),
-                "hotspot Y is out of bounds: 0 <= %s  < " + image.getHeight(), hotspotY);
+        if (!(hotspotX >= 0 && hotspotX < image.getWidth())) {
+            throw new IllegalArgumentException(
+                    "hotspot X is out of bounds: 0 <= " + hotspotX + "  < " + image.getWidth());
+        }
+        if (!(hotspotY >= 0 && hotspotY < image.getHeight())) {
+            throw new IllegalArgumentException(
+                    "hotspot Y is out of bounds: 0 <= " + hotspotY + "  < " + image.getHeight());
+        }
     }
 
     public String getName() {
