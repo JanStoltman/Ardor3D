@@ -24,7 +24,6 @@ import com.ardor3d.extension.shadow.map.ShadowCasterManager;
 import com.ardor3d.extension.terrain.client.Terrain;
 import com.ardor3d.extension.terrain.client.TerrainBuilder;
 import com.ardor3d.extension.terrain.client.TerrainDataProvider;
-import com.ardor3d.extension.terrain.client.UrlInputSupplier;
 import com.ardor3d.extension.terrain.heightmap.MidPointHeightMapGenerator;
 import com.ardor3d.extension.terrain.providers.array.ArrayTerrainDataProvider;
 import com.ardor3d.framework.Canvas;
@@ -192,10 +191,12 @@ public class ShadowedTerrainExample extends ExampleBase {
             raw.setHeightRange(0.2f);
             final float[] heightMap = raw.getHeightData();
 
-            final TerrainDataProvider terrainDataProvider = new ArrayTerrainDataProvider(heightMap, SIZE, new Vector3(                    1, 300, 1));
+            final TerrainDataProvider terrainDataProvider = new ArrayTerrainDataProvider(heightMap, SIZE,
+                    new Vector3(1, 300, 1));
             terrain = new TerrainBuilder(terrainDataProvider, terrainCamera).setShowDebugPanels(true).build();
 
-            terrain.setPixelShader(new UrlInputSupplier(ResourceLocatorTool                    .getClassPathResource(ShadowedTerrainExample.class,                            "com/ardor3d/extension/terrain/shadowedGeometryClipmapShaderPCF.frag")));
+            terrain.setPixelShader(ResourceLocatorTool.getClassPathResource(ShadowedTerrainExample.class,
+                    "com/ardor3d/extension/terrain/shadowedGeometryClipmapShaderPCF.frag"));
             terrain.reloadShader();
 
             _root.attachChild(terrain);
@@ -205,7 +206,8 @@ public class ShadowedTerrainExample extends ExampleBase {
         }
 
         // Initialize PSSM shadows
-        _pssmPass = new ParallelSplitShadowMapPass(directionalLight, 1024, 4);        _pssmPass.setFiltering(Filter.Pcf);
+        _pssmPass = new ParallelSplitShadowMapPass(directionalLight, 1024, 4);
+        _pssmPass.setFiltering(Filter.Pcf);
         _pssmPass.setRenderShadowedScene(false);
         _pssmPass.setKeepMainShader(true);
         _pssmPass.setMaxShadowDistance(750); // XXX: Tune this
@@ -244,45 +246,52 @@ public class ShadowedTerrainExample extends ExampleBase {
         updateText();
 
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.U), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 updateTerrain = !updateTerrain;
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.ONE), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 _controlHandle.setMoveSpeed(5);
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.TWO), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 _controlHandle.setMoveSpeed(50);
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.THREE), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 _controlHandle.setMoveSpeed(400);
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.FOUR), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 _controlHandle.setMoveSpeed(1000);
                 updateText();
             }
         }));
 
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.SPACE), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 groundCamera = !groundCamera;
                 updateText();
             }
         }));
 
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.P), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 if (sphere.getSceneHints().getCullHint() == CullHint.Dynamic) {
                     sphere.getSceneHints().setCullHint(CullHint.Always);
                 } else if (sphere.getSceneHints().getCullHint() == CullHint.Always) {
@@ -292,39 +301,45 @@ public class ShadowedTerrainExample extends ExampleBase {
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.R), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 terrain.getTextureClipmap().setShowDebug(!terrain.getTextureClipmap().isShowDebug());
                 terrain.reloadShader();
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.G), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 terrain.reloadShader();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.FIVE), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 terrain.getTextureClipmap().setScale(terrain.getTextureClipmap().getScale() / 2);
                 terrain.reloadShader();
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.SIX), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 terrain.getTextureClipmap().setScale(terrain.getTextureClipmap().getScale() * 2);
                 terrain.reloadShader();
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.C), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 _pssmPass.setUpdateMainCamera(!_pssmPass.isUpdateMainCamera());
                 updateText();
             }
         }));
         _logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(Key.ZERO), new TriggerAction() {
-            @Override            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
+            @Override
+            public void perform(final Canvas source, final TwoInputStates inputStates, final double tpf) {
                 final Camera cam = _canvas.getCanvasRenderer().getCamera();
                 System.out.println("camera location: " + cam.getLocation());
                 System.out.println("camera direction: " + cam.getDirection());
@@ -356,7 +371,14 @@ public class ShadowedTerrainExample extends ExampleBase {
 
     private void setupDefaultStates() {
         _lightState.detachAll();
-        directionalLight = new DirectionalLight();        directionalLight.setEnabled(true);        directionalLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.5f, 1));        directionalLight.setDiffuse(new ColorRGBA(0.6f, 0.6f, 0.5f, 1));        directionalLight.setSpecular(new ColorRGBA(0.3f, 0.3f, 0.2f, 1));        directionalLight.setDirection(lightPosition.normalize(null).negateLocal());        _lightState.attach(directionalLight);        _lightState.setEnabled(true);
+        directionalLight = new DirectionalLight();
+        directionalLight.setEnabled(true);
+        directionalLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.5f, 1));
+        directionalLight.setDiffuse(new ColorRGBA(0.6f, 0.6f, 0.5f, 1));
+        directionalLight.setSpecular(new ColorRGBA(0.3f, 0.3f, 0.2f, 1));
+        directionalLight.setDirection(lightPosition.normalize(null).negateLocal());
+        _lightState.attach(directionalLight);
+        _lightState.setEnabled(true);
 
         final CullState cs = new CullState();
         cs.setEnabled(true);

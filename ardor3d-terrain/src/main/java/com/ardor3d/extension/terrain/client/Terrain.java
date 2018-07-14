@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -11,6 +11,7 @@
 package com.ardor3d.extension.terrain.client;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +48,6 @@ import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.event.DirtyType;
 import com.ardor3d.scenegraph.hint.DataMode;
 import com.ardor3d.util.resource.ResourceLocatorTool;
-import com.google.common.io.ByteSource;
 
 /**
  * An implementation of geometry clipmapping
@@ -83,8 +83,8 @@ public class Terrain extends Node implements Pickable {
 
     private final DoubleBufferedList<Region> mailBox = new DoubleBufferedList<>();
 
-    private ByteSource vertexShader;
-    private ByteSource pixelShader;
+    private URL vertexShader;
+    private URL pixelShader;
 
     /** Timers for mailbox updates */
     private long oldTime = 0;
@@ -156,10 +156,10 @@ public class Terrain extends Node implements Pickable {
             ex.printStackTrace();
         }
 
-        vertexShader = new UrlInputSupplier(ResourceLocatorTool.getClassPathResource(Terrain.class,
-                "com/ardor3d/extension/terrain/texturedGeometryClipmapShader.vert"));
-        pixelShader = new UrlInputSupplier(ResourceLocatorTool.getClassPathResource(Terrain.class,
-                "com/ardor3d/extension/terrain/texturedGeometryClipmapShader.frag"));
+        vertexShader = ResourceLocatorTool.getClassPathResource(Terrain.class,
+                "com/ardor3d/extension/terrain/texturedGeometryClipmapShader.vert");
+        pixelShader = ResourceLocatorTool.getClassPathResource(Terrain.class,
+                "com/ardor3d/extension/terrain/texturedGeometryClipmapShader.frag");
 
         // setScale(terrainConfiguration.getScale());
         // TODO: hack. unify scale handling over cache etc
@@ -422,8 +422,8 @@ public class Terrain extends Node implements Pickable {
                 _geometryClipmapShader.setVertexShader(vertexShader.openStream());
                 _geometryClipmapShader.setFragmentShader(pixelShader.openStream());
             } catch (final IOException ex) {
-                Terrain.logger
-                        .logp(Level.SEVERE, getClass().getName(), "init(Renderer)", "Could not load shaders.", ex);
+                Terrain.logger.logp(Level.SEVERE, getClass().getName(), "init(Renderer)", "Could not load shaders.",
+                        ex);
             }
 
             _geometryClipmapShader.setUniform("texture", 0);
@@ -619,11 +619,11 @@ public class Terrain extends Node implements Pickable {
         return _clips;
     }
 
-    public void setVertexShader(final ByteSource vertexShader) {
+    public void setVertexShader(final URL vertexShader) {
         this.vertexShader = vertexShader;
     }
 
-    public void setPixelShader(final ByteSource pixelShader) {
+    public void setPixelShader(final URL pixelShader) {
         this.pixelShader = pixelShader;
     }
 
@@ -633,7 +633,7 @@ public class Terrain extends Node implements Pickable {
 
     /**
      * set the minimum (highest resolution) clipmap level visible
-     * 
+     *
      * @param level
      *            clamped to valid range
      */

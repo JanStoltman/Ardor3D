@@ -27,7 +27,6 @@ import com.ardor3d.extension.shadow.map.ParallelSplitShadowMapPass.Filter;
 import com.ardor3d.extension.shadow.map.ShadowCasterManager;
 import com.ardor3d.extension.terrain.client.Terrain;
 import com.ardor3d.extension.terrain.client.TerrainBuilder;
-import com.ardor3d.extension.terrain.client.UrlInputSupplier;
 import com.ardor3d.extension.terrain.heightmap.ImageHeightMap;
 import com.ardor3d.extension.terrain.providers.array.ArrayTerrainDataProvider;
 import com.ardor3d.extension.ui.Orientation;
@@ -297,9 +296,8 @@ public class MountainShadowTerrainExample extends ExampleBase {
                     .setShowDebugPanels(true);
 
             terrain = builder.build();
-            terrain.setPixelShader(
-                    new UrlInputSupplier(ResourceLocatorTool.getClassPathResource(ShadowedTerrainExample.class,
-                            "com/ardor3d/extension/terrain/shadowedGeometryClipmapShader_normalMap.frag")));
+            terrain.setPixelShader(ResourceLocatorTool.getClassPathResource(ShadowedTerrainExample.class,
+                    "com/ardor3d/extension/terrain/shadowedGeometryClipmapShader_normalMap.frag"));
             terrain.reloadShader();
             terrain.getGeometryClipmapShader().setUniform("normalMap", 5);
             terrainNode.attachChild(terrain);
