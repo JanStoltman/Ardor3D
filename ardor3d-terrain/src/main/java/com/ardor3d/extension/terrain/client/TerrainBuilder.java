@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -27,7 +29,6 @@ import com.ardor3d.extension.terrain.util.TerrainGridCachePanel;
 import com.ardor3d.extension.terrain.util.TextureGridCachePanel;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.renderer.Camera;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 public class TerrainBuilder {
     private int cacheBufferSize = 4;
@@ -122,9 +123,19 @@ public class TerrainBuilder {
         logger.info("level: " + level);
 
         final ThreadPoolExecutor tileThreadService = new ThreadPoolExecutor(gridCacheThreadCount, gridCacheThreadCount,
-                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactoryBuilder()
-                        .setThreadFactory(Executors.defaultThreadFactory()).setDaemon(true)
-                        .setNameFormat("TerrainTileThread-%s").setPriority(Thread.MIN_PRIORITY).build());
+                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
+
+                    private final AtomicLong count = new AtomicLong(0);
+
+                    @Override
+                    public Thread newThread(final Runnable runnable) {
+                        final Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+                        thread.setDaemon(true);
+                        thread.setName(String.format("TerrainTileThread-%s", count.getAndIncrement()));
+                        thread.setPriority(Thread.MIN_PRIORITY);
+                        return thread;
+                    }
+                });
 
         for (int i = baseLevel; i < clipmapLevels; i++) {
             final TerrainCache gridCache = new TerrainGridCache(parentCache, cacheSize, terrainSource, tileSize,
@@ -176,9 +187,19 @@ public class TerrainBuilder {
         logger.info("level: " + level);
 
         final ThreadPoolExecutor tileThreadService = new ThreadPoolExecutor(gridCacheThreadCount, gridCacheThreadCount,
-                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactoryBuilder()
-                        .setThreadFactory(Executors.defaultThreadFactory()).setDaemon(true)
-                        .setNameFormat("TextureTileThread-%s").setPriority(Thread.MIN_PRIORITY).build());
+                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
+
+                    private final AtomicLong count = new AtomicLong(0);
+
+                    @Override
+                    public Thread newThread(final Runnable runnable) {
+                        final Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+                        thread.setDaemon(true);
+                        thread.setName(String.format("TextureTileThread-%s", count.getAndIncrement()));
+                        thread.setPriority(Thread.MIN_PRIORITY);
+                        return thread;
+                    }
+                });
 
         for (int i = baseLevel; i < clipmapLevels; i++) {
             final TextureCache gridCache = new TextureGridCache(parentCache, cacheSize, textureSource, tileSize,
