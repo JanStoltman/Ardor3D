@@ -10,8 +10,6 @@
 
 package com.ardor3d.input.logical;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Objects;
 
 import com.ardor3d.annotation.Immutable;
@@ -39,8 +37,8 @@ public final class TwoInputStates {
      *             if either parameter is null
      */
     public TwoInputStates(final InputState previous, final InputState current) {
-        _previous = checkNotNull(previous, "previous");
-        _current = checkNotNull(current, "current");
+        _previous = Objects.requireNonNull(previous, "previous");
+        _current = Objects.requireNonNull(current, "current");
     }
 
     public InputState getPrevious() {

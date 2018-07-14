@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -16,13 +16,13 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import com.ardor3d.annotation.GuardedBy;
 import com.ardor3d.input.Key;
 import com.ardor3d.input.KeyEvent;
 import com.ardor3d.input.KeyState;
 import com.ardor3d.input.KeyboardWrapper;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.PeekingIterator;
 
@@ -43,7 +43,7 @@ public class AwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
     protected final EnumSet<Key> _pressedList = EnumSet.noneOf(Key.class);
 
     public AwtKeyboardWrapper(final Component component) {
-        _component = Preconditions.checkNotNull(component, "component");
+        _component = Objects.requireNonNull(component, "component");
     }
 
     @Override
@@ -101,7 +101,7 @@ public class AwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
 
     /**
      * Convert from AWT key event to Ardor3D Key. Override to provide additional or custom behavior.
-     * 
+     *
      * @param e
      *            the AWT KeyEvent received by the input system.
      * @return an Ardor3D Key, to be forwarded to the Predicate/Trigger system.
