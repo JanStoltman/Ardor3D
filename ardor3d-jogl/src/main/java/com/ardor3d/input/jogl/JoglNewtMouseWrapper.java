@@ -10,11 +10,10 @@
 
 package com.ardor3d.input.jogl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import com.ardor3d.annotation.GuardedBy;
 import com.ardor3d.framework.jogl.NewtWindowContainer;
@@ -60,7 +59,7 @@ public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
     protected int _ignoreY = Integer.MAX_VALUE;
 
     public JoglNewtMouseWrapper(final NewtWindowContainer newtWindowContainer, final MouseManager manager) {
-        _newtWindow = checkNotNull(newtWindowContainer.getNewtWindow(), "newtWindow");
+        _newtWindow = Objects.requireNonNull(newtWindowContainer.getNewtWindow(), "newtWindow");
         _manager = manager;
         for (final MouseButton mb : MouseButton.values()) {
             _lastClickTime.put(mb, 0L);

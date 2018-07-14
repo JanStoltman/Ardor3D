@@ -10,11 +10,10 @@
 
 package com.ardor3d.input.swt;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -54,7 +53,7 @@ public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveLi
     private final EnumSet<MouseButton> _clickArmed = EnumSet.noneOf(MouseButton.class);
 
     public SwtMouseWrapper(final Control control) {
-        _control = checkNotNull(control, "control");
+        _control = Objects.requireNonNull(control, "control");
         for (final MouseButton mb : MouseButton.values()) {
             _lastClickTime.put(mb, 0L);
         }
@@ -120,7 +119,8 @@ public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveLi
         setStateForButton(e, buttons, ButtonState.UP);
 
         final MouseButton b = getButtonForEvent(e);
-        if (_clickArmed.contains(b) && (System.currentTimeMillis() - _lastClickTime.get(b) <= MouseState.CLICK_TIME_MS)) {
+        if (_clickArmed.contains(b)
+                && (System.currentTimeMillis() - _lastClickTime.get(b) <= MouseState.CLICK_TIME_MS)) {
             _clicks.add(b); // increment count of clicks for button b.
             // XXX: Note the double event add... this prevents sticky click counts, but is it the best way?
             addNewState(e, 0, buttons, EnumMultiset.create(_clicks));

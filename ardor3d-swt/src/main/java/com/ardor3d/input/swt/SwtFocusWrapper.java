@@ -3,14 +3,14 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
 
 package com.ardor3d.input.swt;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -27,12 +27,12 @@ public class SwtFocusWrapper implements FocusWrapper, FocusListener {
     private final Control _control;
 
     public SwtFocusWrapper(final Control control) {
-        _control = checkNotNull(control, "control");
+        _control = Objects.requireNonNull(control, "control");
     }
 
     @Override
     public void focusGained(final FocusEvent focusEvent) {
-    // nothing to do
+        // nothing to do
     }
 
     @Override

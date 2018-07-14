@@ -10,8 +10,6 @@
 
 package com.ardor3d.input.awt;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.MouseEvent;
@@ -22,6 +20,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import com.ardor3d.annotation.GuardedBy;
 import com.ardor3d.input.ButtonState;
@@ -66,7 +65,7 @@ public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelL
         if (component instanceof Frame) {
             _frame = (Frame) (_component = component);
         } else {
-            _component = checkNotNull(component, "component");
+            _component = Objects.requireNonNull(component, "component");
             _frame = null;
         }
         for (final MouseButton mb : MouseButton.values()) {
@@ -135,7 +134,8 @@ public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelL
         setStateForButton(e, buttons, ButtonState.UP);
 
         final MouseButton b = getButtonForEvent(e);
-        if (_clickArmed.contains(b) && (System.currentTimeMillis() - _lastClickTime.get(b) <= MouseState.CLICK_TIME_MS)) {
+        if (_clickArmed.contains(b)
+                && (System.currentTimeMillis() - _lastClickTime.get(b) <= MouseState.CLICK_TIME_MS)) {
             _clicks.add(b); // increment count of clicks for button b.
             // XXX: Note the double event add... this prevents sticky click counts, but is it the best way?
             addNewState(e, buttons, EnumMultiset.create(_clicks));
