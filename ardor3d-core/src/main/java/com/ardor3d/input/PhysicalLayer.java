@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 import com.ardor3d.input.logical.DummyControllerWrapper;
 import com.ardor3d.input.logical.DummyFocusWrapper;
-import com.google.common.collect.PeekingIterator;
+import com.ardor3d.util.PeekingIterator;
 
 /**
  * Provides access to the physical layer of the input system. This is done via one method that polls the input system,

@@ -12,7 +12,6 @@ package com.ardor3d.input.swt;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.Objects;
 
 import org.eclipse.swt.events.MouseEvent;
@@ -27,23 +26,19 @@ import com.ardor3d.input.ButtonState;
 import com.ardor3d.input.MouseButton;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.MouseWrapper;
-import com.google.common.collect.AbstractIterator;
+import com.ardor3d.util.PeekingIterator;
 import com.google.common.collect.EnumMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.PeekingIterator;
 
 /**
  * A mouse wrapper for use with SWT.
  */
 @ThreadSafe
 public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveListener, MouseWheelListener {
-    @GuardedBy("this")
-    private final LinkedList<MouseState> _upcomingEvents = new LinkedList<>();
-
     private final Control _control;
 
     @GuardedBy("this")
-    private SwtMouseIterator _currentIterator = null;
+    private MouseIterator _currentIterator = null;
 
     @GuardedBy("this")
     private MouseState _lastState = null;
@@ -71,7 +66,7 @@ public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveLi
         expireClickEvents();
 
         if (_currentIterator == null || !_currentIterator.hasNext()) {
-            _currentIterator = new SwtMouseIterator();
+            _currentIterator = new MouseIterator(this);
         }
 
         return _currentIterator;
@@ -224,18 +219,5 @@ public class SwtMouseWrapper implements MouseWrapper, MouseListener, MouseMoveLi
 
         _upcomingEvents.add(newState);
         _lastState = newState;
-    }
-
-    private class SwtMouseIterator extends AbstractIterator<MouseState> implements PeekingIterator<MouseState> {
-        @Override
-        protected MouseState computeNext() {
-            synchronized (SwtMouseWrapper.this) {
-                if (_upcomingEvents.isEmpty()) {
-                    return endOfData();
-                }
-
-                return _upcomingEvents.poll();
-            }
-        }
     }
 }

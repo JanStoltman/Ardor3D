@@ -15,7 +15,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.Objects;
 
 import com.ardor3d.annotation.GuardedBy;
@@ -23,18 +22,15 @@ import com.ardor3d.input.Key;
 import com.ardor3d.input.KeyEvent;
 import com.ardor3d.input.KeyState;
 import com.ardor3d.input.KeyboardWrapper;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.PeekingIterator;
+import com.ardor3d.util.PeekingIterator;
 
 /**
  * Keyboard wrapper class for use with AWT.
  */
 public class AwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
-    @GuardedBy("this")
-    protected final LinkedList<KeyEvent> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
-    protected AwtKeyboardIterator _currentIterator = null;
+    protected KeyboardIterator _currentIterator = null;
 
     protected final Component _component;
 
@@ -63,7 +59,7 @@ public class AwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
     @Override
     public synchronized PeekingIterator<KeyEvent> getEvents() {
         if (_currentIterator == null || !_currentIterator.hasNext()) {
-            _currentIterator = new AwtKeyboardIterator();
+            _currentIterator = new KeyboardIterator(this);
         }
 
         return _currentIterator;
@@ -108,19 +104,6 @@ public class AwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
      */
     public synchronized Key fromKeyEventToKey(final java.awt.event.KeyEvent e) {
         return AwtKey.findByCode(e.getKeyCode());
-    }
-
-    private class AwtKeyboardIterator extends AbstractIterator<KeyEvent> implements PeekingIterator<KeyEvent> {
-        @Override
-        protected KeyEvent computeNext() {
-            synchronized (AwtKeyboardWrapper.this) {
-                if (_upcomingEvents.isEmpty()) {
-                    return endOfData();
-                }
-
-                return _upcomingEvents.poll();
-            }
-        }
     }
 
     public boolean isConsumeEvents() {

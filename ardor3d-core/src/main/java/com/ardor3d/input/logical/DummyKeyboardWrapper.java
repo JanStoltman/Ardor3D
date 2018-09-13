@@ -3,7 +3,7 @@
  *
  * This file is part of Ardor3D.
  *
- * Ardor3D is free software: you can redistribute it and/or modify it 
+ * Ardor3D is free software: you can redistribute it and/or modify it
  * under the terms of its license which may be found in the accompanying
  * LICENSE file or at <http://www.ardor3d.com/LICENSE>.
  */
@@ -12,7 +12,7 @@ package com.ardor3d.input.logical;
 
 import com.ardor3d.input.KeyEvent;
 import com.ardor3d.input.KeyboardWrapper;
-import com.google.common.collect.PeekingIterator;
+import com.ardor3d.util.PeekingIterator;
 
 /**
  * A "do-nothing" implementation of KeyboardWrapper useful when you want to ignore (or do not need) key events.

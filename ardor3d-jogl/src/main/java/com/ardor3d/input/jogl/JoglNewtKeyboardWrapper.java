@@ -20,8 +20,7 @@ import com.ardor3d.input.Key;
 import com.ardor3d.input.KeyEvent;
 import com.ardor3d.input.KeyState;
 import com.ardor3d.input.KeyboardWrapper;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.PeekingIterator;
+import com.ardor3d.util.PeekingIterator;
 import com.jogamp.newt.event.KeyAdapter;
 import com.jogamp.newt.event.NEWTEvent;
 import com.jogamp.newt.event.WindowAdapter;
@@ -34,7 +33,7 @@ public class JoglNewtKeyboardWrapper extends KeyAdapter implements KeyboardWrapp
     protected final LinkedList<KeyEvent> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
-    protected JoglNewtKeyboardIterator _currentIterator = null;
+    protected KeyboardIterator _currentIterator = null;
 
     protected final GLWindow _newtWindow;
 
@@ -66,7 +65,7 @@ public class JoglNewtKeyboardWrapper extends KeyAdapter implements KeyboardWrapp
     @Override
     public synchronized PeekingIterator<KeyEvent> getEvents() {
         if (_currentIterator == null || !_currentIterator.hasNext()) {
-            _currentIterator = new JoglNewtKeyboardIterator();
+            _currentIterator = new KeyboardIterator(this);
         }
 
         return _currentIterator;
@@ -109,19 +108,6 @@ public class JoglNewtKeyboardWrapper extends KeyAdapter implements KeyboardWrapp
      */
     public synchronized Key fromKeyEventToKey(final com.jogamp.newt.event.KeyEvent e) {
         return JoglNewtKey.findByCode(e.getKeySymbol());
-    }
-
-    private class JoglNewtKeyboardIterator extends AbstractIterator<KeyEvent> implements PeekingIterator<KeyEvent> {
-        @Override
-        protected KeyEvent computeNext() {
-            synchronized (JoglNewtKeyboardWrapper.this) {
-                if (_upcomingEvents.isEmpty()) {
-                    return endOfData();
-                }
-
-                return _upcomingEvents.poll();
-            }
-        }
     }
 
     public boolean isConsumeEvents() {

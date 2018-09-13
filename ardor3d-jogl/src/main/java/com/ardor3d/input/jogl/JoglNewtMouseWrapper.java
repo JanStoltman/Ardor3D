@@ -12,7 +12,6 @@ package com.ardor3d.input.jogl;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.Objects;
 
 import com.ardor3d.annotation.GuardedBy;
@@ -23,10 +22,9 @@ import com.ardor3d.input.MouseButton;
 import com.ardor3d.input.MouseManager;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.MouseWrapper;
-import com.google.common.collect.AbstractIterator;
+import com.ardor3d.util.PeekingIterator;
 import com.google.common.collect.EnumMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.PeekingIterator;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.event.NEWTEvent;
@@ -35,10 +33,7 @@ import com.jogamp.newt.opengl.GLWindow;
 public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
 
     @GuardedBy("this")
-    protected final LinkedList<MouseState> _upcomingEvents = new LinkedList<>();
-
-    @GuardedBy("this")
-    protected JoglNewtMouseIterator _currentIterator = null;
+    protected MouseIterator _currentIterator = null;
 
     @GuardedBy("this")
     protected MouseState _lastState = null;
@@ -76,7 +71,7 @@ public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
         expireClickEvents();
 
         if (_currentIterator == null || !_currentIterator.hasNext()) {
-            _currentIterator = new JoglNewtMouseIterator();
+            _currentIterator = new MouseIterator(this);
         }
 
         return _currentIterator;
@@ -291,19 +286,6 @@ public class JoglNewtMouseWrapper implements MouseWrapper, MouseListener {
                 throw new RuntimeException("unknown button: " + me.getButton());
         }
         return button;
-    }
-
-    private class JoglNewtMouseIterator extends AbstractIterator<MouseState> implements PeekingIterator<MouseState> {
-
-        @Override
-        protected MouseState computeNext() {
-            synchronized (JoglNewtMouseWrapper.this) {
-                if (_upcomingEvents.isEmpty()) {
-                    return endOfData();
-                }
-                return _upcomingEvents.poll();
-            }
-        }
     }
 
     @Override

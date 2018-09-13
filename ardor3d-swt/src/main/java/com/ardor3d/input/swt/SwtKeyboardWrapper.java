@@ -10,7 +10,6 @@
 
 package com.ardor3d.input.swt;
 
-import java.util.LinkedList;
 import java.util.Objects;
 
 import org.eclipse.swt.events.KeyListener;
@@ -22,26 +21,23 @@ import com.ardor3d.input.Key;
 import com.ardor3d.input.KeyEvent;
 import com.ardor3d.input.KeyState;
 import com.ardor3d.input.KeyboardWrapper;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.PeekingIterator;
+import com.ardor3d.util.PeekingIterator;
 
 /**
  * Keyboard wrapper for SWT input.
  */
 @ThreadSafe
 public class SwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
-    @GuardedBy("this")
-    private final LinkedList<KeyEvent> _upcomingEvents;
 
     private final Control _control;
 
     @GuardedBy("this")
-    private SwtKeyboardIterator _currentIterator = null;
+    private KeyboardIterator _currentIterator = null;
     @GuardedBy("this")
     private Key _lastKeyPressed = null;
 
     public SwtKeyboardWrapper(final Control control) {
-        _upcomingEvents = new LinkedList<>();
+        super();
         _control = Objects.requireNonNull(control, "control");
     }
 
@@ -53,7 +49,7 @@ public class SwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
     @Override
     public synchronized PeekingIterator<KeyEvent> getEvents() {
         if (_currentIterator == null || !_currentIterator.hasNext()) {
-            _currentIterator = new SwtKeyboardIterator();
+            _currentIterator = new KeyboardIterator(this);
         }
 
         return _currentIterator;
@@ -98,19 +94,5 @@ public class SwtKeyboardWrapper implements KeyboardWrapper, KeyListener {
      */
     public synchronized Key fromKeyEventToKey(final org.eclipse.swt.events.KeyEvent e) {
         return SwtKey.findByCode(e.keyCode);
-    }
-
-    private class SwtKeyboardIterator extends AbstractIterator<KeyEvent> implements PeekingIterator<KeyEvent> {
-
-        @Override
-        protected KeyEvent computeNext() {
-            synchronized (SwtKeyboardWrapper.this) {
-                if (_upcomingEvents.isEmpty()) {
-                    return endOfData();
-                }
-
-                return _upcomingEvents.poll();
-            }
-        }
     }
 }

@@ -19,7 +19,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.Objects;
 
 import com.ardor3d.annotation.GuardedBy;
@@ -29,20 +28,17 @@ import com.ardor3d.input.MouseButton;
 import com.ardor3d.input.MouseManager;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.MouseWrapper;
-import com.google.common.collect.AbstractIterator;
+import com.ardor3d.util.PeekingIterator;
 import com.google.common.collect.EnumMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.PeekingIterator;
 
 /**
  * Mouse wrapper class for use with AWT.
  */
 public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelListener, MouseMotionListener {
-    @GuardedBy("this")
-    protected final LinkedList<MouseState> _upcomingEvents = new LinkedList<>();
 
     @GuardedBy("this")
-    protected AwtMouseIterator _currentIterator = null;
+    protected MouseIterator _currentIterator = null;
 
     @GuardedBy("this")
     protected MouseState _lastState = null;
@@ -85,7 +81,7 @@ public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelL
         expireClickEvents();
 
         if (_currentIterator == null || !_currentIterator.hasNext()) {
-            _currentIterator = new AwtMouseIterator();
+            _currentIterator = new MouseIterator(this);
         }
 
         return _currentIterator;
@@ -299,20 +295,6 @@ public class AwtMouseWrapper implements MouseWrapper, MouseListener, MouseWheelL
                 throw new RuntimeException("unknown button: " + e.getButton());
         }
         return button;
-    }
-
-    private class AwtMouseIterator extends AbstractIterator<MouseState> implements PeekingIterator<MouseState> {
-        @Override
-        protected MouseState computeNext() {
-            synchronized (AwtMouseWrapper.this) {
-                if (_upcomingEvents.isEmpty()) {
-                    return endOfData();
-                }
-
-                return _upcomingEvents.poll();
-            }
-
-        }
     }
 
     // -- The following interface methods are not used. --
