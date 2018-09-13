@@ -13,8 +13,8 @@ package com.ardor3d.input;
 import java.util.LinkedList;
 
 import com.ardor3d.annotation.GuardedBy;
+import com.ardor3d.util.AbstractIterator;
 import com.ardor3d.util.PeekingIterator;
-import com.google.common.collect.AbstractIterator;
 
 public interface ControllerWrapper {
     /**
